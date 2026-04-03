@@ -12,8 +12,8 @@ import java.util.Date;
 public class JwtUtil {
 
     private final String SECRET_KEY = "mySecretKeymySecretKeymySecretKeymySecretKey";
-    // must be at least 32 chars for HS256
-    private final long EXPIRATION = 1000 * 60 * 60; // 1 hour
+   
+    private final long EXPIRATION = 1000 * 60 * 60; 
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());

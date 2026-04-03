@@ -23,14 +23,14 @@ public class AuthController {
     @GetMapping({"/register", "/login"})
     public String showAuthPage(Model model) {
         model.addAttribute("user", new User());
-        return "auth"; // unified page with both forms
+        return "auth"; 
     }
 
     @PostMapping("/register")
     public String register(@ModelAttribute User user, Model model) {
         userService.register(user);
         model.addAttribute("message", "Registration successful!");
-        return "redirect:/auth/login"; // ✅ redirect instead of direct view
+        return "redirect:/auth/login"; 
     }
 
 
@@ -40,17 +40,16 @@ public class AuthController {
         try {
             String token = userService.login(user.getUsername(), user.getPassword());
             model.addAttribute("message", "Login successful! JWT: " + token);
-            return "redirect:/auth/dashboard"; // ✅ redirect to dashboard
+            return "redirect:/auth/dashboard"; 
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            return "login"; // reload login page with error
+            return "login"; 
         }
     }
 
     @GetMapping("/dashboard")
     public String showDashboard(Model model) {
-        return "dashboard"; //
-    }
+        return "dashboard"; 
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users")

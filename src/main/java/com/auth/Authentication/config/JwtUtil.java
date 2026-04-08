@@ -13,6 +13,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
+<<<<<<< HEAD
     @Value("${jwt.secret}")
     private String secret;
 
@@ -21,6 +22,11 @@ public class JwtUtil {
 
     @Value("${jwt.refreshExpiration}")
     private long refreshExpiration;
+=======
+    private final String SECRET_KEY = "mySecretKeymySecretKeymySecretKeymySecretKey";
+   
+    private final long EXPIRATION = 1000 * 60 * 60; 
+>>>>>>> bc6e37b5158a5e6ea073b47570b5a8e16f902ec3
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));

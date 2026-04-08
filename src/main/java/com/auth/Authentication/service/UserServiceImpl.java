@@ -1,50 +1,58 @@
 package com.auth.Authentication.service;
 
-import com.auth.Authentication.config.JwtUtil;
 import com.auth.Authentication.model.User;
 import com.auth.Authentication.repo.UserRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.List;
+import java.util.HashSet;
 
 @Service
-public class UserServiceImpl  implements  UserService{
+public class UserServiceImpl implements UserService {
 
-    private final UserRepo userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final UserRepo repo;
+    private final PasswordEncoder encoder;
 
-    public UserServiceImpl(UserRepo userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
+    public UserServiceImpl(UserRepo repo, PasswordEncoder encoder) {
+        this.repo = repo;
+        this.encoder = encoder;
     }
 
     @Override
     public User register(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRoles().add("USER");
-        return userRepository.save(user);
+        repo.findByUsername(user.getUsername()).ifPresent(u -> {
+            throw new RuntimeException("Username already taken");
+        });
+        repo.findByEmail(user.getEmail()).ifPresent(u -> {
+            throw new RuntimeException("Email already registered");
+        });
+
+        user.setPassword(encoder.encode(user.getPassword()));
+
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            user.setRoles(new HashSet<>());
+            user.getRoles().add("USER");
+        }
+
+        return repo.save(user);
     }
 
     @Override
-    public String login(String username, String password) {
-        User user = userRepository.findByUsername(username)
+    public User login(String username, String password) {
+        User user = repo.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+
+        if (!encoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
-        return jwtUtil.generateToken(user);
-    }
 
-    @Override
-    public void removeUser(Long id) {
-        userRepository.deleteById(id);
-    }
+        if (!user.isActive()) {
+            throw new RuntimeException("User account is inactive");
+        }
 
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return user;
     }
 }

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+
+            /* 🔥 Background Image */
+            background: url('https://images.unsplash.com/photo-1518770660439-4636190af475') no-repeat center center/cover;
+            position: relative;
+        }
+
+        /* 🔥 DARK OVERLAY (for blur + readability) */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* darkness */
+            backdrop-filter: blur(8px); /* blur effect */
+            z-index: 0;
+        }
+
+        .auth-card {
+            position: relative;
+            z-index: 1;
+            width: 420px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            color: white;
+        }
+        .auth-card:hover {
+    transform: scale(1.02);
+    transition: 0.3s;
+}
+    </style>
+</head>
+
+<body>
+
+<div class="auth-card">
+
+    <h3 class="text-center mb-4">🚀 Auth Service</h3>
+
+    <!-- Tabs -->
+    <div class="d-flex justify-content-around mb-3">
+        <button id="loginTab" class="tab-btn active" onclick="showLogin()">Login</button>
+        <button id="registerTab" class="tab-btn" onclick="showRegister()">Register</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginDiv" class="fade-in">
+        <input id="l_username" class="form-control mb-3" placeholder="Username">
+        <input id="l_password" type="password" class="form-control mb-3" placeholder="Password">
+
+        <button class="btn btn-light w-100 btn-custom" onclick="login()">Login</button>
+
+        <p id="loginMsg" class="msg text-danger"></p>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="registerDiv" style="display:none;" class="fade-in">
+        <input id="r_username" class="form-control mb-3" placeholder="Username">
+        <input id="r_email" class="form-control mb-3" placeholder="Email">
+        <input id="r_password" type="password" class="form-control mb-3" placeholder="Password">
+
+        <button class="btn btn-success w-100 btn-custom" onclick="register()">Create Account</button>
+
+        <p id="registerMsg" class="msg"></p>
+    </div>
+
+</div>
+
+<script>
+    function showLogin() {
+        loginDiv.style.display = "block";
+        registerDiv.style.display = "none";
+
+        loginTab.classList.add("active");
+        registerTab.classList.remove("active");
+    }
+
+    function showRegister() {
+        loginDiv.style.display = "none";
+        registerDiv.style.display = "block";
+
+        registerTab.classList.add("active");
+        loginTab.classList.remove("active");
+    }
+
+    function register() {
+        fetch("/auth/register", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                username: r_username.value,
+                email: r_email.value,
+                password: r_password.value
+            })
+        })
+        .then(res => {
+            if (!res.ok) return res.text().then(err => { throw new Error(err); });
+            return res.json();
+        })
+        .then(() => {
+            registerMsg.innerText = "✔ Account created successfully";
+            registerMsg.className = "msg text-success";
+
+            setTimeout(showLogin, 1200);
+        })
+        .catch(err => {
+            registerMsg.innerText = err.message;
+            registerMsg.className = "msg text-danger";
+        });
+    }
+
+    function login() {
+        fetch("/auth/login", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                username: l_username.value,
+                password: l_password.value
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            localStorage.setItem("token", data.token);
+            window.location.href = "/dashboard.html";
+        })
+        .catch(() => {
+            loginMsg.innerText = "❌ Invalid username or password";
+        });
+    }
+</script>
+
+</body>
+</html>

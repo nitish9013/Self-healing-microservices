@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+
+    <style>
+        body {
+          font-family: 'Segoe UI', sans-serif;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          margin: 0;
+        }
+
+        .card {
+          width: 350px;
+          margin: 100px auto;
+          padding: 25px;
+          background: white;
+          border-radius: 15px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+          text-align: center;
+        }
+
+        h2 {
+          margin-bottom: 20px;
+        }
+
+        button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 10px;
+          border: none;
+          background: #667eea;
+          color: white;
+          border-radius: 8px;
+          cursor: pointer;
+        }
+
+        button:hover {
+          background: #5a67d8;
+        }
+
+        .logout {
+          background: #e53e3e;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="card">
+    <h2>👤 User Profile</h2>
+
+    <p><b>Name:</b> <span id="name"></span></p>
+    <p><b>Email:</b> <span id="email"></span></p>
+    <p><b>Bio:</b> <span id="bio"></span></p>
+
+    <button onclick="goToEdit()">Edit Profile</button>
+    <button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<script>
+    const API_URL = "http://localhost:8082/api/users";
+
+    // JWT decode
+    function parseJwt(token) {
+      return JSON.parse(atob(token.split('.')[1]));
+    }
+
+    // Load profile
+    async function loadProfile() {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        window.location.href = "http://localhost:8081/login.html";
+        return;
+      }
+
+      const user = parseJwt(token);
+      const userId = user.userId;
+
+      try {
+        const res = await fetch(`${API_URL}/${userId}`, {
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        });
+
+        const data = await res.json();
+
+        document.getElementById("name").innerText = data.name;
+        document.getElementById("email").innerText = data.email;
+        document.getElementById("bio").innerText = data.bio;
+
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    function goToEdit() {
+      window.location.href = "edit-profile.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "http://localhost:8081/login.html";
+    }
+
+    // auto run
+    loadProfile();
+</script>
+
+</body>
+</html>

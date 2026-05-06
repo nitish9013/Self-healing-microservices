@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>User Data</h2>
+<button onclick="loadUser()">Load User</button>
+
+<pre id="output"></pre>
+
+<script>
+    function loadUser() {
+        fetch("http://localhost:8081/api/users/1", {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("output").innerText =
+                JSON.stringify(data, null, 2);
+        });
+    }
+</script>
+
+</body>
+</html>

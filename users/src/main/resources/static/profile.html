@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile</title>
+
+    <style>
+        body {
+          font-family: 'Segoe UI', sans-serif;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          margin: 0;
+        }
+
+        .card {
+          width: 350px;
+          margin: 100px auto;
+          padding: 25px;
+          background: white;
+          border-radius: 15px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+          text-align: center;
+        }
+
+        input {
+          width: 90%;
+          padding: 10px;
+          margin: 10px 0;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+        }
+
+        button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 10px;
+          border: none;
+          background: #667eea;
+          color: white;
+          border-radius: 8px;
+          cursor: pointer;
+        }
+
+        button:hover {
+          background: #5a67d8;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="card">
+    <h2>✏️ Edit Profile</h2>
+
+    <input id="nameInput" placeholder="Name">
+    <input id="emailInput" placeholder="Email">
+    <input id="bioInput" placeholder="Bio">
+
+    <button onclick="updateProfile()">Update</button>
+</div>
+
+<script>
+    const API_URL = "http://localhost:8082/api/users";
+
+    function parseJwt(token) {
+      return JSON.parse(atob(token.split('.')[1]));
+    }
+
+    async function updateProfile() {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        window.location.href = "http://localhost:8081/login.html";
+        return;
+      }
+
+      const user = parseJwt(token);
+      const userId = user.userId;
+
+      const name = document.getElementById("nameInput").value;
+      const email = document.getElementById("emailInput").value;
+      const bio = document.getElementById("bioInput").value;
+
+      await fetch(`${API_URL}/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({ name, email, bio })
+      });
+
+      alert("Profile updated");
+      window.location.href = "profile.html";
+    }
+</script>
+
+</body>
+</html>

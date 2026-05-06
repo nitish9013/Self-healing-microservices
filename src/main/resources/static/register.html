@@ -1,0 +1,21 @@
+<button onclick="register()">Register</button>
+
+<script>
+    function register() {
+        const data = {
+            username: document.getElementById("username").value,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
+        };
+
+        fetch("/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(() => alert("Registered"))
+        .catch(() => alert("Error"));
+    }
+</script>

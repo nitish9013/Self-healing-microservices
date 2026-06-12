@@ -26,4 +26,12 @@ public class OrderController {
     public List<Order> getOrders(Authentication auth) {
         return service.getUserOrders(auth.getName());
     }
+
+    @GetMapping("/user/{username}")
+    public List<Order> getOrdersByUser(
+            @PathVariable String username) {
+
+        return service.getUserOrders(
+                username);
+    }
 }

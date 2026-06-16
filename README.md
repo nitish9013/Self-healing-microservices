@@ -1,175 +1,231 @@
-# Self-Healing Distributed Event Platform
+# 🚀 Self-Healing Distributed Event Platform (SHDEP)
 
-## Overview
+A cloud-native microservices platform built using Spring Boot to simulate a resilient distributed architecture with secure authentication, service-to-service communication, fault tolerance, and scalable deployment strategies.
 
-Self-Healing Distributed Event Platform is a microservices-based backend system designed to simulate resilient distributed architecture using Spring Boot. The project focuses on fault tolerance, automated recovery, service communication, and scalable backend design.
-
-This platform is being developed to demonstrate:
-
-* Distributed systems architecture
-* Microservices communication
-* Service resilience and recovery
-* Event-driven backend concepts
-* Docker and Kubernetes deployment
+The project focuses on gaining practical experience in designing and implementing distributed backend systems using modern cloud-native technologies.
 
 ---
 
-# Current Microservices
+# 🏗️ Architecture Overview
 
-## 1. Authentication Service
+```text
+Client
+   │
+   ▼
+API Gateway
+   │
+   ├───────────────────────────────┐
+   │                               │
+   ▼                               ▼
+Authentication Service       User Service
+        │                          │
+        └──────────┬───────────────┘
+                   ▼
+             Order Service
+                   │
+                   ▼
+            Payment Service
+                   
+Database Layer
+(PostgreSQL)
+```
 
-Handles:
+---
+
+# ✅ Implemented Microservices
+
+## 🔐 Authentication Service
+
+Responsible for user authentication and authorization.
+
+### Features
 
 * User Registration
 * User Login
 * JWT Authentication
-* Spring Security Configuration
+* Spring Security Integration
+* Secure API Access
 
-### Tech Stack
+### Technologies
 
 * Spring Boot
 * Spring Security
 * JWT
 * PostgreSQL
+* Spring Data JPA
 
 ---
 
-## 2. User Service
+## 👤 User Service
 
-Handles:
-
-* User Profile Management
-* User Information APIs
-* User Data Persistence
+Manages user profile information.
 
 ### Features
 
 * Create User
 * Update User
 * Fetch User Details
+* User Data Persistence
+
+### Technologies
+
+* Spring Boot
+* Spring Data JPA
+* PostgreSQL
 
 ---
 
-## 3. Order Service
+## 📦 Order Service
 
-Handles:
-
-* Order Creation
-* Order Management
-* Order Tracking
+Handles order management and tracking.
 
 ### Features
 
 * Create Orders
 * Fetch Orders
 * Order Status Management
+* Order Tracking
 
----
+### Technologies
 
-# Planned Services
-
-## Payment Service
-
-Will include:
-
-* Payment Processing
-* Transaction Status
-* Retry & Fallback Mechanisms
-
-## API Gateway
-
-Will handle:
-
-* Centralized Routing
-* Authentication Filters
-* Request Management
-
-## Monitoring & Recovery Service
-
-Will monitor:
-
-* Service Health
-* Failure Detection
-* Auto Recovery Simulation
-
----
-
-# Planned Architecture
-
-```text
-Client
-   ↓
-API Gateway
-   ↓
---------------------------------
-| Authentication Service      |
-| User Service                |
-| Order Service               |
-| Payment Service             |
-| Monitoring Service          |
---------------------------------
-        ↓
- PostgreSQL / Kafka
-```
-
----
-
-# Technologies Used
-
-* Java 21
 * Spring Boot
-* Spring Security
 * Spring Data JPA
 * PostgreSQL
-* Maven
-* Docker
-* Kubernetes
-* Git & GitHub
-* JWT Authentication
 
 ---
 
-# Future Enhancements
+## 💳 Payment Service
 
-* Kafka-based Event Communication
-* Service Discovery using Eureka
-* OpenFeign Communication
-* Circuit Breaker & Retry Patterns
+Handles payment processing and transaction management.
+
+### Features
+
+* Payment Processing
+* Transaction Management
+* Payment Status Tracking
+* Integration with Order Service
+
+### Technologies
+
+* Spring Boot
+* PostgreSQL
+* OpenFeign
+
+---
+
+## 🌐 API Gateway
+
+Centralized entry point for all client requests.
+
+### Features
+
+* Request Routing
+* Authentication Handling
+* Service Access Management
+* Centralized API Entry Point
+
+### Technologies
+
+* Spring Cloud Gateway
+* JWT Validation
+* Spring Boot
+
+---
+
+# 🔄 Inter-Service Communication
+
+The platform uses OpenFeign for communication between microservices.
+
+### Implemented
+
+* OpenFeign Clients
+* Service-to-Service Communication
+* Decoupled Service Interaction
+
+---
+
+# 🛠️ Technology Stack
+
+| Category         | Technologies         |
+| ---------------- | -------------------- |
+| Language         | Java 21              |
+| Framework        | Spring Boot          |
+| Security         | Spring Security, JWT |
+| Database         | PostgreSQL           |
+| ORM              | Spring Data JPA      |
+| API Gateway      | Spring Cloud Gateway |
+| Communication    | OpenFeign            |
+| Build Tool       | Maven                |
+| Version Control  | Git & GitHub         |
+| Containerization | Docker (Planned)     |
+| Orchestration    | Kubernetes (Planned) |
+| Messaging        | Kafka (Planned)      |
+
+---
+
+# 🚀 Planned Enhancements
+
+### Distributed Systems
+
+* Kafka Event-Driven Communication
+* Service Discovery (Eureka)
+* Circuit Breaker Pattern
+* Retry Mechanisms
+* Distributed Transactions
+
+### Monitoring & Observability
+
+* Prometheus
+* Grafana Dashboards
+* Centralized Logging
+* Monitoring Service
+
+### Deployment
+
+* Docker Containerization
 * Kubernetes Deployment
-* Monitoring Dashboard
-* Prometheus & Grafana Integration
+* CI/CD Pipeline
 
 ---
 
-# Project Goal
-
-The primary goal of this project is to gain hands-on experience in:
-
-* Distributed backend systems
-* Cloud-native microservices
-* Containerized deployment
-* Fault-tolerant architecture
-* Production-style backend development
-
----
-
-# Repository Structure
+# 📁 Repository Structure
 
 ```text
-S.H.D.E.P_PROJECT/
+SHDEP_PROJECT/
 │
 ├── Authentication/
+├── User/
 ├── Order/
-├── users/
+├── Payment/
+├── API-Gateway/
 └── README.md
 ```
 
 ---
 
-# Author
+# 🎯 Learning Objectives
+
+This project is helping me gain hands-on experience in:
+
+* Microservices Architecture
+* Distributed Systems Design
+* Secure Backend Development
+* Service Communication Patterns
+* Cloud-Native Development
+* Scalable System Design
+
+---
+
+# 👨‍💻 Author
 
 Nitish Kumar
 
-* Java Backend Developer
-* Spring Boot Enthusiast
-* Learning Distributed Systems & Cloud-Native Architecture
+Java Backend Developer | Spring Boot Enthusiast
+
+Currently learning and building expertise in:
+
+* Distributed Systems
+* Cloud-Native Applications
+* Microservices Architecture
+* DevOps & Kubernetes
+* Event-Driven Systems

@@ -1,7 +1,9 @@
 package com.orderservice.order.service.impl;
 
 import com.orderservice.order.dto.OrderRequest;
+import com.orderservice.order.dto.ProductResponse;
 import com.orderservice.order.entity.Order;
+import com.orderservice.order.feign.CatalogFeignClient;
 import com.orderservice.order.repository.OrderRepository;
 import com.orderservice.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +16,19 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository repo;
+    private final CatalogFeignClient catalogFeignClient;
 
     @Override
     public Order createOrder(OrderRequest request, String username) {
 
+        ProductResponse product =
+                catalogFeignClient.getProduct(
+                        request.getProductId());
+
         Order order = Order.builder()
-                .productName(request.getProductName())
+                .productName(product.getName())
+                .price(product.getPrice().doubleValue())
                 .quantity(request.getQuantity())
-                .price(request.getPrice())
                 .username(username)
                 .status("CREATED")
                 .build();

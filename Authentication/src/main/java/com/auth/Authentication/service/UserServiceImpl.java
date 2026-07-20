@@ -42,15 +42,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(String username, String password) {
+
+        System.out.println("USERNAME = " + username);
+        System.out.println("PASSWORD = " + password);
+
         User user = repo.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!encoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
+        System.out.println("DB USERNAME = " + user.getUsername());
 
-        if (!user.isActive()) {
-            throw new RuntimeException("User account is inactive");
+        boolean match =
+                encoder.matches(
+                        password,
+                        user.getPassword()
+                );
+
+        System.out.println("PASSWORD MATCH = " + match);
+
+        if (!match) {
+            throw new RuntimeException(
+                    "Invalid credentials");
         }
 
         return user;

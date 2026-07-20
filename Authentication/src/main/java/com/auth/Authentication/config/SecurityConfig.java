@@ -45,7 +45,8 @@ public class SecurityConfig {
                                 "/login.html",
                                 "/dashboard.html",
                                 "/css/**",
-                                "/js/**"
+                                "/js/**",
+                                "/actuator/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

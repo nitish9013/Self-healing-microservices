@@ -9,4 +9,5 @@ public interface UserService {
     UserProfileDTO createUser(UserProfileDTO dto);
 
     UserProfileDTO updateUser(Long userId, UserProfileDTO dto);
+    Long getTotalUsers();
 }

@@ -4,6 +4,7 @@ import com.user.users.dto.UserProfileDTO;
 import com.user.users.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,5 +32,13 @@ public class UserController {
     public UserProfileDTO updateUser(@PathVariable Long id,
                                      @Valid @RequestBody UserProfileDTO dto) {
         return userService.updateUser(id, dto);
+    }
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalUsers() {
+
+        return ResponseEntity.ok(
+                userService.getTotalUsers()
+        );
+
     }
 }

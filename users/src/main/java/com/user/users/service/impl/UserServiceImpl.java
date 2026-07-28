@@ -22,6 +22,11 @@ public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
+    public Long getTotalUsers() {
+        return userRepository.count();
+    }
+
+    @Override
     public UserProfileDTO getUser(Long userId) {
         log.info("Fetching user with id: {}", userId);
 

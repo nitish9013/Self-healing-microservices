@@ -173,4 +173,8 @@ public class ProductServiceImpl implements ProductService {
                 .map(this::mapToResponse)
                 .toList();
     }
+    @Override
+    public Long getTotalProducts() {
+        return productRepository.count();
+    }
 }

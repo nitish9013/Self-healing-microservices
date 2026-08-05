@@ -6,6 +6,7 @@ import com.ecommerce.catalog.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -82,5 +83,13 @@ public class ProductController {
 
         return productService
                 .getAllProductsWithoutPagination();
+    }
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalProducts() {
+
+        return ResponseEntity.ok(
+               productService.getTotalProducts()
+        );
+
     }
 }

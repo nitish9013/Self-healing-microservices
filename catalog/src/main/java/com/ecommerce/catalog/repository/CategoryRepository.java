@@ -14,4 +14,5 @@ public interface CategoryRepository
 
     boolean existsByNameIgnoreCase(
             String name);
+
 }

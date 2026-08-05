@@ -116,4 +116,9 @@ public class CategoryServiceImpl
                         category.getUpdatedAt())
                 .build();
     }
+
+    @Override
+    public Long getTotalCategories() {
+        return categoryRepository.count();
+    }
 }

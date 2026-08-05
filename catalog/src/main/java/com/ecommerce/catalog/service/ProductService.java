@@ -34,4 +34,5 @@ public interface ProductService {
 
     List<ProductResponse>
     getAllProductsWithoutPagination();
+    Long getTotalProducts();
 }

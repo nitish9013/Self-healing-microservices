@@ -5,6 +5,7 @@ import com.ecommerce.catalog.dto.response.CategoryResponse;
 import com.ecommerce.catalog.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,5 +56,13 @@ public class CategoryController {
             @PathVariable UUID id) {
 
         categoryService.deleteCategory(id);
+    }
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalCategories() {
+
+        return ResponseEntity.ok(
+                categoryService.getTotalCategories()
+        );
+
     }
 }

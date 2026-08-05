@@ -18,4 +18,5 @@ public interface ProductRepository
             UUID categoryId);
 
     Page<Product> findAll(Pageable pageable);
+
 }

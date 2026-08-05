@@ -22,4 +22,7 @@ public interface CategoryService {
 
     void deleteCategory(
             UUID categoryId);
+
+
+    Long getTotalCategories();
 }

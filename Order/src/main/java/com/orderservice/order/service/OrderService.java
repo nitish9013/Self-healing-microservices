@@ -8,4 +8,7 @@ import java.util.List;
 public interface OrderService {
     Order createOrder(OrderRequest request, String username);
     List<Order> getUserOrders(String username);
+    Long getTotalOrders();
+
+    Long getPendingOrders();
 }

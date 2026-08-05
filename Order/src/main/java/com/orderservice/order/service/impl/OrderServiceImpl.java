@@ -5,9 +5,12 @@ import com.orderservice.order.dto.ProductResponse;
 import com.orderservice.order.entity.Order;
 import com.orderservice.order.feign.CatalogFeignClient;
 import com.orderservice.order.repository.OrderRepository;
+import com.orderservice.order.service.OrderEventProducer;
 import com.orderservice.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.orderservice.order.event.OrderCreatedEvent;
+import com.orderservice.order.service.OrderEventProducer;
 
 import java.util.List;
 
@@ -17,13 +20,13 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository repo;
     private final CatalogFeignClient catalogFeignClient;
+    private final OrderEventProducer orderEventProducer;
 
     @Override
     public Order createOrder(OrderRequest request, String username) {
 
         ProductResponse product =
-                catalogFeignClient.getProduct(
-                        request.getProductId());
+                catalogFeignClient.getProduct(request.getProductId());
 
         Order order = Order.builder()
                 .productName(product.getName())
@@ -35,8 +38,16 @@ public class OrderServiceImpl implements OrderService {
 
         Order saved = repo.save(order);
 
-        // 🔥 FUTURE: publish event to Kafka
-        // kafkaTemplate.send("order-created", saved);
+        OrderCreatedEvent event = OrderCreatedEvent.builder()
+                .orderId(saved.getId())
+                .productName(saved.getProductName())
+                .quantity(saved.getQuantity())
+                .price(saved.getPrice())
+                .username(saved.getUsername())
+                .status(saved.getStatus())
+                .build();
+
+        orderEventProducer.publishOrderCreated(event);
 
         return saved;
     }
@@ -44,5 +55,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getUserOrders(String username) {
         return repo.findByUsername(username);
+    }
+
+    @Override
+    public Long getTotalOrders() {
+        return repo.count();
+    }
+
+    @Override
+    public Long getPendingOrders() {
+        return repo.countByStatus("PENDING");
     }
 }

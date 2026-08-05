@@ -4,6 +4,7 @@ import com.orderservice.order.dto.OrderRequest;
 import com.orderservice.order.entity.Order;
 import com.orderservice.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,19 +18,25 @@ public class OrderController {
     private final OrderService service;
 
     @PostMapping
-    public Order createOrder(@RequestBody OrderRequest request,
-                             Authentication auth) {
+    public Order createOrder(
+            @RequestBody OrderRequest request,
+            @RequestHeader("X-Username")
+            String username) {
 
-        String username =
-                auth != null
-                        ? auth.getName()
-                        : "nitish@gmail.com";
-        return service.createOrder(request, username);
+        return service.createOrder(
+                request,
+                username
+        );
     }
 
     @GetMapping
-    public List<Order> getOrders(Authentication auth) {
-        return service.getUserOrders(auth.getName());
+    public List<Order> getOrders(
+            @RequestHeader("X-Username")
+            String username) {
+
+        return service.getUserOrders(
+                username
+        );
     }
 
     @GetMapping("/user/{username}")
@@ -38,5 +45,23 @@ public class OrderController {
 
         return service.getUserOrders(
                 username);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalOrders() {
+
+        return ResponseEntity.ok(
+                service.getTotalOrders()
+        );
+
+    }
+
+    @GetMapping("/pending/count")
+    public ResponseEntity<Long> getPendingOrders() {
+
+        return ResponseEntity.ok(
+                service.getPendingOrders()
+        );
+
     }
 }

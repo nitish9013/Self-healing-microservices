@@ -1,190 +1,402 @@
 # 🚀 Self-Healing Distributed Event Platform (SHDEP)
 
-A cloud-native microservices platform built using Spring Boot to simulate a resilient distributed architecture with secure authentication, service-to-service communication, fault tolerance, and scalable deployment strategies.
+> A cloud-native, microservices-based platform focused on secure authentication, service-to-service communication, fault tolerance, resilient service behavior, and a future AI-assisted self-healing layer.
 
-The project focuses on gaining practical experience in designing and implementing distributed backend systems using modern cloud-native technologies.
+SHDEP combines the core capabilities of a modern shopping platform with distributed-system engineering concepts. The project is being developed incrementally through release-based milestones, with the long-term goal of detecting service failures, handling them gracefully, and supporting automated or administrator-controlled recovery.
 
 ---
 
-# 🏗️ Architecture Overview
+## 🎯 Project Vision
+
+The central idea behind SHDEP is to move beyond a traditional shopping application and build a system that can tolerate failures instead of simply crashing when one dependency becomes unavailable.
 
 ```text
-Client
-   │
-   ▼
-API Gateway
-   │
-   ├───────────────────────────────┐
-   │                               │
-   ▼                               ▼
-Authentication Service       User Service
-        │                          │
-        └──────────┬───────────────┘
-                   ▼
-             Order Service
-                   │
-                   ▼
-            Payment Service
-                   
-Database Layer
-(PostgreSQL)
+Service Failure
+      ↓
+Detection
+      ↓
+Retry / Fallback
+      ↓
+Circuit Breaker
+      ↓
+Graceful Degradation
+      ↓
+Recovery
+      ↓
+System Continues
 ```
+
+The longer-term vision is to add an AI-assisted layer capable of identifying abnormal behavior and helping choose an appropriate recovery action, while also providing administrators with manual control.
 
 ---
 
-# ✅ Implemented Microservices
+## 🏗️ Architecture
+
+![SHDEP Architecture](assets/shdep-architecture-8.6.1.png)
+
+### Current request flow
+
+```text
+React Frontend
+      │
+      ▼
+API Gateway
+      │
+      ├── Authentication Service
+      ├── User Service
+      ├── Catalog Service
+      ├── Order Service
+      ├── Payment Service
+      └── Dashboard Aggregator
+                │
+                ├── OpenFeign → User Service
+                ├── OpenFeign → Catalog Service
+                └── OpenFeign → Order Service
+```
+
+Each business service is designed around its own responsibility and PostgreSQL persistence.
+
+---
+
+# 🧩 Microservices
 
 ## 🔐 Authentication Service
 
-Responsible for user authentication and authorization.
+Responsible for authentication and authorization.
 
 ### Features
 
-* User Registration
-* User Login
-* JWT Authentication
-* Spring Security Integration
-* Secure API Access
+- User registration
+- User login
+- JWT access-token generation
+- Spring Security integration
+- Role-based authentication
+- Stateless authentication
+- Secure API access
 
 ### Technologies
 
-* Spring Boot
-* Spring Security
-* JWT
-* PostgreSQL
-* Spring Data JPA
+- Java 21
+- Spring Boot
+- Spring Security
+- JWT
+- Spring Data JPA
+- PostgreSQL
 
 ---
 
 ## 👤 User Service
 
-Manages user profile information.
+Manages user profile information independently from authentication records.
 
 ### Features
 
-* Create User
-* Update User
-* Fetch User Details
-* User Data Persistence
+- Create user profile
+- Fetch user profile
+- Update user profile
+- Profile persistence
+- Dashboard profile integration
 
 ### Technologies
 
-* Spring Boot
-* Spring Data JPA
-* PostgreSQL
+- Spring Boot
+- Spring Data JPA
+- PostgreSQL
+- OpenFeign
+
+---
+
+## 🛍️ Catalog Service
+
+Manages products and categories.
+
+### Features
+
+- Product management APIs
+- Category management APIs
+- Product retrieval
+- Category retrieval
+- Dashboard product integration
+
+### Technologies
+
+- Spring Boot
+- Spring Data JPA
+- PostgreSQL
 
 ---
 
 ## 📦 Order Service
 
-Handles order management and tracking.
+Handles order management and order lifecycle.
 
 ### Features
 
-* Create Orders
-* Fetch Orders
-* Order Status Management
-* Order Tracking
+- Create orders
+- Fetch orders
+- Order status management
+- Order tracking
+- Service integration
 
 ### Technologies
 
-* Spring Boot
-* Spring Data JPA
-* PostgreSQL
+- Spring Boot
+- Spring Data JPA
+- PostgreSQL
+- OpenFeign
 
 ---
 
 ## 💳 Payment Service
 
-Handles payment processing and transaction management.
+Handles payment-related operations and transaction status.
 
 ### Features
 
-* Payment Processing
-* Transaction Management
-* Payment Status Tracking
-* Integration with Order Service
+- Payment processing foundation
+- Payment status management
+- Transaction handling
+- Order-service integration
 
 ### Technologies
 
-* Spring Boot
-* PostgreSQL
-* OpenFeign
+- Spring Boot
+- PostgreSQL
+- OpenFeign
 
 ---
 
-## 🌐 API Gateway
+## 📊 Dashboard Aggregator Service
 
-Centralized entry point for all client requests.
+The Dashboard Aggregator provides a centralized view of data from multiple backend services.
 
-### Features
+```text
+React Dashboard
+      │
+      ▼
+Dashboard Aggregator
+      │
+      ├── User Service
+      ├── Catalog Service
+      └── Order Service
+```
 
-* Request Routing
-* Authentication Handling
-* Service Access Management
-* Centralized API Entry Point
+### Current dashboard capabilities
 
-### Technologies
+- User information
+- Featured products
+- Product categories
+- Recent orders
+- Summary information
+- Responsive sidebar
+- Mobile navigation
+- Loading state
+- Error state
+- Retry handling
+- Empty states
+- JWT-aware dashboard access
 
-* Spring Cloud Gateway
-* JWT Validation
-* Spring Boot
+---
+
+# 🌐 API Gateway
+
+Spring Cloud Gateway is used as the centralized entry point for frontend requests.
+
+### Current routes
+
+```text
+/auth/**             → Authentication Service
+/users/**            → User Service
+/orders/**           → Order Service
+/catalog/**          → Catalog Service
+/payments/**         → Payment Service
+/api/dashboard/**    → Dashboard Service
+```
+
+### Responsibilities
+
+- Request routing
+- Centralized API entry point
+- CORS configuration
+- Service access routing
+- Gateway-level request handling
 
 ---
 
 # 🔄 Inter-Service Communication
 
-The platform uses OpenFeign for communication between microservices.
+The current implementation primarily uses **OpenFeign** for synchronous service-to-service communication.
 
-### Implemented
+```text
+Dashboard Service
+       │
+       ├── OpenFeign → User Service
+       ├── OpenFeign → Catalog Service
+       └── OpenFeign → Order Service
+```
 
-* OpenFeign Clients
-* Service-to-Service Communication
-* Decoupled Service Interaction
+Kafka-based asynchronous communication is part of the planned evolution of the platform rather than the primary communication mechanism of the current 8.6.1 release.
+
+---
+
+# 🛡️ Resilience & Self-Healing Foundation
+
+SHDEP has a resilience foundation using Resilience4j patterns such as:
+
+- Retry
+- Fallback
+- Circuit Breaker
+
+For example, when a dependent service is unavailable, the Dashboard Aggregator can fall back to a controlled response instead of allowing the complete dashboard request to fail.
+
+### Failure-handling concept
+
+```text
+Dependency Failure
+       ↓
+Retry
+       ↓
+Still failing?
+       ↓
+Fallback
+       ↓
+Controlled response
+```
+
+![Self-Healing Vision](assets/shdep-self-healing-vision.png)
+
+---
+
+# 🧠 AI-Assisted Self-Healing — Long-Term Vision
+
+A major future objective is an AI-assisted failure detection and recovery layer.
+
+```text
+Microservices
+     │
+     ▼
+Health / Metrics / Logs
+     │
+     ▼
+Anomaly Detection
+     │
+     ├──────────────► Admin Alert
+     │
+     ▼
+Recovery Recommendation
+     │
+     ├──────────────► Automatic Recovery
+     │
+     └──────────────► Manual Admin Action
+```
+
+The AI layer is a future evolution of the existing resilience foundation. It is not presented as fully implemented in Release 8.6.1.
+
+---
+
+# 📈 Monitoring & Observability
+
+Spring Boot Actuator is part of the monitoring foundation.
+
+### Current / planned direction
+
+```text
+Microservices
+     │
+     ▼
+Spring Boot Actuator
+     │
+     ▼
+Health + Metrics
+     │
+     ├── Prometheus (planned)
+     └── Grafana (planned)
+```
+
+Future observability work includes:
+
+- Service health monitoring
+- Metrics collection
+- Centralized logging
+- Distributed tracing
+- System health dashboard
+
+---
+
+# 🖥️ Frontend
+
+The current frontend is being developed with React and Material UI.
+
+### Authentication
+
+```text
+Login
+  ↓
+JWT
+  ↓
+Gateway
+  ↓
+Dashboard
+```
+
+### Dashboard
+
+```text
+Dashboard
+│
+├── Header
+├── Responsive Sidebar
+├── Welcome Section
+├── Featured Products
+├── Summary Cards
+├── Recent Orders
+└── Top Categories
+```
+
+The dashboard is connected to backend APIs rather than using hardcoded business data.
+
+---
+
+# 📸 Project Screenshots
+
+Add actual running-application screenshots here as frontend modules are completed.
+
+Recommended screenshots:
+
+1. Login page
+2. Registration page
+3. Dashboard desktop view
+4. Dashboard mobile/sidebar view
+5. Catalog page
+6. Admin dashboard
+
+> The architecture and self-healing diagrams included in this README are project documentation diagrams. Actual UI screenshots should be added from the running application.
 
 ---
 
 # 🛠️ Technology Stack
 
-| Category         | Technologies         |
-| ---------------- | -------------------- |
-| Language         | Java 21              |
-| Framework        | Spring Boot          |
-| Security         | Spring Security, JWT |
-| Database         | PostgreSQL           |
-| ORM              | Spring Data JPA      |
-| API Gateway      | Spring Cloud Gateway |
-| Communication    | OpenFeign            |
-| Build Tool       | Maven                |
-| Version Control  | Git & GitHub         |
-| Containerization | Docker (Planned)     |
-| Orchestration    | Kubernetes (Planned) |
-| Messaging        | Kafka (Planned)      |
-
----
-
-# 🚀 Planned Enhancements
-
-### Distributed Systems
-
-* Kafka Event-Driven Communication
-* Service Discovery (Eureka)
-* Circuit Breaker Pattern
-* Retry Mechanisms
-* Distributed Transactions
-
-### Monitoring & Observability
-
-* Prometheus
-* Grafana Dashboards
-* Centralized Logging
-* Monitoring Service
-
-### Deployment
-
-* Docker Containerization
-* Kubernetes Deployment
-* CI/CD Pipeline
+| Category | Technologies |
+|---|---|
+| Language | Java 21 |
+| Backend | Spring Boot |
+| Security | Spring Security, JWT |
+| Database | PostgreSQL |
+| ORM | Spring Data JPA / Hibernate |
+| API Gateway | Spring Cloud Gateway |
+| Communication | OpenFeign |
+| Frontend | React |
+| UI | Material UI |
+| Build Tool | Maven |
+| Testing | JUnit |
+| API Testing | Postman |
+| Version Control | Git & GitHub |
+| Monitoring | Spring Boot Actuator |
+| Resilience | Resilience4j |
+| Messaging | Apache Kafka — Planned |
+| Containerization | Docker — Planned |
+| Orchestration | Kubernetes — Planned |
+| CI/CD | Planned |
 
 ---
 
@@ -197,35 +409,153 @@ SHDEP_PROJECT/
 ├── User/
 ├── Order/
 ├── Payment/
+├── Catalog/
+├── Dashboard/
 ├── API-Gateway/
+├── Frontend/
 └── README.md
 ```
 
 ---
 
+# 🚀 Release Roadmap
+
+## ✅ Completed / Implemented
+
+- Authentication Service
+- JWT Authentication
+- User Service
+- Order Service
+- Payment Service
+- Catalog Service
+- API Gateway
+- OpenFeign communication
+- Dashboard Aggregator
+- Resilience4j Retry/Fallback foundation
+- React authentication frontend
+- React dashboard
+- Responsive dashboard navigation
+- Release 8.6.1 dashboard improvements
+
+## 🔄 Next Development
+
+- Catalog frontend
+- Product search
+- Category filtering
+- Product details
+- Cart workflow
+- Order frontend
+- Payment frontend
+- Admin dashboard
+- Advanced monitoring
+
+## 🔮 Planned
+
+### Event-Driven Architecture
+
+- Apache Kafka
+- Event-driven communication
+- Asynchronous workflows
+- Event-based order processing
+
+### Self-Healing
+
+- Advanced failure detection
+- AI-assisted anomaly detection
+- Failure classification
+- Automated recovery
+- Admin-controlled manual recovery
+
+### DevOps
+
+- Docker
+- Kubernetes
+- CI/CD pipeline
+
+### Observability
+
+- Prometheus
+- Grafana
+- Centralized logging
+- Distributed tracing
+
+---
+
 # 🎯 Learning Objectives
 
-This project is helping me gain hands-on experience in:
+SHDEP is being developed to gain practical experience in:
 
-* Microservices Architecture
-* Distributed Systems Design
-* Secure Backend Development
-* Service Communication Patterns
-* Cloud-Native Development
-* Scalable System Design
+- Microservices architecture
+- Distributed systems
+- Secure backend development
+- JWT authentication
+- Service-to-service communication
+- Fault tolerance
+- Resilience patterns
+- Event-driven architecture
+- Cloud-native development
+- Observability
+- DevOps
+- AI-assisted backend systems
+- System design
+
+---
+
+# 💡 Why SHDEP?
+
+A traditional application can behave like:
+
+```text
+Service Failure
+      ↓
+Request Failure
+      ↓
+Application Failure
+```
+
+SHDEP aims to evolve toward:
+
+```text
+Service Failure
+      ↓
+Detection
+      ↓
+Retry / Fallback
+      ↓
+Graceful Degradation
+      ↓
+Recovery
+      ↓
+System Continues
+```
+
+The long-term goal is to build a platform capable of detecting, analysing and responding to distributed failures with minimal manual intervention.
 
 ---
 
 # 👨‍💻 Author
 
-Nitish Kumar
+## Nitish Kumar
 
-Java Backend Developer | Spring Boot Enthusiast
+**Java Backend Developer | Spring Boot Enthusiast**
 
-Currently learning and building expertise in:
+Areas of focus:
 
-* Distributed Systems
-* Cloud-Native Applications
-* Microservices Architecture
-* DevOps & Kubernetes
-* Event-Driven Systems
+- Java
+- Spring Boot
+- Microservices
+- Distributed Systems
+- System Design
+- Event-Driven Architecture
+- Cloud-Native Development
+- DevOps
+- Kubernetes
+- AI-assisted Backend Systems
+
+---
+
+# ⭐ Project Status
+
+**SHDEP is actively under development.**
+
+The project is being developed through release-based milestones, with each release adding backend services, frontend functionality, resilience mechanisms, distributed-system capabilities and, eventually, AI-assisted self-healing.

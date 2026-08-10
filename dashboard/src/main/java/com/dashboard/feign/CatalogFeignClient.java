@@ -20,4 +20,10 @@ public interface CatalogFeignClient {
     @GetMapping("/api/products/all")
     List<ProductSummaryResponse>
     getProducts();
+
+    @GetMapping("/api/products/count")
+    Long getTotalProducts();
+
+    @GetMapping("/api/categories/count")
+    Long getTotalCategories();
 }

@@ -14,4 +14,6 @@ public interface UserFeignClient {
     UserSummaryResponse getUser(
             @PathVariable Long id
     );
+    @GetMapping("/api/users/count")
+    Long getTotalUsers();
 }

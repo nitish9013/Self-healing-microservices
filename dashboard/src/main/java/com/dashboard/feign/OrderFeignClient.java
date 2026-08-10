@@ -16,4 +16,10 @@ public interface OrderFeignClient {
     List<OrderSummaryResponse> getOrders(
             @PathVariable String username
     );
+
+    @GetMapping("/api/orders/count")
+    Long getTotalOrders();
+
+    @GetMapping("/api/orders/pending/count")
+    Long getPendingOrders();
 }

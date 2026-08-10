@@ -19,4 +19,14 @@ public class DashboardController {
         return dashboardService
                 .getDashboard(userId);
     }
+
+    @GetMapping("/test-header")
+    public String testHeader(
+            @RequestHeader(
+                    value = "X-Username",
+                    required = false
+            ) String username) {
+
+        return "Username = " + username;
+    }
 }

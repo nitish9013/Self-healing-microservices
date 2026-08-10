@@ -10,6 +10,8 @@ import com.dashboard.feign.UserFeignClient;
 import com.dashboard.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 
 import java.util.List;
 
@@ -27,8 +29,22 @@ private final UserFeignClient userFeignClient;
     private final OrderClient orderClient;
 
     @Override
+    @Retry(
+
+            name = "dashboardRetry"
+
+
+    )
+    @CircuitBreaker(
+            name = "dashboardService",
+            fallbackMethod = "dashboardFallback"
+    )
+
     public DashboardResponse getDashboard(
             Long userId) {
+        System.out.println(
+                "Retry Attempt"
+        );
 
 //        UserSummaryResponse user =
 //                userClient.getUser(userId);
@@ -60,6 +76,33 @@ private final UserFeignClient userFeignClient;
                 .categories(categories)
                 .featuredProducts(products)
                 .recentOrders(orders)
+                .build();
+    }
+
+    public DashboardResponse dashboardFallback(
+            Long userId,
+            Exception ex) {
+
+//        System.out.println(
+//                "Fallback Triggered : "
+//                        + ex.getMessage());
+        System.out.println("========== DASHBOARD FALLBACK ==========");
+        System.out.println("Exception Type : " + ex.getClass().getName());
+        System.out.println("Exception Message : " + ex.getMessage());
+        ex.printStackTrace();
+        System.out.println("========================================");
+
+        return DashboardResponse.builder()
+                .user(
+                        UserSummaryResponse.builder()
+                                .userId(userId)
+                                .name("Service Unavailable")
+                                .email("N/A")
+                                .build()
+                )
+                .categories(List.of())
+                .featuredProducts(List.of())
+                .recentOrders(List.of())
                 .build();
     }
 }

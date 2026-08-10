@@ -34,7 +34,13 @@ public class AuthController {
         try {
             User loggedIn = service.login(user.getUsername(), user.getPassword());
             String token = jwtUtil.generateAccessToken(loggedIn);
-            return ResponseEntity.ok(Map.of("token", token));
+
+            return ResponseEntity.ok(
+                    Map.of(
+                            "token", token,
+                            "userId", loggedIn.getId()
+                    )
+            );
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

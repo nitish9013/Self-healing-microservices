@@ -1,48 +1,87 @@
 import {
+    CategoryOutlined,
+    Inventory2Outlined,
+    PersonOutlineRounded,
+    ShoppingBagOutlined,
+} from "@mui/icons-material";
+
+import {
     Box,
-    Card,
     Typography,
 } from "@mui/material";
 
-import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
-import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
-import PaymentsRoundedIcon from "@mui/icons-material/PaymentsRounded";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import { useAuth } from "../../context/AuthContext";
 
 
-const summaryData = [
-    {
-        title: "Products",
-        value: "128",
-        description: "Available products",
-        icon: Inventory2RoundedIcon,
-    },
-    {
-        title: "Orders",
-        value: "46",
-        description: "Total orders",
-        icon: ShoppingCartRoundedIcon,
-    },
-    {
-        title: "Payments",
-        value: "32",
-        description: "Transactions",
-        icon: PaymentsRoundedIcon,
-    },
-    {
-        title: "Account",
-        value: "Active",
-        description: "Good standing",
-        icon: CheckCircleRoundedIcon,
-    },
-];
+export default function SummaryCard({
+    dashboardData,
+}) {
+
+    const {
+        role,
+    } = useAuth();
 
 
-export default function SummaryCard() {
+    const products =
+        dashboardData?.featuredProducts?.length || 0;
+
+    const categories =
+        dashboardData?.categories?.length || 0;
+
+    const orders =
+        dashboardData?.recentOrders?.length || 0;
+
+    const accountStatus =
+        dashboardData?.user
+            ? "Active"
+            : "Unavailable";
+
+
+    const cards = [
+        {
+            label: "Products",
+            value: products,
+            description: "Featured products",
+            icon: Inventory2Outlined,
+            iconColor: "#60A5FA",
+            iconBackground: "rgba(59,130,246,.10)",
+        },
+
+        {
+            label: "Categories",
+            value: categories,
+            description: "Available categories",
+            icon: CategoryOutlined,
+            iconColor: "#A78BFA",
+            iconBackground: "rgba(139,92,246,.10)",
+        },
+
+        {
+            label: "Orders",
+            value: orders,
+            description: "Recent orders",
+            icon: ShoppingBagOutlined,
+            iconColor: "#34D399",
+            iconBackground: "rgba(16,185,129,.10)",
+        },
+
+        {
+            label: "Account",
+            value: accountStatus,
+            description: role || "USER",
+            icon: PersonOutlineRounded,
+            iconColor: "#FBBF24",
+            iconBackground: "rgba(245,158,11,.10)",
+        },
+    ];
+
 
     return (
+
         <Box
             sx={{
+                width: "100%",
+
                 display: "grid",
 
                 gridTemplateColumns: {
@@ -51,56 +90,74 @@ export default function SummaryCard() {
                     lg: "repeat(4, 1fr)",
                 },
 
-                gap: 3,
+                gap: {
+                    xs: 1.5,
+                    md: 2,
+                },
             }}
         >
 
-            {summaryData.map((item) => {
+            {cards.map((card) => {
 
-                const Icon = item.icon;
+                const Icon = card.icon;
 
                 return (
-                    <Card
-                        key={item.title}
-                        elevation={0}
+
+                    <Box
+                        key={card.label}
+
                         sx={{
-                            p: 3,
+                            minHeight: {
+                                xs: 125,
+                                md: 140,
+                            },
 
-                            minHeight: 150,
+                            p: {
+                                xs: 2,
+                                md: 2.5,
+                            },
 
-                            borderRadius: 4,
+                            borderRadius: 3,
 
                             background:
-                                "rgba(18,28,48,.72)",
+                                "rgba(255,255,255,.035)",
 
                             border:
-                                "1px solid rgba(255,255,255,.08)",
+                                "1px solid rgba(255,255,255,.07)",
 
-                            backdropFilter:
-                                "blur(20px)",
+                            display: "flex",
+
+                            flexDirection: "column",
+
+                            justifyContent:
+                                "space-between",
 
                             transition:
-                                "all .25s ease",
+                                "all .2s ease",
 
                             "&:hover": {
-                                transform:
-                                    "translateY(-5px)",
+                                background:
+                                    "rgba(255,255,255,.05)",
 
                                 borderColor:
-                                    "rgba(59,130,246,.35)",
+                                    "rgba(255,255,255,.11)",
 
-                                boxShadow:
-                                    "0 18px 45px rgba(0,0,0,.25)",
+                                transform:
+                                    "translateY(-2px)",
                             },
                         }}
                     >
 
-                        {/* Top */}
+                        {/* =========================
+                            TOP
+                        ========================= */}
 
                         <Box
                             sx={{
                                 display: "flex",
+
                                 alignItems: "center",
+
                                 justifyContent:
                                     "space-between",
                             }}
@@ -109,72 +166,98 @@ export default function SummaryCard() {
                             <Typography
                                 sx={{
                                     color: "#94A3B8",
-                                    fontSize: 14,
+
+                                    fontSize: 12,
+
                                     fontWeight: 600,
                                 }}
                             >
-                                {item.title}
+                                {card.label}
                             </Typography>
 
 
                             <Box
                                 sx={{
-                                    width: 42,
-                                    height: 42,
+                                    width: 36,
 
-                                    borderRadius: 3,
+                                    height: 36,
+
+                                    borderRadius: 2,
 
                                     display: "flex",
+
                                     alignItems: "center",
-                                    justifyContent: "center",
+
+                                    justifyContent:
+                                        "center",
 
                                     background:
-                                        "rgba(59,130,246,.12)",
+                                        card.iconBackground,
 
-                                    color: "#60A5FA",
+                                    border:
+                                        `1px solid ${card.iconColor}20`,
                                 }}
                             >
-                                <Icon />
+
+                                <Icon
+                                    sx={{
+                                        fontSize: 19,
+
+                                        color:
+                                            card.iconColor,
+                                    }}
+                                />
+
                             </Box>
 
                         </Box>
 
 
-                        {/* Value */}
+                        {/* =========================
+                            VALUE
+                        ========================= */}
 
-                        <Typography
-                            sx={{
-                                mt: 2,
+                        <Box>
 
-                                color: "#fff",
+                            <Typography
+                                sx={{
+                                    color: "#F8FAFC",
 
-                                fontSize: {
-                                    xs: 26,
-                                    md: 30,
-                                },
+                                    fontSize:
+                                        card.label === "Account"
+                                            ? 19
+                                            : 27,
 
-                                fontWeight: 800,
-                            }}
-                        >
-                            {item.value}
-                        </Typography>
+                                    lineHeight: 1,
+
+                                    fontWeight: 800,
+
+                                    letterSpacing:
+                                        "-.5px",
+                                }}
+                            >
+                                {card.value}
+                            </Typography>
 
 
-                        {/* Description */}
+                            <Typography
+                                sx={{
+                                    mt: .7,
 
-                        <Typography
-                            sx={{
-                                mt: 0.5,
+                                    color: "#475569",
 
-                                color: "#64748B",
+                                    fontSize: 10,
 
-                                fontSize: 13,
-                            }}
-                        >
-                            {item.description}
-                        </Typography>
+                                    fontWeight: 500,
+                                }}
+                            >
+                                {card.description}
+                            </Typography>
 
-                    </Card>
+                        </Box>
+
+                    </Box>
+
                 );
             })}
 

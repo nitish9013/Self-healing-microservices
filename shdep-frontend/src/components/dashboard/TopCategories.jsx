@@ -1,136 +1,20 @@
 import {
-    AccessTimeRounded,
     ArrowForwardRounded,
-    CheckCircleOutlineRounded,
-    Inventory2Outlined,
-    LocalShippingOutlined,
-    ShoppingBagOutlined,
+    CategoryOutlined,
 } from "@mui/icons-material";
 
 import {
     Box,
-    Chip,
     Typography,
 } from "@mui/material";
 
 
-export default function RecentActivity({
-    dashboardData,
+export default function TopCategories({
+    categories = [],
 }) {
 
-    const orders =
-        dashboardData?.recentOrders || [];
-
-
-    const getOrderId = (order, index) => {
-
-        return (
-            order?.orderId ??
-            order?.id ??
-            order?.orderNumber ??
-            `Order ${index + 1}`
-        );
-
-    };
-
-
-    const getOrderStatus = (order) => {
-
-        return (
-            order?.status ||
-            order?.orderStatus ||
-            "Processing"
-        );
-
-    };
-
-
-    const getStatusIcon = (status) => {
-
-        const normalized =
-            String(status)
-                .toLowerCase();
-
-
-        if (
-            normalized.includes("deliver") ||
-            normalized.includes("complete")
-        ) {
-
-            return CheckCircleOutlineRounded;
-
-        }
-
-
-        if (
-            normalized.includes("ship") ||
-            normalized.includes("transit")
-        ) {
-
-            return LocalShippingOutlined;
-
-        }
-
-
-        return AccessTimeRounded;
-    };
-
-
-    const getStatusColor = (status) => {
-
-        const normalized =
-            String(status)
-                .toLowerCase();
-
-
-        if (
-            normalized.includes("deliver") ||
-            normalized.includes("complete")
-        ) {
-
-            return {
-                text: "#86EFAC",
-                background: "rgba(34,197,94,.09)",
-                border: "rgba(34,197,94,.15)",
-            };
-
-        }
-
-
-        if (
-            normalized.includes("cancel") ||
-            normalized.includes("fail")
-        ) {
-
-            return {
-                text: "#FCA5A5",
-                background: "rgba(239,68,68,.09)",
-                border: "rgba(239,68,68,.15)",
-            };
-
-        }
-
-
-        if (
-            normalized.includes("ship") ||
-            normalized.includes("transit")
-        ) {
-
-            return {
-                text: "#93C5FD",
-                background: "rgba(59,130,246,.09)",
-                border: "rgba(59,130,246,.15)",
-            };
-
-        }
-
-
-        return {
-            text: "#FCD34D",
-            background: "rgba(245,158,11,.09)",
-            border: "rgba(245,158,11,.15)",
-        };
-    };
+    const visibleCategories =
+        categories.slice(0, 5);
 
 
     return (
@@ -185,7 +69,7 @@ export default function RecentActivity({
                             fontWeight: 750,
                         }}
                     >
-                        Recent Orders
+                        Top Categories
                     </Typography>
 
 
@@ -198,7 +82,7 @@ export default function RecentActivity({
                             fontSize: 11.5,
                         }}
                     >
-                        Your latest order activity
+                        Categories available in catalog
                     </Typography>
 
                 </Box>
@@ -219,15 +103,15 @@ export default function RecentActivity({
                         justifyContent: "center",
 
                         background:
-                            "rgba(59,130,246,.08)",
+                            "rgba(139,92,246,.08)",
                     }}
                 >
 
-                    <ShoppingBagOutlined
+                    <CategoryOutlined
                         sx={{
                             fontSize: 19,
 
-                            color: "#60A5FA",
+                            color: "#A78BFA",
                         }}
                     />
 
@@ -240,7 +124,7 @@ export default function RecentActivity({
                 EMPTY STATE
             ===================================== */}
 
-            {orders.length === 0 && (
+            {visibleCategories.length === 0 && (
 
                 <Box
                     sx={{
@@ -266,7 +150,7 @@ export default function RecentActivity({
                     }}
                 >
 
-                    <Inventory2Outlined
+                    <CategoryOutlined
                         sx={{
                             fontSize: 31,
 
@@ -286,7 +170,7 @@ export default function RecentActivity({
                             fontWeight: 600,
                         }}
                     >
-                        No recent orders
+                        No categories available
                     </Typography>
 
 
@@ -299,7 +183,7 @@ export default function RecentActivity({
                             fontSize: 11,
                         }}
                     >
-                        Your recent orders will appear here.
+                        Categories will appear here when available.
                     </Typography>
 
                 </Box>
@@ -308,10 +192,10 @@ export default function RecentActivity({
 
 
             {/* =====================================
-                ORDERS
+                CATEGORY LIST
             ===================================== */}
 
-            {orders.length > 0 && (
+            {visibleCategories.length > 0 && (
 
                 <Box
                     sx={{
@@ -323,34 +207,32 @@ export default function RecentActivity({
                     }}
                 >
 
-                    {orders
-                        .slice(0, 5)
-                        .map((order, index) => {
+                    {visibleCategories.map(
+                        (category, index) => {
 
-                            const status =
-                                getOrderStatus(order);
+                            const name =
+                                category?.name ||
+                                category?.categoryName ||
+                                category?.title ||
+                                `Category ${index + 1}`;
 
-                            const StatusIcon =
-                                getStatusIcon(status);
+                            const id =
+                                category?.id ??
+                                category?.categoryId ??
+                                index;
 
-                            const statusStyle =
-                                getStatusColor(status);
 
                             return (
 
                                 <Box
-                                    key={
-                                        order?.orderId ??
-                                        order?.id ??
-                                        index
-                                    }
+                                    key={id}
 
                                     sx={{
-                                        minHeight: 68,
+                                        minHeight: 57,
 
                                         px: 1.5,
 
-                                        py: 1.25,
+                                        py: 1,
 
                                         borderRadius: 2.5,
 
@@ -358,7 +240,7 @@ export default function RecentActivity({
 
                                         alignItems: "center",
 
-                                        gap: 1.5,
+                                        gap: 1.3,
 
                                         background:
                                             "rgba(255,255,255,.018)",
@@ -371,22 +253,22 @@ export default function RecentActivity({
 
                                         "&:hover": {
                                             background:
-                                                "rgba(255,255,255,.035)",
+                                                "rgba(139,92,246,.05)",
                                         },
                                     }}
                                 >
 
-                                    {/* Icon */}
+                                    {/* Number */}
 
                                     <Box
                                         sx={{
-                                            width: 38,
+                                            width: 30,
 
-                                            height: 38,
+                                            height: 30,
 
                                             flexShrink: 0,
 
-                                            borderRadius: 2,
+                                            borderRadius: 1.8,
 
                                             display: "flex",
 
@@ -396,23 +278,21 @@ export default function RecentActivity({
                                             justifyContent:
                                                 "center",
 
+                                            color: "#A78BFA",
+
                                             background:
-                                                "rgba(59,130,246,.08)",
+                                                "rgba(139,92,246,.08)",
+
+                                            fontSize: 11,
+
+                                            fontWeight: 800,
                                         }}
                                     >
-
-                                        <ShoppingBagOutlined
-                                            sx={{
-                                                fontSize: 18,
-
-                                                color: "#60A5FA",
-                                            }}
-                                        />
-
+                                        {index + 1}
                                     </Box>
 
 
-                                    {/* Order information */}
+                                    {/* Category */}
 
                                     <Box
                                         sx={{
@@ -428,7 +308,7 @@ export default function RecentActivity({
 
                                                 fontSize: 12.5,
 
-                                                fontWeight: 700,
+                                                fontWeight: 650,
 
                                                 overflow:
                                                     "hidden",
@@ -440,64 +320,17 @@ export default function RecentActivity({
                                                     "nowrap",
                                             }}
                                         >
-                                            {getOrderId(
-                                                order,
-                                                index
-                                            )}
-                                        </Typography>
-
-
-                                        <Typography
-                                            sx={{
-                                                mt: .35,
-
-                                                color: "#475569",
-
-                                                fontSize: 10.5,
-                                            }}
-                                        >
-                                            Order activity
+                                            {name}
                                         </Typography>
 
                                     </Box>
 
 
-                                    {/* Status */}
-
-                                    <Chip
-                                        icon={
-                                            <StatusIcon
-                                                sx={{
-                                                    fontSize:
-                                                        "14px !important",
-
-                                                    color:
-                                                        `${statusStyle.text} !important`,
-                                                }}
-                                            />
-                                        }
-
-                                        label={status}
-
-                                        size="small"
-
+                                    <ArrowForwardRounded
                                         sx={{
-                                            height: 27,
+                                            fontSize: 16,
 
-                                            flexShrink: 0,
-
-                                            color:
-                                                statusStyle.text,
-
-                                            background:
-                                                statusStyle.background,
-
-                                            border:
-                                                `1px solid ${statusStyle.border}`,
-
-                                            fontSize: 10,
-
-                                            fontWeight: 700,
+                                            color: "#475569",
                                         }}
                                     />
 
@@ -505,7 +338,8 @@ export default function RecentActivity({
 
                             );
 
-                        })}
+                        }
+                    )}
 
                 </Box>
 

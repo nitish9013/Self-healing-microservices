@@ -1,214 +1,443 @@
-import { Box } from "@mui/material";
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Typography,
+} from "@mui/material";
+
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useEffect, useState } from "react";
 
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import WelcomeCard from "../../components/dashboard/WelcomeCard";
 import SummaryCard from "../../components/dashboard/SummaryCard";
-import QuickActions from "../../components/dashboard/QuickActions";
 import RecentActivity from "../../components/dashboard/RecentActivity";
-import SupportCard from "../../components/dashboard/SupportCard";
-import { useEffect, useState } from "react";
+import FeaturedProducts from "../../components/dashboard/FeaturedProducts";
+import TopCategories from "../../components/dashboard/TopCategories";
+import Sidebar from "../../components/dashboard/Sidebar";
+
 import dashboardService from "../../services/dashboardService";
+
 
 export default function Dashboard() {
 
     const navigate = useNavigate();
 
-    const { logout } = useAuth();
-
-    const handleLogout = () => {
-        logout();
-        navigate("/login");
-    };
-
     const {
-    userId,
-    username,
-    role,
-    
-     } = useAuth();
+        userId,
+        token,
+    } = useAuth();
 
 
-    const [dashboardData, setDashboardData] = useState(null);
+    const [dashboardData, setDashboardData] =
+        useState(null);
 
-     const [loading, setLoading] = useState(true);
+    const [loading, setLoading] =
+        useState(true);
 
-    const [error, setError] = useState("");
-     
-    useEffect(() => {
+    const [error, setError] =
+        useState("");
+        const [mobileSidebarOpen, setMobileSidebarOpen] =
+    useState(false);
+
+
+    /* ==============================
+       LOAD DASHBOARD
+    ============================== */
+
     const loadDashboard = async () => {
 
-        if (!userId) {
-            setError("User information not available.");
-            setLoading(false);
+    if (!token || !userId) {
+
+        navigate("/login", {
+            replace: true,
+        });
+
+        return;
+    }
+
+    try {
+
+        setLoading(true);
+        setError("");
+
+        const data =
+            await dashboardService
+                .getUserDashboard(userId);
+
+        console.log(
+            "Dashboard Data = ",
+            data
+        );
+
+        setDashboardData(data);
+
+    } catch (err) {
+
+        console.error(
+            "Dashboard API Error = ",
+            err
+        );
+
+        if (err.response?.status === 401) {
+
+            navigate("/login", {
+                replace: true,
+            });
+
             return;
         }
 
-        try {
+        setError(
+            err.response?.data?.message ||
+            err.response?.data ||
+            "Unable to load dashboard."
+        );
 
-            setLoading(true);
-            setError("");
+    } finally {
 
-            const data =
-                await dashboardService.getUserDashboard(userId);
+        setLoading(false);
 
-            console.log(
-                "Dashboard Data = ",
-                data
-            );
+    }
+};
 
-            setDashboardData(data);
+    useEffect(() => {
 
-        } catch (err) {
+        loadDashboard();
 
-            console.error(
-                "Dashboard API Error = ",
-                err
-            );
-
-            setError(
-                err.response?.data ||
-                "Unable to load dashboard."
-            );
-
-        } finally {
-
-            setLoading(false);
-
-        }
-    };
-
-    loadDashboard();
-
-}, [userId]);
+    }, [userId]);
 
 
     return (
+
         <Box
             sx={{
                 minHeight: "100vh",
+
+                width: "100%",
+
                 background:
                     "linear-gradient(135deg, #080F23 0%, #0F172A 55%, #111827 100%)",
+
+                color: "#fff",
             }}
         >
 
-            {/* Header */}
+            {/* =====================================
+                TOP HEADER
+            ===================================== */}
 
-            <DashboardHeader />
+          <DashboardHeader
+    onMenuClick={() =>
+        setMobileSidebarOpen(true)
+    }
+/>
 
 
-            {/* Main Dashboard */}
+            {/* =====================================
+                SIDEBAR + MAIN CONTENT
+            ===================================== */}
 
             <Box
                 sx={{
+                    display: "flex",
+
                     width: "100%",
-                    maxWidth: 1450,
-                    mx: "auto",
-
-                    px: {
-                        xs: 2,
-                        sm: 3,
-                        md: 5,
-                        lg: 6,
-                    },
-
-                    py: {
-                        xs: 3,
-                        md: 5,
-                    },
                 }}
             >
 
-                {/* Welcome */}
+                {/* =================================
+                    SIDEBAR
+                ================================= */}
 
-                <WelcomeCard />
-
-
-                {/* Summary */}
-
-                <Box sx={{ mt: { xs: 3, md: 4 } }}>
-                    <SummaryCard />
-                </Box>
-
-
-                {/* Quick Actions */}
-
-                <Box sx={{ mt: { xs: 3, md: 4 } }}>
-                    <QuickActions />
-                </Box>
+               <Sidebar
+    mobileOpen={mobileSidebarOpen}
+    onClose={() =>
+        setMobileSidebarOpen(false)
+    }
+/>
 
 
-                {/* Activity + Support */}
+                {/* =================================
+                    MAIN CONTENT
+                ================================= */}
 
                 <Box
                     sx={{
-                        mt: { xs: 3, md: 4 },
+                        flex: 1,
 
-                        display: "grid",
-
-                        gridTemplateColumns: {
-                            xs: "1fr",
-                            md: "minmax(0, 2fr) minmax(280px, 1fr)",
-                        },
-
-                        gap: {
-                            xs: 2,
-                            md: 3,
-                        },
+                        minWidth: 0,
                     }}
                 >
-                    <RecentActivity />
 
-                    <SupportCard />
-                </Box>
-
-
-                {/* Logout */}
-
-                <Box
-                    sx={{
-                        mt: 4,
-                        display: "flex",
-                        justifyContent: "flex-end",
-                    }}
-                >
                     <Box
-                        component="button"
-                        onClick={handleLogout}
                         sx={{
-                            border: "1px solid rgba(239,68,68,.25)",
-                            background: "rgba(239,68,68,.08)",
-                            color: "#FCA5A5",
+                            width: "100%",
 
-                            borderRadius: 2.5,
+                            maxWidth: 1600,
 
-                            px: 2.5,
-                            py: 1,
+                            mx: "auto",
 
-                            fontSize: 13,
-                            fontWeight: 600,
+                            px: {
+                                xs: 2,
+                                sm: 3,
+                                md: 4,
+                                lg: 5,
+                                xl: 6,
+                            },
 
-                            cursor: "pointer",
-
-                            transition: "all .2s ease",
-
-                            "&:hover": {
-                                background:
-                                    "rgba(239,68,68,.15)",
-                                borderColor:
-                                    "rgba(239,68,68,.45)",
-                                transform:
-                                    "translateY(-1px)",
+                            py: {
+                                xs: 3,
+                                md: 4,
                             },
                         }}
                     >
-                        Logout
+
+                        {/* =================================
+                            LOADING
+                        ================================= */}
+
+                        {loading && (
+
+                            <Box
+                                sx={{
+                                    minHeight: "70vh",
+
+                                    display: "flex",
+
+                                    flexDirection:
+                                        "column",
+
+                                    alignItems:
+                                        "center",
+
+                                    justifyContent:
+                                        "center",
+
+                                    gap: 2,
+                                }}
+                            >
+
+                                <CircularProgress
+                                    size={42}
+                                    sx={{
+                                        color: "#60A5FA",
+                                    }}
+                                />
+
+
+                                <Typography
+                                    sx={{
+                                        color: "#94A3B8",
+
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    Loading dashboard...
+                                </Typography>
+
+                            </Box>
+
+                        )}
+
+
+                        {/* =================================
+                            ERROR
+                        ================================= */}
+
+                        {!loading && error && (
+
+                            <Box
+                                sx={{
+                                    minHeight: "70vh",
+
+                                    display: "flex",
+
+                                    flexDirection:
+                                        "column",
+
+                                    alignItems:
+                                        "center",
+
+                                    justifyContent:
+                                        "center",
+
+                                    textAlign: "center",
+
+                                    gap: 2,
+                                }}
+                            >
+
+                                <Typography
+                                    sx={{
+                                        color: "#F87171",
+
+                                        fontSize: 20,
+
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    Unable to load dashboard
+                                </Typography>
+
+
+                                <Typography
+                                    sx={{
+                                        color: "#94A3B8",
+
+                                        maxWidth: 500,
+
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {error}
+                                </Typography>
+
+
+                                <Button
+                                    variant="contained"
+
+                                    onClick={
+                                        loadDashboard
+                                    }
+
+                                    sx={{
+                                        mt: 1,
+
+                                        borderRadius: 2,
+
+                                        textTransform:
+                                            "none",
+
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Retry
+                                </Button>
+
+                            </Box>
+
+                        )}
+
+
+                        {/* =================================
+                            ACTUAL DASHBOARD
+                        ================================= */}
+
+                        {!loading &&
+                            !error &&
+                            dashboardData && (
+
+                            <>
+
+                                {/* =========================
+                                    WELCOME
+                                ========================= */}
+
+                                <WelcomeCard />
+
+
+                                {/* =========================
+                                    FEATURED PRODUCTS
+                                ========================= */}
+
+                                <Box
+                                    sx={{
+                                        mt: {
+                                            xs: 3,
+                                            md: 4,
+                                        },
+                                    }}
+                                >
+
+                                    <FeaturedProducts
+                                        products={
+                                            dashboardData
+                                                ?.featuredProducts || []
+                                        }
+                                    />
+
+                                </Box>
+
+
+                                {/* =========================
+                                    SUMMARY
+                                ========================= */}
+
+                                <Box
+                                    sx={{
+                                        mt: {
+                                            xs: 3,
+                                            md: 4,
+                                        },
+                                    }}
+                                >
+
+                                    <SummaryCard
+                                        dashboardData={
+                                            dashboardData
+                                        }
+                                    />
+
+                                </Box>
+
+
+                                {/* =========================
+                                    RECENT ORDERS + CATEGORIES
+                                ========================= */}
+
+                                <Box
+                                    sx={{
+                                        mt: {
+                                            xs: 3,
+                                            md: 4,
+                                        },
+
+                                        display: "grid",
+
+                                        gridTemplateColumns: {
+                                            xs: "1fr",
+
+                                            md:
+                                                "minmax(0, 2fr) minmax(280px, 1fr)",
+                                        },
+
+                                        gap: {
+                                            xs: 2,
+
+                                            md: 3,
+                                        },
+                                    }}
+                                >
+
+                                    <RecentActivity
+                                        dashboardData={
+                                            dashboardData
+                                        }
+                                    />
+
+
+                                    <TopCategories
+                                        categories={
+                                            dashboardData
+                                                ?.categories || []
+                                        }
+                                    />
+
+                                </Box>
+
+                            </>
+
+                        )}
+
                     </Box>
+
                 </Box>
 
             </Box>
 
         </Box>
+
     );
 }

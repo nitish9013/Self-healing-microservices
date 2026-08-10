@@ -363,14 +363,11 @@ Add actual running-application screenshots here as frontend modules are complete
 
 Recommended screenshots:
 
-1. Login page
-2. Registration page
-3. Dashboard desktop view
-4. Dashboard mobile/sidebar view
-5. Catalog page
-6. Admin dashboard
+![Login page](assets/login_page.png)
+![Registration page](assets/register_page.png)
+![Dashboard view](assets/dashboard.png)
 
-> The architecture and self-healing diagrams included in this README are project documentation diagrams. Actual UI screenshots should be added from the running application.
+
 
 ---
 

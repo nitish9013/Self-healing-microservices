@@ -8,10 +8,11 @@ import com.Payment.dto.*;
 import com.Payment.entity.Payment;
 import com.Payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/payments")
+@RequestMapping("/api/payments")
 @RequiredArgsConstructor
 public class PaymentController {
 
@@ -66,5 +67,32 @@ public class PaymentController {
         return paymentService.refundPayment(
                 request
         );
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalPayments() {
+
+        return ResponseEntity.ok(
+                paymentService.getTotalPayments()
+        );
+
+    }
+
+    @GetMapping("/revenue")
+    public ResponseEntity<Double> getTotalRevenue() {
+
+        return ResponseEntity.ok(
+                paymentService.getTotalRevenue()
+        );
+
+    }
+
+    @GetMapping("/failed/count")
+    public ResponseEntity<Long> getFailedPayments() {
+
+        return ResponseEntity.ok(
+                paymentService.getFailedPayments()
+        );
+
     }
 }

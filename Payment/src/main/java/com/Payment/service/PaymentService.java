@@ -247,4 +247,26 @@ public class PaymentService {
                 )
                 .build();
     }
+
+
+    public Long getTotalPayments() {
+        return paymentRepository.count();
+    }
+
+
+    public Double getTotalRevenue() {
+
+        return paymentRepository.findAll()
+                .stream()
+                .filter(payment ->
+                        payment.getStatus() == PaymentStatus.SUCCESS
+                )
+                .mapToDouble(Payment::getAmount)
+                .sum();
+    }
+
+
+    public Long getFailedPayments() {
+        return paymentRepository.countByStatus(PaymentStatus.FAILED);
+    }
 }

@@ -40,6 +40,16 @@ export default function Sidebar({
             onClose();
         }
     };
+    const handleNavigation = (path) => {
+
+    if (!path) {
+        return;
+    }
+
+    navigate(path);
+
+    onClose?.();
+};
 
 
     const handleHome = () => {
@@ -66,11 +76,11 @@ export default function Sidebar({
             onClick: handleHome,
         },
 
-        {
-            label: "Catalog",
-            icon: StorefrontOutlined,
-            disabled: true,
-        },
+    {
+    label: "Catalog",
+    icon: ShoppingBagOutlined,
+    path: "/catalog",
+},
 
         {
             label: "Orders",
@@ -128,13 +138,15 @@ export default function Sidebar({
 
                 type="button"
 
-                onClick={
-                    item.disabled
-                        ? undefined
-                        : item.onClick
-                }
+              onClick={
+    item.disabled
+        ? undefined
+        : item.onClick
+            ? item.onClick
+            : () => handleNavigation(item.path)
+}
 
-                disabled={item.disabled}
+disabled={item.disabled}
 
                 sx={{
                     width: "100%",

@@ -6,6 +6,7 @@ import com.ecommerce.catalog.entity.Category;
 import com.ecommerce.catalog.exception.DuplicateResourceException;
 import com.ecommerce.catalog.exception.ResourceNotFoundException;
 import com.ecommerce.catalog.repository.CategoryRepository;
+import com.ecommerce.catalog.repository.ProductRepository;
 import com.ecommerce.catalog.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class CategoryServiceImpl
         implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public CategoryResponse createCategory(
@@ -98,6 +100,20 @@ public class CategoryServiceImpl
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
                                         "Category not found"));
+
+
+        boolean hasProducts =
+                productRepository
+                        .existsByCategoryId(categoryId);
+
+
+        if (hasProducts) {
+            throw new DuplicateResourceException(
+                    "Cannot delete category because it contains products. "
+                            + "Please move or delete the products first."
+            );
+        }
+
 
         categoryRepository.delete(category);
     }

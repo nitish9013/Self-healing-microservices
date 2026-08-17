@@ -13,8 +13,15 @@ import {
     SaveRounded,
 } from "@mui/icons-material";
 
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+    useEffect,
+    useState,
+} from "react";
+
+import {
+    useNavigate,
+    useParams,
+} from "react-router-dom";
 
 import catalogService
     from "../../services/catalogService";
@@ -26,14 +33,18 @@ export default function ProductForm() {
 
     const { id } = useParams();
 
-    const isEditMode = Boolean(id);
+    const isEditMode =
+        Boolean(id);
 
 
     /* ============================================
-       FORM
+       FORM DATA
     ============================================ */
 
-    const [formData, setFormData] = useState({
+    const [
+        formData,
+        setFormData,
+    ] = useState({
         name: "",
         description: "",
         price: "",
@@ -60,7 +71,9 @@ export default function ProductForm() {
     const [
         loading,
         setLoading,
-    ] = useState(isEditMode);
+    ] = useState(
+        isEditMode
+    );
 
 
     const [
@@ -85,103 +98,112 @@ export default function ProductForm() {
        LOAD CATEGORIES
     ============================================ */
 
-    const loadCategories = async () => {
+    const loadCategories =
+        async () => {
 
-        try {
+            try {
 
-            const data =
-                await catalogService
-                    .getCategories();
+                const data =
+                    await catalogService
+                        .getCategories();
 
 
-            setCategories(
-                Array.isArray(data)
-                    ? data
-                    : []
-            );
+                setCategories(
+                    Array.isArray(data)
+                        ? data
+                        : []
+                );
 
-        } catch (err) {
+            } catch (err) {
 
-            console.error(
-                "Category Load Error = ",
-                err
-            );
+                console.error(
+                    "Category Load Error = ",
+                    err
+                );
 
-            setError(
-                err.response?.data?.message ||
-                err.response?.data ||
-                "Unable to load categories."
-            );
 
-        }
+                setError(
+                    err.response?.data?.message ||
+                    err.response?.data ||
+                    "Unable to load categories."
+                );
 
-    };
+            }
+
+        };
 
 
     /* ============================================
-       LOAD PRODUCT FOR EDIT
+       LOAD EXISTING PRODUCT
     ============================================ */
 
-    const loadProduct = async () => {
+    const loadProduct =
+        async () => {
 
-        if (!id) {
-            return;
-        }
-
-
-        try {
-
-            setLoading(true);
-
-            setError("");
+            if (!id) {
+                return;
+            }
 
 
-            const product =
-                await catalogService
-                    .getProductById(id);
+            try {
+
+                setLoading(true);
+
+                setError("");
 
 
-            setFormData({
-                name:
-                    product?.name || "",
-
-                description:
-                    product?.description || "",
-
-                price:
-                    product?.price ?? "",
-
-                stockQuantity:
-                    product?.stockQuantity ?? "",
-
-                imageUrl:
-                    product?.imageUrl || "",
-
-                categoryId:
-                    product?.categoryId || "",
-            });
-
-        } catch (err) {
-
-            console.error(
-                "Product Load Error = ",
-                err
-            );
+                const product =
+                    await catalogService
+                        .getProductById(id);
 
 
-            setError(
-                err.response?.data?.message ||
-                err.response?.data ||
-                "Unable to load product."
-            );
+                console.log(
+                    "Edit Product Data = ",
+                    product
+                );
 
-        } finally {
 
-            setLoading(false);
+                setFormData({
+                    name:
+                        product?.name || "",
 
-        }
+                    description:
+                        product?.description || "",
 
-    };
+                    price:
+                        product?.price ?? "",
+
+                    stockQuantity:
+                        product?.stockQuantity ?? "",
+
+                    imageUrl:
+                        product?.imageUrl || "",
+
+                    categoryId:
+                        product?.categoryId || "",
+                });
+
+            } catch (err) {
+
+                console.error(
+                    "Product Load Error = ",
+                    err
+                );
+
+
+                setError(
+                    err.response?.data?.message ||
+                    err.response?.data ||
+                    "Unable to load product."
+                );
+
+            } finally {
+
+                setLoading(false);
+
+            }
+
+        };
 
 
     /* ============================================
@@ -190,229 +212,268 @@ export default function ProductForm() {
 
     useEffect(() => {
 
-        loadCategories();
+        const initializeForm =
+            async () => {
 
-        loadProduct();
+                await loadCategories();
+
+                if (isEditMode) {
+                    await loadProduct();
+                }
+
+            };
+
+
+        initializeForm();
 
     }, [id]);
 
 
     /* ============================================
-       INPUT HANDLER
+       INPUT CHANGE
     ============================================ */
 
-    const handleChange = (
-        event
-    ) => {
+    const handleChange =
+        (event) => {
 
-        const {
-            name,
-            value,
-        } = event.target;
-
-
-        setFormData(
-            (previous) => ({
-                ...previous,
-                [name]: value,
-            })
-        );
+            const {
+                name,
+                value,
+            } = event.target;
 
 
-        setError("");
+            setFormData(
+                (previous) => ({
+                    ...previous,
 
-        setSuccess("");
+                    [name]: value,
+                })
+            );
 
-    };
+
+            setError("");
+
+            setSuccess("");
+
+        };
 
 
     /* ============================================
        VALIDATION
     ============================================ */
 
-    const validateForm = () => {
+    const validateForm =
+        () => {
 
-        if (!formData.name.trim()) {
+            if (
+                !formData.name.trim()
+            ) {
 
-            return "Product name is required.";
+                return (
+                    "Product name is required."
+                );
 
-        }
-
-
-        if (!formData.description.trim()) {
-
-            return "Product description is required.";
-
-        }
+            }
 
 
-        if (
-            formData.price === "" ||
-            Number(formData.price) < 0
-        ) {
+            if (
+                !formData.description.trim()
+            ) {
 
-            return "Please enter a valid price.";
+                return (
+                    "Product description is required."
+                );
 
-        }
-
-
-        if (
-            formData.stockQuantity === "" ||
-            Number(formData.stockQuantity) < 0
-        ) {
-
-            return "Please enter a valid stock quantity.";
-
-        }
+            }
 
 
-        if (!formData.categoryId) {
+            if (
+                formData.price === "" ||
+                Number(formData.price) < 0
+            ) {
 
-            return "Please select a category.";
+                return (
+                    "Please enter a valid price."
+                );
 
-        }
+            }
 
 
-        return "";
+            if (
+                formData.stockQuantity === "" ||
+                Number(formData.stockQuantity) < 0
+            ) {
 
-    };
+                return (
+                    "Please enter a valid stock quantity."
+                );
+
+            }
+
+
+            if (
+                !formData.categoryId
+            ) {
+
+                return (
+                    "Please select a category."
+                );
+
+            }
+
+
+            return "";
+
+        };
 
 
     /* ============================================
        SUBMIT
     ============================================ */
 
-    const handleSubmit = async (
-        event
-    ) => {
+    const handleSubmit =
+        async (event) => {
 
-        event.preventDefault();
-
-
-        setError("");
-
-        setSuccess("");
+            event.preventDefault();
 
 
-        const validationError =
-            validateForm();
+            setError("");
+
+            setSuccess("");
 
 
-        if (validationError) {
-
-            setError(
-                validationError
-            );
-
-            return;
-
-        }
+            const validationError =
+                validateForm();
 
 
-        const payload = {
+            if (validationError) {
 
-            name:
-                formData.name.trim(),
-
-            description:
-                formData.description.trim(),
-
-            price:
-                Number(formData.price),
-
-            stockQuantity:
-                Number(
-                    formData.stockQuantity
-                ),
-
-            imageUrl:
-                formData.imageUrl.trim(),
-
-            categoryId:
-                formData.categoryId,
-        };
-
-
-        try {
-
-            setSubmitting(true);
-
-
-            if (isEditMode) {
-
-                await catalogService
-                    .updateProduct(
-                        id,
-                        payload
-                    );
-
-
-                setSuccess(
-                    "Product updated successfully."
+                setError(
+                    validationError
                 );
 
-            } else {
-
-                await catalogService
-                    .createProduct(
-                        payload
-                    );
-
-
-                setSuccess(
-                    "Product created successfully."
-                );
+                return;
 
             }
 
 
-            /*
-             * Give the success message a moment
-             * before returning to Catalog.
-             */
+            const payload = {
 
-            setTimeout(() => {
+                name:
+                    formData.name.trim(),
 
-                navigate("/catalog");
+                description:
+                    formData.description.trim(),
 
-            }, 800);
+                price:
+                    Number(
+                        formData.price
+                    ),
 
-        } catch (err) {
+                stockQuantity:
+                    Number(
+                        formData.stockQuantity
+                    ),
 
-            console.error(
-                "Product Save Error = ",
-                err
-            );
+                imageUrl:
+                    formData.imageUrl.trim(),
+
+                categoryId:
+                    formData.categoryId,
+
+            };
 
 
-            setError(
-                err.response?.data?.message ||
-                err.response?.data ||
-                "Unable to save product."
-            );
+            try {
 
-        } finally {
+                setSubmitting(true);
 
-            setSubmitting(false);
 
-        }
+                if (isEditMode) {
 
-    };
+                    await catalogService
+                        .updateProduct(
+                            id,
+                            payload
+                        );
+
+
+                    setSuccess(
+                        "Product updated successfully."
+                    );
+
+                } else {
+
+                    await catalogService
+                        .createProduct(
+                            payload
+                        );
+
+
+                    setSuccess(
+                        "Product created successfully."
+                    );
+
+                }
+
+
+                /*
+                 * Redirect only after successful
+                 * backend response.
+                 */
+
+                setTimeout(() => {
+
+                    navigate(
+                        "/catalog"
+                    );
+
+                }, 800);
+
+            } catch (err) {
+
+                console.error(
+                    "Product Save Error = ",
+                    err
+                );
+
+
+                setError(
+                    err.response?.data?.message ||
+                    err.response?.data ||
+                    "Unable to save product."
+                );
+
+            } finally {
+
+                setSubmitting(false);
+
+            }
+
+        };
 
 
     /* ============================================
-       BACK
+       BACK TO CATALOG
     ============================================ */
 
-    const handleBack = () => {
+    const handleBack =
+        () => {
 
-        navigate("/catalog");
+            if (submitting) {
+                return;
+            }
 
-    };
+
+            navigate(
+                "/catalog"
+            );
+
+        };
 
 
     /* ============================================
-       LOADING EDIT PRODUCT
+       LOADING
     ============================================ */
 
     if (loading) {
@@ -421,7 +482,8 @@ export default function ProductForm() {
 
             <Box
                 sx={{
-                    minHeight: "100vh",
+                    minHeight:
+                        "100vh",
 
                     display:
                         "flex",
@@ -459,7 +521,9 @@ export default function ProductForm() {
                             13,
                     }}
                 >
-                    Loading product...
+                    {isEditMode
+                        ? "Loading product..."
+                        : "Preparing form..."}
                 </Typography>
 
             </Box>
@@ -512,7 +576,7 @@ export default function ProductForm() {
             >
 
                 {/* =================================
-                    BACK
+                    BACK BUTTON
                 ================================= */}
 
                 <Button
@@ -522,6 +586,10 @@ export default function ProductForm() {
 
                     onClick={
                         handleBack
+                    }
+
+                    disabled={
+                        submitting
                     }
 
                     sx={{
@@ -552,7 +620,7 @@ export default function ProductForm() {
 
 
                 {/* =================================
-                    HEADER
+                    PAGE HEADER
                 ================================= */}
 
                 <Box
@@ -708,7 +776,7 @@ export default function ProductForm() {
 
 
                     {/* =============================
-                        BASIC INFORMATION
+                        PRODUCT INFORMATION
                     ============================= */}
 
                     <Typography
@@ -749,7 +817,9 @@ export default function ProductForm() {
                             handleChange
                         }
 
-                        placeholder="Enter product name"
+                        placeholder={
+                            "Enter product name"
+                        }
 
                         sx={{
                             mb:
@@ -809,7 +879,9 @@ export default function ProductForm() {
 
                         multiline
 
-                        minRows={4}
+                        minRows={
+                            4
+                        }
 
                         name="description"
 
@@ -823,7 +895,9 @@ export default function ProductForm() {
                             handleChange
                         }
 
-                        placeholder="Describe the product"
+                        placeholder={
+                            "Describe the product"
+                        }
 
                         sx={{
                             mb:
@@ -1146,7 +1220,9 @@ export default function ProductForm() {
 
 
                         {categories.map(
-                            (category) => (
+                            (
+                                category
+                            ) => (
 
                                 <MenuItem
                                     key={
@@ -1187,9 +1263,13 @@ export default function ProductForm() {
                             handleChange
                         }
 
-                        placeholder="https://example.com/product.jpg"
+                        placeholder={
+                            "https://example.com/product.jpg"
+                        }
 
-                        helperText="Optional"
+                        helperText={
+                            "Optional"
+                        }
 
                         sx={{
                             mb:
@@ -1323,7 +1403,9 @@ export default function ProductForm() {
                                 submitting
                                     ? (
                                         <CircularProgress
-                                            size={17}
+                                            size={
+                                                17
+                                            }
 
                                             sx={{
                                                 color:
@@ -1376,5 +1458,6 @@ export default function ProductForm() {
             </Box>
 
         </Box>
+
     );
 }

@@ -8,6 +8,7 @@ import {
     SettingsOutlined,
     ShoppingBagOutlined,
     StorefrontOutlined,
+    CategoryOutlined,
 } from "@mui/icons-material";
 
 import {
@@ -28,7 +29,18 @@ export default function Sidebar({
     const navigate = useNavigate();
 
     const { logout } = useAuth();
+    const {
+    role,
+} = useAuth();
 
+
+const normalizedRole =
+    String(role || "")
+        .replace("ROLE_", "")
+        .toUpperCase();
+
+const isAdmin =
+    normalizedRole === "ADMIN";
 
     const handleLogout = () => {
 
@@ -82,6 +94,19 @@ export default function Sidebar({
     path: "/catalog",
 },
 
+{
+    label: "Manage Categories",
+    icon: CategoryOutlined,
+    visible: isAdmin,
+    onClick: () => {
+        navigate("/catalog/categories");
+
+        if (onClose) {
+            onClose();
+        }
+    },
+},
+
         {
             label: "Orders",
             icon: ShoppingBagOutlined,
@@ -126,6 +151,10 @@ export default function Sidebar({
 
     const renderNavigationItem = (item) => {
 
+         if (item.visible === false) {
+        return null;
+    }
+    
         const Icon = item.icon;
 
 

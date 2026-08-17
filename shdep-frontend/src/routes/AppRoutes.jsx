@@ -8,6 +8,8 @@ import ProductDetails from "../pages/Catalog/ProductDetails";
 import Catalog from "../pages/Catalog/Catalog";
 import ProductForm
     from "../pages/Catalog/ProductForm";
+import CategoryManagement
+    from "../pages/Catalog/CategoryManagement";    
 
 function AppRoutes() {
   return (
@@ -33,6 +35,14 @@ function AppRoutes() {
 <Route
     path="/catalog/product/:id/edit"
     element={<ProductForm />}
+/>
+ <Route
+    path="/catalog/categories"
+    element={
+        <ProtectedRoute>
+            <CategoryManagement />
+        </ProtectedRoute>
+    }
 />
       </Routes>
     </BrowserRouter>

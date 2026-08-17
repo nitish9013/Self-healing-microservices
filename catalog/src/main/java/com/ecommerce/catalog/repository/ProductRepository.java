@@ -19,4 +19,6 @@ public interface ProductRepository
 
     Page<Product> findAll(Pageable pageable);
 
+    boolean existsByCategoryId(UUID categoryId);
+
 }

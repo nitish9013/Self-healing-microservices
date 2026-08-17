@@ -3,6 +3,11 @@ import {
     Box,
     Button,
     CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     FormControl,
     InputLabel,
     MenuItem,
@@ -16,6 +21,7 @@ import {
     RefreshRounded,
     Inventory2Outlined,
     CloseRounded,
+    DeleteOutlineRounded,
 } from "@mui/icons-material";
 
 import { useEffect, useState } from "react";
@@ -47,6 +53,8 @@ const canManageProducts =
     normalizedRole === "ADMIN" ||
     normalizedRole === "SALESMAN";
 
+const canDeleteProducts =
+    normalizedRole === "ADMIN";
 
     /* ============================================
        SIDEBAR
@@ -144,6 +152,25 @@ const canManageProducts =
         setError,
     ] = useState("");
 
+
+
+    /* ============================================
+       Delete states
+    ============================================ */
+const [
+    deleteDialogOpen,
+    setDeleteDialogOpen,
+] = useState(false);
+
+const [
+    deletingProduct,
+    setDeletingProduct,
+] = useState(false);
+
+const [
+    productToDelete,
+    setProductToDelete,
+] = useState(null);
 
     /* ============================================
        LOAD CATEGORIES
@@ -462,6 +489,100 @@ const canManageProducts =
 
     };
 
+
+    /* ============================================
+       Delete handler
+    ============================================ */
+const handleDeleteClick = (productId) => {
+
+    if (
+        !canDeleteProducts ||
+        !productId
+    ) {
+        return;
+    }
+
+    const selectedProduct =
+        products.find(
+            (product) =>
+                String(product.id) ===
+                String(productId)
+        );
+
+    setProductToDelete(
+        selectedProduct || {
+            id: productId,
+            name: "this product",
+        }
+    );
+
+    setDeleteDialogOpen(true);
+};
+
+
+    /* ============================================
+       Actual DELETE API
+    ============================================ */
+
+const handleDeleteConfirm = async () => {
+
+    if (
+        !productToDelete?.id ||
+        deletingProduct
+    ) {
+        return;
+    }
+
+    try {
+
+        setDeletingProduct(true);
+
+        setError("");
+
+        await catalogService.deleteProduct(
+            productToDelete.id
+        );
+
+        setDeleteDialogOpen(false);
+
+        setProductToDelete(null);
+
+        /*
+         * Reload current product list
+         */
+        await loadProducts();
+
+    } catch (err) {
+
+        console.error(
+            "Delete Product Error = ",
+            err
+        );
+
+        setError(
+            err.response?.data?.message ||
+            err.response?.data ||
+            "Unable to delete product."
+        );
+
+    } finally {
+
+        setDeletingProduct(false);
+
+    }
+
+};
+
+const handleDeleteCancel = () => {
+
+    if (deletingProduct) {
+        return;
+    }
+
+    setDeleteDialogOpen(false);
+
+    setProductToDelete(null);
+};
 
     /* ============================================
        PAGE CHANGE
@@ -1488,6 +1609,18 @@ const canManageProducts =
                                                                 product.id
                                                             )
                                                         }
+
+                                                        onEdit={(productId) =>
+                                                             navigate(
+                                                              `/catalog/product/${productId}/edit`
+                                                             )
+                                                        }
+
+                                                        onDelete={
+                                                            canDeleteProducts
+                                                            ? handleDeleteClick
+                                                            : undefined
+                                                        }
                                                     />
 
                                                 )
@@ -1639,6 +1772,170 @@ const canManageProducts =
                 </Box>
 
             </Box>
+
+
+        {/* ================================
+            DELETE CONFIRMATION DIALOG
+        ================================= */}
+
+<Dialog
+    open={deleteDialogOpen}
+    onClose={
+        deletingProduct
+            ? undefined
+            : handleDeleteCancel
+    }
+
+    PaperProps={{
+        sx: {
+            width: "100%",
+            maxWidth: 440,
+
+            borderRadius: 3,
+
+            background:
+                "#111827",
+
+            color: "#F8FAFC",
+
+            border:
+                "1px solid rgba(255,255,255,.08)",
+        },
+    }}
+>
+    <DialogTitle
+        sx={{
+            color: "#F8FAFC",
+
+            fontWeight: 800,
+
+            fontSize: 18,
+        }}
+    >
+        Delete Product?
+    </DialogTitle>
+
+
+    <DialogContent>
+
+        <DialogContentText
+            sx={{
+                color: "#94A3B8",
+
+                fontSize: 13,
+
+                lineHeight: 1.6,
+            }}
+        >
+            Are you sure you want to delete{" "}
+            <Box
+                component="span"
+                sx={{
+                    color: "#F8FAFC",
+                    fontWeight: 700,
+                }}
+            >
+                {productToDelete?.name ||
+                    "this product"}
+            </Box>
+            ?
+
+            <br />
+
+            This action cannot be undone.
+        </DialogContentText>
+
+    </DialogContent>
+
+
+    <DialogActions
+        sx={{
+            px: 3,
+            pb: 2.5,
+            gap: 1,
+        }}
+    >
+
+        <Button
+            onClick={
+                handleDeleteCancel
+            }
+
+            disabled={
+                deletingProduct
+            }
+
+            sx={{
+                color: "#94A3B8",
+
+                textTransform:
+                    "none",
+
+                fontWeight: 700,
+
+                borderRadius: 2,
+
+                "&:hover": {
+                    background:
+                        "rgba(255,255,255,.05)",
+                },
+            }}
+        >
+            Cancel
+        </Button>
+
+
+        <Button
+            variant="contained"
+
+            onClick={
+                handleDeleteConfirm
+            }
+
+            disabled={
+                deletingProduct
+            }
+
+            startIcon={
+                deletingProduct ? (
+                    <CircularProgress
+                        size={16}
+                        sx={{
+                            color: "#fff",
+                        }}
+                    />
+                ) : (
+                    <DeleteOutlineRounded />
+                )
+            }
+
+            sx={{
+                color: "#fff",
+
+                background:
+                    "#DC2626",
+
+                textTransform:
+                    "none",
+
+                fontWeight: 700,
+
+                borderRadius: 2,
+
+                "&:hover": {
+                    background:
+                        "#B91C1C",
+                },
+            }}
+        >
+            {deletingProduct
+                ? "Deleting..."
+                : "Delete"}
+        </Button>
+
+    </DialogActions>
+
+</Dialog>
 
         </Box>
     );

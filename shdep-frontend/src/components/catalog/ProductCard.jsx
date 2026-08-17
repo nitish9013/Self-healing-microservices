@@ -9,17 +9,44 @@ import {
     ShoppingCartOutlined,
     ArrowForwardRounded,
     Inventory2Outlined,
+    EditOutlined,
+    DeleteOutlineRounded,
 } from "@mui/icons-material";
+
+import { useAuth } from "../../context/AuthContext";
 
 
 export default function ProductCard({
     product,
     onClick,
+    onEdit,
+    onDelete,
 }) {
 
     if (!product) {
         return null;
     }
+
+
+    /* ============================================
+       AUTH / ROLE
+    ============================================ */
+
+    const { role } = useAuth();
+
+
+    const normalizedRole =
+        String(role || "")
+            .replace("ROLE_", "")
+            .toUpperCase();
+
+
+    const canEditProduct =
+        normalizedRole === "ADMIN" ||
+        normalizedRole === "SALESMAN";
+
+       const canDeleteProduct =
+    normalizedRole === "ADMIN"; 
 
 
     /* ============================================
@@ -90,7 +117,7 @@ export default function ProductCard({
 
 
     /* ============================================
-       CLICK
+       VIEW PRODUCT
     ============================================ */
 
     const handleClick = () => {
@@ -101,6 +128,59 @@ export default function ProductCard({
 
     };
 
+
+    /* ============================================
+       EDIT PRODUCT
+    ============================================ */
+
+    const handleEdit = (
+        event
+    ) => {
+
+        /*
+         * Prevent the card's onClick from firing.
+         *
+         * Without this, clicking Edit would also
+         * open Product Details.
+         */
+
+        event.stopPropagation();
+
+
+        if (
+            onEdit &&
+            id &&
+            canEditProduct
+        ) {
+
+            onEdit(id);
+
+        }
+
+    };
+
+
+    /* ============================================
+       DELETE PRODUCT
+    ============================================ */
+const handleDelete = (
+    event
+) => {
+
+    event.stopPropagation();
+
+
+    if (
+        onDelete &&
+        id &&
+        canDeleteProduct
+    ) {
+
+        onDelete(id);
+
+    }
+
+};
 
     return (
 
@@ -137,7 +217,9 @@ export default function ProductCard({
                 },
             }}
 
-            onClick={handleClick}
+            onClick={
+                handleClick
+            }
         >
 
             {/* =====================================
@@ -167,7 +249,9 @@ export default function ProductCard({
                     <Box
                         component="img"
 
-                        src={imageUrl}
+                        src={
+                            imageUrl
+                        }
 
                         alt={
                             name ||
@@ -228,6 +312,7 @@ export default function ProductCard({
                                     42,
                             }}
                         />
+
 
                         <Typography
                             sx={{
@@ -489,7 +574,9 @@ export default function ProductCard({
                             )
                     }
 
-                    onClick={(event) => {
+                    onClick={(
+                        event
+                    ) => {
 
                         event.stopPropagation();
 
@@ -534,6 +621,129 @@ export default function ProductCard({
                         ? "View Product"
                         : "View Details"}
                 </Button>
+
+
+                {/* =================================
+                    EDIT PRODUCT
+                ================================= */}
+
+                {canEditProduct && (
+
+                    <Button
+                        fullWidth
+
+                        variant="contained"
+
+                        startIcon={
+                            <EditOutlined />
+                        }
+
+                        onClick={
+                            handleEdit
+                        }
+
+                        sx={{
+                            mt: 1,
+
+                            minHeight:
+                                40,
+
+                            borderRadius:
+                                2,
+
+                            textTransform:
+                                "none",
+
+                            fontSize:
+                                12,
+
+                            fontWeight:
+                                700,
+
+                            color:
+                                "#E0F2FE",
+
+                            background:
+                                "rgba(59,130,246,.16)",
+
+                            border:
+                                "1px solid rgba(96,165,250,.20)",
+
+                            boxShadow:
+                                "none",
+
+                            "&:hover": {
+                                background:
+                                    "rgba(59,130,246,.26)",
+
+                                borderColor:
+                                    "rgba(96,165,250,.40)",
+
+                                boxShadow:
+                                    "none",
+                            },
+                        }}
+                    >
+                        Edit Product
+                    </Button>
+
+                )}
+
+
+                {/* =================================
+                    DELETE PRODUCT
+                ================================= */}
+                {canDeleteProduct && (
+
+    <Button
+        fullWidth
+
+        variant="outlined"
+
+        startIcon={
+            <DeleteOutlineRounded />
+        }
+
+        onClick={
+            handleDelete
+        }
+
+        sx={{
+            mt: 1,
+
+            minHeight: 40,
+
+            borderRadius: 2,
+
+            textTransform: "none",
+
+            fontSize: 12,
+
+            fontWeight: 700,
+
+            color: "#FCA5A5",
+
+            borderColor:
+                "rgba(239,68,68,.22)",
+
+            background:
+                "rgba(239,68,68,.04)",
+
+            "&:hover": {
+                color: "#FECACA",
+
+                borderColor:
+                    "rgba(239,68,68,.45)",
+
+                background:
+                    "rgba(239,68,68,.10)",
+            },
+        }}
+    >
+        Delete Product
+    </Button>
+
+)}
 
             </Box>
 

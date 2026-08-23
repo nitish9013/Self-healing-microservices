@@ -52,4 +52,20 @@ public class JwtUtil {
             return false;
         }
     }
+
+    public java.util.List<String> extractRoles(String token) {
+
+        Claims claims = extractClaims(token);
+
+        Object roles = claims.get("roles");
+
+        if (roles instanceof java.util.List<?> roleList) {
+
+            return roleList.stream()
+                    .map(Object::toString)
+                    .toList();
+        }
+
+        return java.util.List.of();
+    }
 }

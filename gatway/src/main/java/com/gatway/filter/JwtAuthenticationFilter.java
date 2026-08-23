@@ -23,6 +23,42 @@ public class JwtAuthenticationFilter
     private final JwtUtil jwtUtil;
     private final RateLimitService rateLimitService;
 
+    private Mono<Void> forbidden(
+            ServerWebExchange exchange) {
+
+        exchange.getResponse().setStatusCode(
+                org.springframework.http.HttpStatus.FORBIDDEN
+        );
+
+        exchange.getResponse()
+                .getHeaders()
+                .add(
+                        HttpHeaders.CONTENT_TYPE,
+                        "application/json"
+                );
+
+        String body = """
+            {
+              "status":403,
+              "error":"FORBIDDEN",
+              "message":"You do not have permission to perform this operation."
+            }
+            """;
+
+        byte[] bytes =
+                body.getBytes(StandardCharsets.UTF_8);
+
+        return exchange.getResponse().writeWith(
+                Mono.just(
+                        exchange.getResponse()
+                                .bufferFactory()
+                                .wrap(bytes)
+                )
+        );
+    }
+
+
+
     @Override
     public Mono<Void> filter(
             ServerWebExchange exchange,
@@ -74,25 +110,113 @@ public class JwtAuthenticationFilter
                     .setComplete();
         }
 
-        String username =
-                jwtUtil.extractUsername(token);
+        String username = jwtUtil.extractUsername(token);
+
+        java.util.List<String> roles =
+                jwtUtil.extractRoles(token);
+
         System.out.println("USERNAME = " + username);
+        System.out.println("ROLES = " + roles);
+
+
+/* =================================================
+   ROLE BASED AUTHORIZATION
+================================================= */
+
+        org.springframework.http.HttpMethod method =
+                exchange.getRequest().getMethod();
+
+        boolean isAdmin =
+                roles.contains("ADMIN");
+
+        boolean isSalesman =
+                roles.contains("SALESMAN");
+
+        boolean isReadRequest =
+                method == org.springframework.http.HttpMethod.GET;
+
+
+        /*
+         * GET requests:
+         * USER / SALESMAN / ADMIN → allowed
+         */
+        if (!isReadRequest) {
+
+            boolean isProductCreateOrUpdate =
+                    path.startsWith("/catalog/api/products")
+                            && (
+                            method == org.springframework.http.HttpMethod.POST
+                                    || method == org.springframework.http.HttpMethod.PUT
+                    );
+
+            boolean isProductDelete =
+                    path.startsWith("/catalog/api/products")
+                            && method == org.springframework.http.HttpMethod.DELETE;
+
+            boolean isCategoryManagement =
+                    path.startsWith("/catalog/api/categories")
+                            && (
+                            method == org.springframework.http.HttpMethod.POST
+                                    || method == org.springframework.http.HttpMethod.PUT
+                                    || method == org.springframework.http.HttpMethod.DELETE
+                    );
+
+
+            /*
+             * Product Create / Update
+             * SALESMAN / ADMIN
+             */
+            if (isProductCreateOrUpdate
+                    && !(isAdmin || isSalesman)) {
+
+                return forbidden(exchange);
+            }
+
+
+            /*
+             * Product Delete
+             * ADMIN only
+             */
+            if (isProductDelete && !isAdmin) {
+
+                return forbidden(exchange);
+            }
+
+
+            /*
+             * Category Management
+             * ADMIN only
+             */
+            if (isCategoryManagement && !isAdmin) {
+
+                return forbidden(exchange);
+            }
+        }
+
 
         Bucket bucket = rateLimitService.resolveBucket(username);
 
         System.out.println("Bucket = " + bucket);
 
-        boolean allowed = bucket.tryConsume(1);
+        boolean allowed =
+                bucket.tryConsume(1);
 
-        System.out.println("Allowed = " + allowed);
+        System.out.println(
+                "Allowed = " + allowed
+        );
 
-        if (!bucket.tryConsume(1)) {
+        if (!allowed) {
 
             exchange.getResponse().setStatusCode(
-                    org.springframework.http.HttpStatus.TOO_MANY_REQUESTS);
+                    org.springframework.http.HttpStatus.TOO_MANY_REQUESTS
+            );
 
-            exchange.getResponse().getHeaders()
-                    .add("Content-Type", "application/json");
+            exchange.getResponse()
+                    .getHeaders()
+                    .add(
+                            "Content-Type",
+                            "application/json"
+                    );
 
             String body = """
             {
@@ -102,7 +226,8 @@ public class JwtAuthenticationFilter
             }
             """;
 
-            byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
+            byte[] bytes =
+                    body.getBytes(StandardCharsets.UTF_8);
 
             return exchange.getResponse().writeWith(
                     Mono.just(

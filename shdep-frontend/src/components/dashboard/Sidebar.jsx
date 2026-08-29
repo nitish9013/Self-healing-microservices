@@ -110,7 +110,7 @@ const isAdmin =
         {
             label: "Orders",
             icon: ShoppingBagOutlined,
-            disabled: true,
+            path: "/orders",
         },
 
         {

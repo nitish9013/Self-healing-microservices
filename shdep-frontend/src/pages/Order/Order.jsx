@@ -1,3 +1,11 @@
+import CheckCircleOutlineRoundedIcon
+    from "@mui/icons-material/CheckCircleOutlineRounded";
+
+import PendingRoundedIcon
+    from "@mui/icons-material/PendingRounded";
+
+import CancelRoundedIcon
+    from "@mui/icons-material/CancelRounded";
 import {
     getOrders,
     createOrder
@@ -25,6 +33,72 @@ import {
 
 
 const Order = () => {
+
+const getErrorMessage = (err, fallback) => {
+    const status = err?.response?.status;
+
+    switch (status) {
+        case 401:
+            return "Your session has expired. Please login again.";
+
+        case 403:
+            return "You do not have permission to perform this operation.";
+
+        case 404:
+            return "The requested resource was not found.";
+
+        case 429:
+            return "Too many requests. Please try again after a moment.";
+
+        case 500:
+            return "Something went wrong on the server.";
+
+        case 503:
+            return "Order service is temporarily unavailable. Please try again later.";
+
+        default:
+            return (
+                err?.response?.data?.message ||
+                err?.message ||
+                fallback
+            );
+    }
+};
+    const getOrderStatus = (status) => {
+    const normalized = String(status || "")
+        .toUpperCase();
+
+    switch (normalized) {
+
+        case "PAID":
+            return {
+                label: "PAID",
+                icon: CheckCircleOutlineRoundedIcon,
+                background: "rgba(34,197,94,.12)",
+                border: "rgba(34,197,94,.25)",
+                color: "#4ADE80",
+            };
+
+        case "FAILED":
+            return {
+                label: "FAILED",
+                icon: CancelRoundedIcon,
+                background: "rgba(239,68,68,.12)",
+                border: "rgba(239,68,68,.25)",
+                color: "#F87171",
+            };
+
+        case "PENDING":
+        default:
+            return {
+                label: "PENDING",
+                icon: PendingRoundedIcon,
+                background: "rgba(245,158,11,.12)",
+                border: "rgba(245,158,11,.25)",
+                color: "#FBBF24",
+            };
+    }
+};
 
     // =========================
     // PRODUCTS
@@ -98,10 +172,11 @@ useEffect(() => {
             );
 
             setError(
-                err.message ||
-                "Unable to load products."
-            );
-
+              getErrorMessage(
+                             err,
+                      "Unable to load products."
+                    )
+                );
         } finally {
 
             setProductsLoading(false);
@@ -137,9 +212,12 @@ useEffect(() => {
             );
 
             setError(
-                err.message ||
-                "Unable to load your orders."
-            );
+                  getErrorMessage(
+                   err,
+                   "Unable to load your orders."
+                        )
+                   );
+              
 
         } finally {
 
@@ -155,6 +233,12 @@ useEffect(() => {
     const handleCreateOrder = async (event) => {
 
         event.preventDefault();
+
+
+         // Prevent duplicate order requests
+    if (creating) {
+        return;
+    }
 
         setError("");
 
@@ -221,11 +305,12 @@ useEffect(() => {
                 "Order creation failed:",
                 err
             );
-
-            setError(
-                err.message ||
-                "Unable to create order."
-            );
+             setError(
+                 getErrorMessage(
+                 err,
+                     "Unable to create order."
+                    )
+                   );
 
         } finally {
 

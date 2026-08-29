@@ -13,6 +13,8 @@ public class OrderCreatedEvent {
 
     private Long orderId;
 
+    private String productId;
+
     private String username;
 
     private String productName;

@@ -10,10 +10,12 @@ import ProductForm
     from "../pages/Catalog/ProductForm";
 import CategoryManagement
     from "../pages/Catalog/CategoryManagement";    
+import Order from "../pages/Order/Order";    
 
 function AppRoutes() {
   return (
     <BrowserRouter>
+  
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
@@ -36,6 +38,15 @@ function AppRoutes() {
     path="/catalog/product/:id/edit"
     element={<ProductForm />}
 />
+
+<Route
+    path="/orders"
+    element={
+        <ProtectedRoute>
+            <Order />
+        </ProtectedRoute>
+    } />
+
  <Route
     path="/catalog/categories"
     element={

@@ -1,3 +1,7 @@
+import {
+    createPayment,
+    openRazorpayCheckout
+} from "../../services/paymentService";
 import CheckCircleOutlineRoundedIcon
     from "@mui/icons-material/CheckCircleOutlineRounded";
 
@@ -140,7 +144,7 @@ const getErrorMessage = (err, fallback) => {
 
 useEffect(() => {
     console.log("🔥 ORDER COMPONENT MOUNTED");
-    console.log("🔥 TOKEN =", localStorage.getItem("token"));
+   
 
     loadProducts();
     loadOrders();
@@ -277,16 +281,100 @@ useEffect(() => {
             setCreating(true);
 
 
-            await createOrder(
-                productId,
-                quantity
+           const createdOrder = await createOrder(
+    productId,
+    quantity
+);
+
+
+console.log("Created Order:", createdOrder);
+const userId = localStorage.getItem("userId");
+
+if (!userId) {
+    throw new Error("User ID not found. Please login again.");
+}
+
+const paymentAmount =
+    Number(createdOrder.price) *
+    Number(createdOrder.quantity);
+
+const payment = await createPayment({
+    orderId: String(createdOrder.id),
+    userId: String(userId),
+    amount: paymentAmount,
+    currency: "INR",
+    idempotencyKey: crypto.randomUUID()
+});
+
+console.log("Payment Created:", payment);
+
+openRazorpayCheckout({
+    payment,
+
+   onSuccess: async (verificationResponse) => {
+    console.log(
+        "Payment Verified:",
+        verificationResponse
+    );
+
+    setSuccess(
+        "Payment successful. Order is being confirmed."
+    );
+
+    // Give Order Service time to process
+    // PaymentCompletedEvent from Kafka.
+    for (let attempt = 1; attempt <= 5; attempt++) {
+        await new Promise((resolve) =>
+            setTimeout(resolve, 1000)
+        );
+
+        try {
+            const data = await getOrders();
+
+            const updatedOrders =
+                Array.isArray(data) ? data : [];
+
+            setOrders(updatedOrders);
+
+            const paidOrder = updatedOrders.find(
+                (order) =>
+                    String(order.id) ===
+                    String(createdOrder.id) &&
+                    String(order.status).toUpperCase() === "PAID"
             );
 
+            if (paidOrder) {
+                console.log(
+                    "✅ Order status updated to PAID"
+                );
+                break;
+            }
 
-            setSuccess(
-                "Order created successfully."
+            console.log(
+                `⏳ Waiting for order status update... Attempt ${attempt}/5`
             );
 
+        } catch (err) {
+            console.error(
+                "Failed to refresh orders:",
+                err
+            );
+        }
+    }
+},
+
+    onFailure: (error) => {
+        console.error(
+            "Payment Failed:",
+            error
+        );
+
+        setError(
+            error?.message ||
+            "Payment failed. Please try again."
+        );
+    }
+});
 
             // Reset form
 

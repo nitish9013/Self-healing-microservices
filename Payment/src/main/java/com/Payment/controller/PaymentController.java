@@ -39,7 +39,7 @@ public class PaymentController {
     @PostMapping("/verify")
     public PaymentResponse verifyPayment(
             @RequestBody VerifyPaymentRequest request
-    ) {
+    ) throws Exception {
 
         return paymentService.verifyPayment(
                 request

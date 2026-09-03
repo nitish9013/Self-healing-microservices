@@ -1,6 +1,6 @@
 package com.Payment.kafka;
 
-import com.Payment.service.PaymentProcessorService;
+//import com.Payment.service.PaymentProcessorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.Payment.event.OrderCreatedEvent;
 import com.Payment.event.PaymentEventService;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class OrderEventConsumer {
-    private final PaymentProcessorService paymentProcessorService;
+//    private final PaymentProcessorService paymentProcessorService;
     private final PaymentEventService paymentEventService;
     private final ObjectMapper objectMapper;
 
@@ -32,7 +32,7 @@ public class OrderEventConsumer {
                     "ORDER_CREATED",
                     objectMapper.writeValueAsString(event)
             );
-            paymentProcessorService.processPayment(event);
+//            paymentProcessorService.processPayment(event);
 
         } catch (Exception e) {
             e.printStackTrace();

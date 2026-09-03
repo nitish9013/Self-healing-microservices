@@ -3,16 +3,12 @@ package com.Payment.service;
 import com.Payment.config.RazorpayConfig;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
+import com.razorpay.Utils;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
 import java.util.UUID;
-
-
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +21,17 @@ public class RazorpayService {
             String currency
     ) throws Exception {
 
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException(
+                    "Payment amount must be greater than zero"
+            );
+        }
+
+        String finalCurrency =
+                currency == null || currency.isBlank()
+                        ? "INR"
+                        : currency.toUpperCase();
+
         RazorpayClient client =
                 new RazorpayClient(
                         razorpayConfig.getKey(),
@@ -34,11 +41,18 @@ public class RazorpayService {
         JSONObject options =
                 new JSONObject();
 
-        options.put("amount", amount * 100);
+        /*
+         * Razorpay expects amount in smallest currency unit.
+         * INR 100 = 10000 paise.
+         */
+        options.put(
+                "amount",
+                Math.round(amount * 100)
+        );
 
         options.put(
                 "currency",
-                currency == null ? "INR" : currency
+                finalCurrency
         );
 
         options.put(
@@ -46,8 +60,18 @@ public class RazorpayService {
                 UUID.randomUUID().toString()
         );
 
+        /*
+         * Partial payments are not allowed for our
+         * normal order-payment flow.
+         */
+        options.put(
+                "partial_payment",
+                false
+        );
+
         return client.orders.create(options);
     }
+
 
     public boolean verifySignature(
             String razorpayOrderId,
@@ -55,38 +79,36 @@ public class RazorpayService {
             String razorpaySignature
     ) {
 
+        if (isBlank(razorpayOrderId)
+                || isBlank(razorpayPaymentId)
+                || isBlank(razorpaySignature)) {
+
+            return false;
+        }
+
         try {
 
-            String payload =
-                    razorpayOrderId +
-                            "|" +
-                            razorpayPaymentId;
+            JSONObject options =
+                    new JSONObject();
 
-            Mac sha256Hmac =
-                    Mac.getInstance(
-                            "HmacSHA256"
-                    );
+            options.put(
+                    "razorpay_order_id",
+                    razorpayOrderId
+            );
 
-            SecretKeySpec secretKey =
-                    new SecretKeySpec(
-                            razorpayConfig.getSecret()
-                                    .getBytes(),
-                            "HmacSHA256"
-                    );
+            options.put(
+                    "razorpay_payment_id",
+                    razorpayPaymentId
+            );
 
-            sha256Hmac.init(secretKey);
-
-            byte[] hash =
-                    sha256Hmac.doFinal(
-                            payload.getBytes()
-                    );
-
-            String generatedSignature =
-                    Base64.getEncoder()
-                            .encodeToString(hash);
-
-            return generatedSignature.equals(
+            options.put(
+                    "razorpay_signature",
                     razorpaySignature
+            );
+
+            return Utils.verifyPaymentSignature(
+                    options,
+                    razorpayConfig.getSecret()
             );
 
         } catch (Exception e) {
@@ -95,4 +117,34 @@ public class RazorpayService {
         }
     }
 
+
+    public com.razorpay.Payment fetchPayment(
+            String razorpayPaymentId
+    ) throws Exception {
+
+        if (razorpayPaymentId == null
+                || razorpayPaymentId.isBlank()) {
+
+            throw new IllegalArgumentException(
+                    "Razorpay payment ID is required"
+            );
+        }
+
+        RazorpayClient client =
+                new RazorpayClient(
+                        razorpayConfig.getKey(),
+                        razorpayConfig.getSecret()
+                );
+
+        return client.payments.fetch(
+                razorpayPaymentId
+        );
+    }
+
+
+    private boolean isBlank(String value) {
+
+        return value == null
+                || value.isBlank();
+    }
 }

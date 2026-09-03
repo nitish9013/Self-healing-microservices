@@ -27,4 +27,9 @@ public interface PaymentRepository
 
 
     Long countByStatus(PaymentStatus status);
+    Optional<Payment> findByIdempotencyKey(String idempotencyKey);
+
+    Optional<Payment> findByRazorpayPaymentId(
+            String razorpayPaymentId
+    );
 }

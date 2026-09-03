@@ -1,34 +1,31 @@
 package com.Payment.entity;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-// ================================
-// PAYMENT SERVICE - SPRING BOOT
-// ================================
-
-// Tech Stack:
-// Spring Boot
-// Spring Security JWT
-// PostgreSQL
-// OpenFeign
-// Razorpay
-// JPA/Hibernate
-
-// =======================================
-// 1. Payment Entity
-// =======================================
-
-
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "payments")
+@Table(
+        name = "payments",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_payment_order_id",
+                        columnNames = "orderId"
+                ),
+                @UniqueConstraint(
+                        name = "uk_payment_idempotency_key",
+                        columnNames = "idempotencyKey"
+                ),
+                @UniqueConstraint(
+                        name = "uk_payment_razorpay_payment_id",
+                        columnNames = "razorpayPaymentId"
+                )
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -46,14 +43,20 @@ public class Payment {
 
     private Double amount;
 
+    private String currency;
+
     private String transactionId;
 
     private String razorpayOrderId;
 
     private String razorpayPaymentId;
 
+    @Column(nullable = false, length = 100)
+    private String idempotencyKey;
+
     private String provider;
 
+    @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
     private Integer retryCount;

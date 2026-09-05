@@ -9,7 +9,7 @@ import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
 import ShoppingBagRoundedIcon from "@mui/icons-material/ShoppingBagRounded";
 import PaymentsRoundedIcon from "@mui/icons-material/PaymentsRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
-
+import { useNavigate } from "react-router-dom";
 
 const actions = [
     {
@@ -36,6 +36,8 @@ const actions = [
 
 
 export default function QuickActions() {
+
+    const navigate = useNavigate();
 
     return (
         <Card
@@ -108,6 +110,11 @@ export default function QuickActions() {
                         <Button
                             key={action.title}
                             variant="outlined"
+                            onClick={() => {
+    if (action.title === "Payments") {
+        navigate("/payments");
+    }
+}}
                             sx={{
                                 minHeight: 90,
 

@@ -116,7 +116,7 @@ const isAdmin =
         {
             label: "Payments",
             icon: PaymentsOutlined,
-            disabled: true,
+            path: "/payments",
         },
 
         {

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -583,5 +584,46 @@ public class PaymentService {
 
     public Long getFailedPayments() {
         return paymentRepository.countByStatus(PaymentStatus.FAILED);
+    }
+
+    public List<PaymentHistoryResponse> getPaymentsByUserId(
+            String userId
+    ) {
+
+        return paymentRepository
+                .findByUserId(userId)
+                .stream()
+                .map(payment ->
+                        PaymentHistoryResponse.builder()
+                                .paymentId(
+                                        payment.getId().toString()
+                                )
+                                .orderId(
+                                        payment.getOrderId()
+                                )
+                                .amount(
+                                        payment.getAmount()
+                                )
+                                .currency(
+                                        payment.getCurrency()
+                                )
+                                .transactionId(
+                                        payment.getTransactionId()
+                                )
+                                .status(
+                                        payment.getStatus().name()
+                                )
+                                .createdAt(
+                                        payment.getCreatedAt()
+                                )
+                                .completedAt(
+                                        payment.getCompletedAt()
+                                )
+                                .provider(
+                                        payment.getProvider()
+                                )
+                                .build()
+                )
+                .toList();
     }
 }

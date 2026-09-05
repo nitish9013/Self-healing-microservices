@@ -10,7 +10,8 @@ import ProductForm
     from "../pages/Catalog/ProductForm";
 import CategoryManagement
     from "../pages/Catalog/CategoryManagement";    
-import Order from "../pages/Order/Order";    
+import Order from "../pages/Order/Order";   
+import Payment from "../pages/Payment/Payment"; 
 
 function AppRoutes() {
   return (
@@ -27,6 +28,14 @@ function AppRoutes() {
                        <Dashboard />
                       </ProtectedRoute>
                       }/>
+                      <Route
+    path="/payments"
+    element={
+        <ProtectedRoute>
+            <Payment />
+        </ProtectedRoute>
+    }
+/>
        <Route path="/catalog/product/:id" element={<ProductDetails />}/>
        <Route path="/catalog" element={<Catalog />} />
        <Route
@@ -55,6 +64,8 @@ function AppRoutes() {
         </ProtectedRoute>
     }
 />
+
+
       </Routes>
     </BrowserRouter>
   );

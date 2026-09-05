@@ -10,6 +10,7 @@ import com.Payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/payments")
@@ -94,5 +95,15 @@ public class PaymentController {
                 paymentService.getFailedPayments()
         );
 
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<PaymentHistoryResponse>> getPaymentsByUserId(
+            @PathVariable String userId
+    ) {
+
+        return ResponseEntity.ok(
+                paymentService.getPaymentsByUserId(userId)
+        );
     }
 }

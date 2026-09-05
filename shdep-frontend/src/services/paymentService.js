@@ -101,3 +101,11 @@ export const openRazorpayCheckout = ({
 
     razorpay.open();
 };
+
+export const getPaymentsByUserId = async (userId) => {
+    const response = await apiClient.get(
+        `/api/payments/user/${userId}`
+    );
+
+    return response.data;
+};

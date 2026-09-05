@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getPaymentsByUserId } from "../../services/paymentService";
 import {
@@ -20,10 +21,12 @@ import {
 
 
 const Payment = () => {
+    const navigate = useNavigate();
 
 const [payments, setPayments] = useState([]);
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState("");
+
 
 const loadPayments = async () => {
     try {
@@ -407,19 +410,24 @@ useEffect(() => {
 
                                                 <Typography
                                                     sx={{
-                                                        color:
-                                                            "white",
-
-                                                        fontWeight:
-                                                            600
-                                                    }}
-                                                >
-                                                    Payment #
-                                                    {
-                                                        payment.PaymentId
-                                                    }
-                                                </Typography>
-
+                                                    color: "white",
+        fontWeight: 600,
+        cursor: "pointer",
+        "&:hover": {
+            color: "#38BDF8"
+        }
+    }}
+    onClick={() =>
+        navigate(
+            `/payments/${payment.paymentId}`
+        )
+    }
+>
+    Payment #
+    {
+        payment.paymentId
+    }
+</Typography>
 
                                                 <Typography
                                                     sx={{

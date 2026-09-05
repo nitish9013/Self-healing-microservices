@@ -39,6 +39,16 @@ public class OrderController {
         );
     }
 
+    @GetMapping("/{orderId}")
+    public Order getOrderById(
+            @PathVariable Long orderId
+    ) {
+
+        return service.getOrderById(
+                orderId
+        );
+    }
+
     @GetMapping("/user/{username}")
     public List<Order> getOrdersByUser(
             @PathVariable String username) {

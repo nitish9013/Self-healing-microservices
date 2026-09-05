@@ -1,4 +1,7 @@
+import apiClient from "../api/apiClient";
 const API_BASE = "/orders/api/orders";
+// const API_BASE = "/orders";
+
 
 function getToken() {
     return localStorage.getItem("token");
@@ -121,6 +124,13 @@ export async function getOrders() {
     return handleResponse(response);
 }
 
+export const getOrderById = async (orderId) => {
+    const response = await apiClient.get(
+         `${API_BASE}/${orderId}`
+    );
+
+    return response.data;
+};
 
 /*
  * Create a new order

@@ -109,3 +109,10 @@ export const getPaymentsByUserId = async (userId) => {
 
     return response.data;
 };
+export const getPaymentById = async (paymentId) => {
+    const response = await apiClient.get(
+        `/api/payments/${paymentId}`
+    );
+
+    return response.data;
+};

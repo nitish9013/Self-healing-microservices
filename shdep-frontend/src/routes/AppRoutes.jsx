@@ -12,6 +12,8 @@ import CategoryManagement
     from "../pages/Catalog/CategoryManagement";    
 import Order from "../pages/Order/Order";   
 import Payment from "../pages/Payment/Payment"; 
+import PaymentDetails from "../pages/Payment/PaymentDetails";
+import OrderDetails from "../pages/Order/OrderDetails";
 
 function AppRoutes() {
   return (
@@ -36,6 +38,14 @@ function AppRoutes() {
         </ProtectedRoute>
     }
 />
+<Route
+    path="/payments/:paymentId"
+    element={
+        <ProtectedRoute>
+            <PaymentDetails />
+        </ProtectedRoute>
+    }
+/>
        <Route path="/catalog/product/:id" element={<ProductDetails />}/>
        <Route path="/catalog" element={<Catalog />} />
        <Route
@@ -55,6 +65,14 @@ function AppRoutes() {
             <Order />
         </ProtectedRoute>
     } />
+    <Route
+    path="/orders/:orderId"
+    element={
+        <ProtectedRoute>
+            <OrderDetails />
+        </ProtectedRoute>
+    }
+/>
 
  <Route
     path="/catalog/categories"

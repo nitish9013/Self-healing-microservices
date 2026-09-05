@@ -92,7 +92,16 @@ public class OrderServiceImpl implements OrderService {
 
         return repo.findByUsername(username);
     }
+    @Override
+    public Order getOrderById(Long orderId) {
 
+        return repo.findById(orderId)
+                .orElseThrow(
+                        () -> new RuntimeException(
+                                "Order not found"
+                        )
+                );
+    }
 
     @Override
     public Long getTotalOrders() {

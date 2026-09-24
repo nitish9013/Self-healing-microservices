@@ -14,7 +14,9 @@ import Order from "../pages/Order/Order";
 import Payment from "../pages/Payment/Payment"; 
 import PaymentDetails from "../pages/Payment/PaymentDetails";
 import OrderDetails from "../pages/Order/OrderDetails";
-
+import AdminRoute from "../components/auth/AdminRoute";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import AdminServices from "../pages/admin/AdminServices";
 function AppRoutes() {
   return (
     <BrowserRouter>
@@ -23,6 +25,26 @@ function AppRoutes() {
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register"element={<Register />}/>
+        <Route
+    path="/admin"
+    element={
+        <ProtectedRoute>
+            <AdminRoute>
+                <AdminDashboard />
+            </AdminRoute>
+        </ProtectedRoute>
+    }
+/>
+<Route
+    path="/admin/services"
+    element={
+        <ProtectedRoute>
+            <AdminRoute>
+                <AdminServices />
+            </AdminRoute>
+        </ProtectedRoute>
+    }
+/>
         <Route
               path="/dashboard"
               element={

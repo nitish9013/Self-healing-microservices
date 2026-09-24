@@ -1,11 +1,15 @@
 import {
     AppBar,
-    Avatar,
-    Box,
-    Divider,
-    IconButton,
     Toolbar,
+    Box,
     Typography,
+    TextField,
+    InputAdornment,
+    IconButton,
+    Avatar,
+    Chip,
+    Button,
+    Divider,
 } from "@mui/material";
 
 import {
@@ -15,16 +19,27 @@ import {
 } from "@mui/icons-material";
 
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
 
 
 export default function DashboardHeader({
     onMenuClick,
 }) {
+    const navigate = useNavigate();
 
-    const {
-        username,
-        role,
-    } = useAuth();
+const {
+    username,
+    role,
+} = useAuth();
+
+const normalizedRole = String(role || "")
+    .replace("ROLE_", "")
+    .toUpperCase();
+
+const isAdmin = normalizedRole === "ADMIN";
+
+   
 
 
     const displayName =
@@ -391,7 +406,38 @@ export default function DashboardHeader({
                     }}
                 />
 
+{isAdmin && (
+    <Button
+        variant="outlined"
+        startIcon={<AdminPanelSettingsRoundedIcon />}
+        onClick={() => navigate("/admin")}
+        sx={{
+            display: {
+                xs: "none",
+                md: "inline-flex",
+            },
 
+            color: "#93C5FD",
+
+            borderColor:
+                "rgba(59,130,246,.35)",
+
+            borderRadius: 2.5,
+
+            textTransform: "none",
+
+            fontWeight: 700,
+
+            "&:hover": {
+                borderColor: "#60A5FA",
+                background:
+                    "rgba(59,130,246,.10)",
+            },
+        }}
+    >
+        Go as Admin
+    </Button>
+)}
                 {/* =================================
                     USER
                 ================================= */}

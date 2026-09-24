@@ -138,6 +138,8 @@
 								<path>
 									<groupId>org.projectlombok</groupId>
 									<artifactId>lombok</artifactId>
+									<version>1.18.30</version>
+
 								</path>
 							</annotationProcessorPaths>
 						</configuration>
@@ -146,6 +148,7 @@
 					<execution>
 						<id>default-testCompile</id>
 						<phase>test-compile</phase>
+
 						<goals>
 							<goal>testCompile</goal>
 						</goals>
@@ -154,6 +157,7 @@
 								<path>
 									<groupId>org.projectlombok</groupId>
 									<artifactId>lombok</artifactId>
+									<version>1.18.30</version>
 								</path>
 							</annotationProcessorPaths>
 						</configuration>

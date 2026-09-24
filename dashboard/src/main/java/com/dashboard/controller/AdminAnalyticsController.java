@@ -13,10 +13,15 @@ public class AdminAnalyticsController {
     private final AdminAnalyticsService analyticsService;
 
     @GetMapping("/analytics")
-    public AdminAnalyticsResponse analytics() {
+    public AdminAnalyticsResponse getAnalytics() {
 
-        return analyticsService.getAnalytics();
+        System.out.println("🔥 ADMIN ANALYTICS REQUEST REACHED DASHBOARD");
 
+        AdminAnalyticsResponse response = analyticsService.getAnalytics();
+
+        System.out.println("🔥 ADMIN ANALYTICS RESPONSE CREATED");
+
+        return response;
     }
 
 }

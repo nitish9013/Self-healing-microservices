@@ -109,19 +109,8 @@ async function handleResponse(response) {
  * Get orders of currently logged-in user
  */
 export async function getOrders() {
-
-    const response = await fetch(
-        API_BASE,
-        {
-            method: "GET",
-
-            headers: {
-                "Authorization": `Bearer ${getToken()}`
-            }
-        }
-    );
-
-    return handleResponse(response);
+    const response = await apiClient.get(API_BASE);
+    return response.data;
 }
 
 export const getOrderById = async (orderId) => {
@@ -141,27 +130,11 @@ export const getOrderById = async (orderId) => {
  *   quantity: number
  * }
  */
-export async function createOrder(
-    productId,
-    quantity
-) {
+export async function createOrder(productId, quantity) {
+    const response = await apiClient.post(API_BASE, {
+        productId: productId,
+        quantity: Number(quantity)
+    });
 
-    const response = await fetch(
-        API_BASE,
-        {
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${getToken()}`
-            },
-
-            body: JSON.stringify({
-                productId: productId,
-                quantity: Number(quantity)
-            })
-        }
-    );
-
-    return handleResponse(response);
+    return response.data;
 }

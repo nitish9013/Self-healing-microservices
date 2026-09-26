@@ -26,8 +26,12 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getServiceHealth } from "../../services/adminDashboardService";
-
+import {
+    getServiceHealth,
+    getServiceRuntime,
+    getCircuitBreakerStatus,
+    getRetryStatus,
+} from "../../services/adminDashboardService";
 
 const menuItems = [
     {
@@ -43,10 +47,12 @@ const menuItems = [
     },
     {
         label: "Users",
+        path:"/admin/users",
         icon: PeopleRounded,
     },
     {
         label: "Orders",
+        path:"/admin/orders",
         icon: ShoppingCartRounded,
     },
     {
@@ -94,6 +100,12 @@ export default function AdminServices() {
     const [loading, setLoading] = useState(true);
 
     const [error, setError] = useState("");
+    const [expandedService, setExpandedService] = useState(null);
+    const [serviceRuntime, setServiceRuntime] = useState([]);
+const [runtimeLoading, setRuntimeLoading] = useState(false);
+const [circuitBreaker, setCircuitBreaker] = useState(null);
+const [retryStatus, setRetryStatus] = useState(null);
+const [resilienceLoading, setResilienceLoading] = useState(false);
 
 
     const loadServices = async () => {
@@ -127,10 +139,67 @@ export default function AdminServices() {
 
     };
 
+    const loadRuntime = async () => {
+
+    try {
+
+        setRuntimeLoading(true);
+
+        const data = await getServiceRuntime();
+
+        setServiceRuntime(data || []);
+
+    } catch (error) {
+
+        console.error(
+            "Service Runtime API Error:",
+            error
+        );
+
+    } finally {
+
+        setRuntimeLoading(false);
+
+    }
+};
+
+const loadResilience = async () => {
+
+    try {
+
+        setResilienceLoading(true);
+
+        const [circuitBreakerData, retryData] =
+            await Promise.all([
+                getCircuitBreakerStatus(),
+                getRetryStatus(),
+            ]);
+
+        setCircuitBreaker(circuitBreakerData);
+        setRetryStatus(retryData);
+
+    } catch (error) {
+
+        console.error(
+            "Resilience Monitoring API Error:",
+            error
+        );
+
+    } finally {
+
+        setResilienceLoading(false);
+
+    }
+};
+
 
     useEffect(() => {
 
         loadServices();
+
+        loadRuntime();
+
+        loadResilience();
 
     }, []);
 
@@ -159,6 +228,42 @@ export default function AdminServices() {
 
         return "rgba(239,68,68,0.08)";
     };
+
+    const handleServiceClick = (serviceName) => {
+    setExpandedService((current) =>
+        current === serviceName
+            ? null
+            : serviceName
+    );
+};
+
+
+const formatUptime = (seconds) => {
+
+    if (!seconds) {
+        return "—";
+    }
+
+    const totalSeconds = Math.floor(seconds);
+
+    const hours = Math.floor(totalSeconds / 3600);
+
+    const minutes = Math.floor(
+        (totalSeconds % 3600) / 60
+    );
+
+    const secs = totalSeconds % 60;
+
+    if (hours > 0) {
+        return `${hours}h ${minutes}m`;
+    }
+
+    if (minutes > 0) {
+        return `${minutes}m ${secs}s`;
+    }
+
+    return `${secs}s`;
+};
 
 
     return (
@@ -591,8 +696,16 @@ export default function AdminServices() {
                             startIcon={
                                 <RefreshRounded />
                             }
-                            onClick={loadServices}
-                            disabled={loading}
+                           onClick={() => {
+    loadServices();
+    loadRuntime();
+    loadResilience();
+}}
+disabled={
+    loading ||
+    runtimeLoading ||
+    resilienceLoading
+}
                             sx={{
                                 color: "#76a7ff",
                                 textTransform: "none",
@@ -694,6 +807,14 @@ export default function AdminServices() {
                                             service.status || ""
                                         ).toUpperCase() === "UP";
 
+                                        const runtime = serviceRuntime.find(
+    (item) =>
+        item.serviceName === service.serviceName
+);
+
+                                        const isExpanded =
+    expandedService === service.serviceName;
+
                                     const statusColor =
                                         getStatusColor(
                                             service.status
@@ -705,6 +826,9 @@ export default function AdminServices() {
                                             key={
                                                 service.serviceName
                                             }
+                                            onClick={() =>
+        handleServiceClick(service.serviceName)
+    }
                                             sx={{
                                                 minHeight: 190,
                                                 borderRadius: 3,
@@ -903,9 +1027,484 @@ export default function AdminServices() {
                                                     }
                                                 </Typography>
 
+
+                                            </Box>
+                                            {isExpanded && (
+                                                <Box
+                                                    sx={{
+                                                        mt: 2,
+                                                        pt: 2,
+                                                        borderTop:
+                                                            "1px solid rgba(255,255,255,0.07)",
+                                                    }}
+                                                >
+                                                    <Typography
+                                                        sx={{
+                                                            fontSize: 12,
+                                                            fontWeight: 700,
+                                                            color: "#76a7ff",
+                                                            mb: 1.5,
+                                                        }}
+                                                    >
+                                                        Health Details
+                                                    </Typography>
+
+                                                    <Box
+                                                        sx={{
+                                                            display: "grid",
+                                                            gridTemplateColumns: {
+                                                                xs: "1fr",
+                                                                sm: "repeat(2, 1fr)",
+                                                            },
+                                                            gap: 1.2,
+                                                        }}
+                                                    >
+                                                        <Box
+                                                            sx={{
+                                                                p: 1.3,
+                                                                borderRadius: 2,
+                                                                background:
+                                                                    "rgba(255,255,255,0.035)",
+                                                            }}
+                                                        >
+                                                            <Typography
+                                                                sx={{
+                                                                    fontSize: 10,
+                                                                    color:
+                                                                        "rgba(255,255,255,0.35)",
+                                                                }}
+                                                            >
+                                                                Status
+                                                            </Typography>
+
+                                                            <Typography
+                                                                sx={{
+                                                                    mt: 0.4,
+                                                                    fontSize: 12,
+                                                                    fontWeight: 700,
+                                                                    color: statusColor,
+                                                                }}
+                                                            >
+                                                                {isUp ? "UP" : "DOWN"}
+                                                            </Typography>
+                                                        </Box>
+
+                                                        <Box
+                                                            sx={{
+                                                                p: 1.3,
+                                                                borderRadius: 2,
+                                                                background:
+                                                                    "rgba(255,255,255,0.035)",
+                                                            }}
+                                                        >
+                                                            <Typography
+                                                                sx={{
+                                                                    fontSize: 10,
+                                                                    color:
+                                                                        "rgba(255,255,255,0.35)",
+                                                                }}
+                                                            >
+                                                                Response Time
+                                                            </Typography>
+
+                                                            <Typography
+                                                                sx={{
+                                                                    mt: 0.4,
+                                                                    fontSize: 12,
+                                                                    fontWeight: 700,
+                                                                }}
+                                                            >
+                                                                {service.responseTime ?? 0} ms
+                                                            </Typography>
+                                                        </Box>
+
+                                                        <Box
+                                                            sx={{
+                                                                p: 1.3,
+                                                                borderRadius: 2,
+                                                                background:
+                                                                    "rgba(255,255,255,0.035)",
+                                                                gridColumn: {
+                                                                    sm: "1 / -1",
+                                                                },
+                                                            }}
+                                                        >
+                                                            <Typography
+                                                                sx={{
+                                                                    fontSize: 10,
+                                                                    color:
+                                                                        "rgba(255,255,255,0.35)",
+                                                                }}
+                                                            >
+                                                                Last Health Check
+                                                            </Typography>
+
+                                                            <Typography
+                                                                sx={{
+                                                                    mt: 0.4,
+                                                                    fontSize: 12,
+                                                                    color:
+                                                                        "rgba(255,255,255,0.65)",
+                                                                }}
+                                                            >
+                                                                {service.checkedAt
+                                                                    ? new Date(
+                                                                          service.checkedAt
+                                                                      ).toLocaleString()
+                                                                    : "—"}
+                                                            </Typography>
+                                                        </Box>
+                                                    </Box>
+                                                      <Box
+                                                sx={{
+                                                    mt: 2,
+                                                    pt: 2,
+                                                    borderTop:
+                                                        "1px solid rgba(255,255,255,0.07)",
+                                                }}
+                                            >
+                                                <Typography
+                                                    sx={{
+                                                        fontSize: 12,
+                                                        fontWeight: 700,
+                                                        color: "#76a7ff",
+                                                        mb: 1.5,
+                                                    }}
+                                                >
+                                                    Runtime
+                                                </Typography>
+
+                                                <Box
+                                                    sx={{
+                                                        display: "grid",
+                                                        gridTemplateColumns: {
+                                                            xs: "1fr",
+                                                            sm: "repeat(2, 1fr)",
+                                                        },
+                                                        gap: 1.2,
+                                                    }}
+                                                >
+
+                                                    <Box
+                                                        sx={{
+                                                            p: 1.3,
+                                                            borderRadius: 2,
+                                                            background:
+                                                                "rgba(255,255,255,0.035)",
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            sx={{
+                                                                fontSize: 10,
+                                                                color:
+                                                                    "rgba(255,255,255,0.35)",
+                                                            }}
+                                                        >
+                                                            CPU Usage
+                                                        </Typography>
+
+                                                        <Typography
+                                                            sx={{
+                                                                mt: 0.4,
+                                                                fontSize: 12,
+                                                                fontWeight: 700,
+                                                            }}
+                                                        >
+                                                            {runtime
+                                                                ? `${runtime.cpuUsage.toFixed(1)}%`
+                                                                : "—"}
+                                                        </Typography>
+                                                    </Box>
+
+
+                                                    <Box
+                                                        sx={{
+                                                            p: 1.3,
+                                                            borderRadius: 2,
+                                                            background:
+                                                                "rgba(255,255,255,0.035)",
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            sx={{
+                                                                fontSize: 10,
+                                                                color:
+                                                                    "rgba(255,255,255,0.35)",
+                                                            }}
+                                                        >
+                                                            Threads
+                                                        </Typography>
+
+                                                        <Typography
+                                                            sx={{
+                                                                mt: 0.4,
+                                                                fontSize: 12,
+                                                                fontWeight: 700,
+                                                            }}
+                                                        >
+                                                            {runtime
+                                                                ? runtime.threads
+                                                                : "—"}
+                                                        </Typography>
+                                                    </Box>
+
+
+                                                    <Box
+                                                        sx={{
+                                                            p: 1.3,
+                                                            borderRadius: 2,
+                                                            background:
+                                                                "rgba(255,255,255,0.035)",
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            sx={{
+                                                                fontSize: 10,
+                                                                color:
+                                                                    "rgba(255,255,255,0.35)",
+                                                            }}
+                                                        >
+                                                            Memory
+                                                        </Typography>
+
+                                                        <Typography
+                                                            sx={{
+                                                                mt: 0.4,
+                                                                fontSize: 12,
+                                                                fontWeight: 700,
+                                                            }}
+                                                        >
+                                                            {runtime
+                                                                ? `${(
+                                                                      runtime.memoryUsed /
+                                                                      1024 /
+                                                                      1024
+                                                                  ).toFixed(0)} MB`
+                                                                : "—"}
+                                                        </Typography>
+                                                    </Box>
+
+
+                                                    <Box
+                                                        sx={{
+                                                            p: 1.3,
+                                                            borderRadius: 2,
+                                                            background:
+                                                                "rgba(255,255,255,0.035)",
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            sx={{
+                                                                fontSize: 10,
+                                                                color:
+                                                                    "rgba(255,255,255,0.35)",
+                                                            }}
+                                                        >
+                                                            Uptime
+                                                        </Typography>
+
+                                                        <Typography
+                                                            sx={{
+                                                                mt: 0.4,
+                                                                fontSize: 12,
+                                                                fontWeight: 700,
+                                                            }}
+                                                        >
+                                                            {runtime
+                                                                ? formatUptime(
+                                                                      runtime.uptimeSeconds
+                                                                  )
+                                                                : "—"}
+                                                        </Typography>
+                                                    </Box>
+                                                                                                        <Box
+                                                        sx={{
+                                                            mt: 2,
+                                                            pt: 2,
+                                                            borderTop:
+                                                                "1px solid rgba(255,255,255,0.07)",
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            sx={{
+                                                                fontSize: 12,
+                                                                fontWeight: 700,
+                                                                color: "#76a7ff",
+                                                                mb: 1.5,
+                                                            }}
+                                                        >
+                                                            Resilience
+                                                        </Typography>
+
+                                                        <Box
+                                                            sx={{
+                                                                display: "grid",
+                                                                gridTemplateColumns: {
+                                                                    xs: "1fr",
+                                                                    sm: "repeat(2, 1fr)",
+                                                                },
+                                                                gap: 1.2,
+                                                            }}
+                                                        >
+
+                                                            {/* Circuit Breaker */}
+
+                                                            <Box
+                                                                sx={{
+                                                                    p: 1.3,
+                                                                    borderRadius: 2,
+                                                                    background:
+                                                                        "rgba(255,255,255,0.035)",
+                                                                }}
+                                                            >
+                                                                <Typography
+                                                                    sx={{
+                                                                        fontSize: 10,
+                                                                        color:
+                                                                            "rgba(255,255,255,0.35)",
+                                                                    }}
+                                                                >
+                                                                    Circuit Breaker
+                                                                </Typography>
+
+                                                                <Typography
+                                                                    sx={{
+                                                                        mt: 0.4,
+                                                                        fontSize: 12,
+                                                                        fontWeight: 700,
+                                                                        color:
+                                                                            circuitBreaker?.state ===
+                                                                            "CLOSED"
+                                                                                ? "#35d98b"
+                                                                                : circuitBreaker?.state ===
+                                                                                  "OPEN"
+                                                                                ? "#ef4444"
+                                                                                : "#fbbf24",
+                                                                    }}
+                                                                >
+                                                                    {resilienceLoading
+                                                                        ? "Loading..."
+                                                                        : circuitBreaker?.state ||
+                                                                          "—"}
+                                                                </Typography>
+                                                            </Box>
+
+
+                                                            {/* Retry Attempts */}
+
+                                                            <Box
+                                                                sx={{
+                                                                    p: 1.3,
+                                                                    borderRadius: 2,
+                                                                    background:
+                                                                        "rgba(255,255,255,0.035)",
+                                                                }}
+                                                            >
+                                                                <Typography
+                                                                    sx={{
+                                                                        fontSize: 10,
+                                                                        color:
+                                                                            "rgba(255,255,255,0.35)",
+                                                                    }}
+                                                                >
+                                                                    Retry Attempts
+                                                                </Typography>
+
+                                                                <Typography
+                                                                    sx={{
+                                                                        mt: 0.4,
+                                                                        fontSize: 12,
+                                                                        fontWeight: 700,
+                                                                    }}
+                                                                >
+                                                                    {resilienceLoading
+                                                                        ? "Loading..."
+                                                                        : retryStatus?.totalRetries ?? 0}
+                                                                </Typography>
+                                                            </Box>
+
+
+                                                            {/* Retry Success */}
+
+                                                            <Box
+                                                                sx={{
+                                                                    p: 1.3,
+                                                                    borderRadius: 2,
+                                                                    background:
+                                                                        "rgba(255,255,255,0.035)",
+                                                                }}
+                                                            >
+                                                                <Typography
+                                                                    sx={{
+                                                                        fontSize: 10,
+                                                                        color:
+                                                                            "rgba(255,255,255,0.35)",
+                                                                    }}
+                                                                >
+                                                                    Retry Success
+                                                                </Typography>
+
+                                                                <Typography
+                                                                    sx={{
+                                                                        mt: 0.4,
+                                                                        fontSize: 12,
+                                                                        fontWeight: 700,
+                                                                        color: "#35d98b",
+                                                                    }}
+                                                                >
+                                                                    {resilienceLoading
+                                                                        ? "Loading..."
+                                                                        : retryStatus?.successfulRetries ?? 0}
+                                                                </Typography>
+                                                            </Box>
+
+
+                                                            {/* Retry Failures */}
+
+                                                            <Box
+                                                                sx={{
+                                                                    p: 1.3,
+                                                                    borderRadius: 2,
+                                                                    background:
+                                                                        "rgba(255,255,255,0.035)",
+                                                                }}
+                                                            >
+                                                                <Typography
+                                                                    sx={{
+                                                                        fontSize: 10,
+                                                                        color:
+                                                                            "rgba(255,255,255,0.35)",
+                                                                    }}
+                                                                >
+                                                                    Retry Failures
+                                                                </Typography>
+
+                                                                <Typography
+                                                                    sx={{
+                                                                        mt: 0.4,
+                                                                        fontSize: 12,
+                                                                        fontWeight: 700,
+                                                                        color: "#ef4444",
+                                                                    }}
+                                                                >
+                                                                    {resilienceLoading
+                                                                        ? "Loading..."
+                                                                        : retryStatus?.failedRetries ?? 0}
+                                                                </Typography>
+                                                            </Box>
+
+                                                        </Box>
+                                                    </Box>
+
+                                                </Box>
                                             </Box>
 
+                                                </Box>
+                                            )}
+                                            
+                                                                                      
                                         </Box>
+                                        
 
                                     );
 
@@ -913,6 +1512,8 @@ export default function AdminServices() {
                             )
 
                         )}
+
+                        
 
                     </Box>
 

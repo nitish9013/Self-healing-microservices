@@ -5,7 +5,9 @@ import com.auth.Authentication.model.User;
 import com.auth.Authentication.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.auth.Authentication.dto.AdminUserResponse;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -44,5 +46,24 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<AdminUserResponse>> getAllUsers() {
+
+        List<AdminUserResponse> users =
+                service.getAllUsers()
+                        .stream()
+                        .map(user -> AdminUserResponse.builder()
+                                .id(user.getId())
+                                .username(user.getUsername())
+                                .email(user.getEmail())
+                                .roles(user.getRoles())
+                                .active(user.isActive())
+                                .build()
+                        )
+                        .toList();
+
+        return ResponseEntity.ok(users);
     }
 }

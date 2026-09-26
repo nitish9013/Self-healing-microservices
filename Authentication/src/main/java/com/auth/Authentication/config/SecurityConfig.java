@@ -54,6 +54,8 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/actuator/**"
                         ).permitAll()
+                        .requestMatchers("/auth/users")
+                        .hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex

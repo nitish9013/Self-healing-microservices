@@ -18,6 +18,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/api/orders/admin/**")
+//                        .hasRole("ADMIN")
                         .anyRequest()
                         .permitAll()
                 );

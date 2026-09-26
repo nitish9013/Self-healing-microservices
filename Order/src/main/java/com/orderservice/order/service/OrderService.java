@@ -12,4 +12,5 @@ public interface OrderService {
 
     Long getPendingOrders();
     Order getOrderById(Long orderId);
+    List<Order> getAllOrders();
 }

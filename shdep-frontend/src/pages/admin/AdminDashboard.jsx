@@ -49,6 +49,7 @@ const menuItems = [
     {
         label: "Orders",
         icon: ShoppingCartRounded,
+        path: "/admin/orders",
     },
     {
         label: "Payments",
@@ -340,22 +341,30 @@ const getCircuitBreakerLabel = (state) => {
                     </Typography>
 
 
-                    {menuItems.map((item) => {
+                   {menuItems.map((item) => {
 
-                        const Icon = item.icon;
+    const Icon = item.icon;
 
-                        return (
-                            <Box
-                                key={item.label}
-                                 component="button"
-    type="button"
-    onClick={() => {
+    return (
+        <Box
+            key={item.label}
+            component="button"
+            type="button"
+            onClick={() => {
 
-        if (item.label === "Services") {
-            navigate("/admin/services");
-        }
+                if (item.label === "Services") {
+                    navigate("/admin/services");
+                }
 
-    }}
+                if (item.label === "Users") {
+                    navigate("/admin/users");
+                }
+
+                if (item.label === "Orders") {
+                    navigate("/admin/orders");
+                }
+
+            }}
                                 sx={{
                                     display: "flex",
                                     alignItems: "center",

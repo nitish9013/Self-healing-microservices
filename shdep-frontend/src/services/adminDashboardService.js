@@ -15,4 +15,13 @@ export async function getCircuitBreakerStatus() {
     return response.data;
 }
 
+export async function getRetryStatus() {
+    const response = await apiClient.get("/admin/retries");
+    return response.data;
+}
+export async function getServiceRuntime() {
+    const response = await apiClient.get("/admin/services/runtime");
+    return response.data;
+}
+
 export { getAdminAnalytics };

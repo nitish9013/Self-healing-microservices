@@ -115,4 +115,8 @@ public class OrderServiceImpl implements OrderService {
 
         return repo.countByStatus("PENDING");
     }
+    @Override
+    public List<Order> getAllOrders() {
+        return repo.findAll();
+    }
 }

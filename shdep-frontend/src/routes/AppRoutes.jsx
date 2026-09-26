@@ -17,6 +17,8 @@ import OrderDetails from "../pages/Order/OrderDetails";
 import AdminRoute from "../components/auth/AdminRoute";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminServices from "../pages/admin/AdminServices";
+import AdminUsers from "../pages/admin/AdminUsers";
+import AdminOrders from "../pages/admin/AdminOrders";
 function AppRoutes() {
   return (
     <BrowserRouter>
@@ -41,6 +43,27 @@ function AppRoutes() {
         <ProtectedRoute>
             <AdminRoute>
                 <AdminServices />
+            </AdminRoute>
+        </ProtectedRoute>
+    }
+/>
+<Route
+    path="/admin/users"
+    element={
+        <ProtectedRoute>
+            <AdminRoute>
+                <AdminUsers />
+            </AdminRoute>
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/admin/orders"
+    element={
+        <ProtectedRoute>
+            <AdminRoute>
+                <AdminOrders />
             </AdminRoute>
         </ProtectedRoute>
     }

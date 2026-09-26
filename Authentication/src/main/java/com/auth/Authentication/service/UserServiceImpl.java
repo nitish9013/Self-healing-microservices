@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import java.util.List;
 
 import java.util.HashSet;
 
@@ -18,6 +19,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepo repo;
     private final PasswordEncoder encoder;
     private final UserProfileClient userProfileClient;
+
 
     public UserServiceImpl(
             UserRepo repo,
@@ -94,5 +96,9 @@ public class UserServiceImpl implements UserService {
         }
 
         return user;
+    }
+    @Override
+    public List<User> getAllUsers() {
+        return repo.findAll();
     }
 }

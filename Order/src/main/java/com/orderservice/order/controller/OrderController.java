@@ -74,4 +74,12 @@ public class OrderController {
         );
 
     }
+
+    @GetMapping("/admin/all")
+    public ResponseEntity<List<Order>> getAllOrders() {
+
+        return ResponseEntity.ok(
+                service.getAllOrders()
+        );
+    }
 }

@@ -2,10 +2,12 @@ package com.gatway.filter;
 
 import com.gatway.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -15,6 +17,7 @@ import io.github.bucket4j.Bucket;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLOutput;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter
@@ -70,15 +73,22 @@ public class JwtAuthenticationFilter
                         .getPath();
 
 
-        System.out.println("PATH =" +path);
+        log.debug(
+                "Incoming gateway request method={} path={}",
+                exchange.getRequest().getMethod(),
+                path
+        );
         // login/register ko allow karo
 
         if (path.startsWith("/auth")) {
-            System.out.println("AUTH PATH DETECTED");
+
+            log.debug(
+                    "Public authentication endpoint path={}",
+                    path
+            );
 
             return chain.filter(exchange);
         }
-
         String authHeader =
                 exchange.getRequest()
                         .getHeaders()
@@ -87,13 +97,17 @@ public class JwtAuthenticationFilter
         if (authHeader == null ||
                 !authHeader.startsWith("Bearer ")) {
 
+            log.warn(
+                    "Gateway request rejected: missing or invalid Authorization header path={}",
+                    path
+            );
+
             exchange.getResponse()
                     .setStatusCode(
-                            org.springframework.http.HttpStatus.UNAUTHORIZED
+                            HttpStatus.UNAUTHORIZED
                     );
 
-            return exchange.getResponse()
-                    .setComplete();
+            return exchange.getResponse().setComplete();
         }
 
         String token =
@@ -101,13 +115,17 @@ public class JwtAuthenticationFilter
 
         if (!jwtUtil.validateToken(token)) {
 
+            log.warn(
+                    "Gateway request rejected: invalid JWT path={}",
+                    path
+            );
+
             exchange.getResponse()
                     .setStatusCode(
-                            org.springframework.http.HttpStatus.UNAUTHORIZED
+                            HttpStatus.UNAUTHORIZED
                     );
 
-            return exchange.getResponse()
-                    .setComplete();
+            return exchange.getResponse().setComplete();
         }
 
         String username = jwtUtil.extractUsername(token);

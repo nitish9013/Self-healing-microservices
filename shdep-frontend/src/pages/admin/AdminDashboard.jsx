@@ -363,6 +363,17 @@ const getCircuitBreakerLabel = (state) => {
                 if (item.label === "Orders") {
                     navigate("/admin/orders");
                 }
+                if (item.label === "Payments") {
+    navigate("/admin/payments");
+}
+
+if (item.label === "Catalog") {
+    navigate("/admin/catalog");
+}
+
+if (item.label === "Kafka") {
+    navigate("/admin/kafka");
+}
 
             }}
                                 sx={{

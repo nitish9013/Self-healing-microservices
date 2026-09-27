@@ -57,14 +57,17 @@ const menuItems = [
     },
     {
         label: "Payments",
+        path:"/admin/payments",
         icon: PaymentsRounded,
     },
     {
         label: "Catalog",
+        path:"/admin/catalog",
         icon: Inventory2Rounded,
     },
     {
         label: "Kafka",
+        path:"/admin/kafka",
         icon: HubRounded,
     },
     {

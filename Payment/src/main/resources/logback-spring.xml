@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <springProperty
+            scope="context"
+            name="applicationName"
+            source="spring.application.name"
+            defaultValue="unknown-service"/>
+
+    <!-- ============================= -->
+    <!-- Console JSON Appender -->
+    <!-- ============================= -->
+
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+
+            <providers>
+
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+
+                <logLevel/>
+
+                <loggerName/>
+
+                <message/>
+
+                <mdc/>
+
+                <arguments/>
+
+                <stackTrace/>
+
+            </providers>
+
+        </encoder>
+
+    </appender>
+
+
+    <!-- ============================= -->
+    <!-- File JSON Appender -->
+    <!-- ============================= -->
+
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>logs/${applicationName}.json</file>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <fileNamePattern>
+                logs/${applicationName}.%d{yyyy-MM-dd}.%i.json
+            </fileNamePattern>
+
+            <maxFileSize>20MB</maxFileSize>
+
+            <maxHistory>7</maxHistory>
+
+            <totalSizeCap>500MB</totalSizeCap>
+
+        </rollingPolicy>
+
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+
+            <providers>
+
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+
+                <logLevel/>
+
+                <loggerName/>
+
+                <message/>
+
+                <mdc/>
+
+                <arguments/>
+
+                <stackTrace/>
+
+            </providers>
+
+        </encoder>
+
+    </appender>
+
+
+    <!-- ============================= -->
+    <!-- Root Logger -->
+    <!-- ============================= -->
+
+    <root level="INFO">
+
+        <appender-ref ref="CONSOLE"/>
+
+        <appender-ref ref="FILE"/>
+
+    </root>
+
+</configuration>

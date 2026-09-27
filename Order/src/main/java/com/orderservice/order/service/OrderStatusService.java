@@ -4,8 +4,10 @@ import com.orderservice.order.entity.Order;
 import com.orderservice.order.event.PaymentCompletedEvent;
 import com.orderservice.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderStatusService {
@@ -29,7 +31,11 @@ public class OrderStatusService {
 
         orderRepository.save(order);
 
-        System.out.println("Order Status Updated : " + order.getStatus());
+        log.info(
+                "Order status updated orderId={} status={}",
+                order.getId(),
+                order.getStatus()
+        );
 
     }
 }

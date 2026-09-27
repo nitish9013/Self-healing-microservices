@@ -10,9 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import java.util.HashSet;
 
+
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -74,26 +76,33 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(String username, String password) {
 
-        System.out.println("USERNAME = " + username);
-        System.out.println("PASSWORD = " + password);
+        log.info("Login attempt for username={}", username);
 
         User user = repo.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> {
+                    log.warn("Login failed: user not found username={}", username);
+                    return new RuntimeException("User not found");
+                });
 
-        System.out.println("DB USERNAME = " + user.getUsername());
-
-        boolean match =
-                encoder.matches(
-                        password,
-                        user.getPassword()
-                );
-
-        System.out.println("PASSWORD MATCH = " + match);
+        boolean match = encoder.matches(
+                password,
+                user.getPassword()
+        );
 
         if (!match) {
-            throw new RuntimeException(
-                    "Invalid credentials");
+
+            log.warn(
+                    "Login failed: invalid credentials username={}",
+                    username
+            );
+
+            throw new RuntimeException("Invalid credentials");
         }
+
+        log.info(
+                "Login successful username={}",
+                username
+        );
 
         return user;
     }

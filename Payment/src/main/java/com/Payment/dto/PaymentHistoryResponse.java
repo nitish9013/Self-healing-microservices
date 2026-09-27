@@ -10,9 +10,12 @@ import java.time.LocalDateTime;
 public class PaymentHistoryResponse {
 
     private String provider;
+
     private String paymentId;
 
     private String orderId;
+
+    private String userId;
 
     private Double amount;
 

@@ -4,12 +4,14 @@ import com.dashboard.monitoring.client.*;
 import com.dashboard.monitoring.dto.ServiceHealthResponse;
 import com.dashboard.monitoring.service.HealthMonitoringService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Supplier;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HealthMonitoringServiceImpl
@@ -26,7 +28,9 @@ public class HealthMonitoringServiceImpl
     @Override
     public List<ServiceHealthResponse> getAllServicesHealth() {
 
-        return List.of(
+        log.info("Starting health check for all monitored services");
+
+        List<ServiceHealthResponse> services = List.of(
                 check(
                         "API Gateway",
                         () -> gatewayHealthClient.health().getStatus()
@@ -62,6 +66,21 @@ public class HealthMonitoringServiceImpl
                         () -> dashboardHealthClient.health().getStatus()
                 )
         );
+
+        long downServices = services.stream()
+                .filter(service -> "DOWN".equalsIgnoreCase(service.getStatus()))
+                .count();
+
+        if (downServices > 0) {
+            log.warn(
+                    "Health check completed with {} service(s) DOWN",
+                    downServices
+            );
+        } else {
+            log.info("Health check completed successfully. All services are UP");
+        }
+
+        return services;
     }
 
     private ServiceHealthResponse check(
@@ -71,12 +90,33 @@ public class HealthMonitoringServiceImpl
 
         long start = System.currentTimeMillis();
 
+        log.debug("Checking health of service: {}", serviceName);
+
         try {
 
             String status = healthCheck.get();
 
             long responseTime =
                     System.currentTimeMillis() - start;
+
+            if ("UP".equalsIgnoreCase(status)) {
+
+                log.info(
+                        "Service health check successful: service={}, status={}, responseTime={}ms",
+                        serviceName,
+                        status,
+                        responseTime
+                );
+
+            } else {
+
+                log.warn(
+                        "Service health check returned non-UP status: service={}, status={}, responseTime={}ms",
+                        serviceName,
+                        status,
+                        responseTime
+                );
+            }
 
             return ServiceHealthResponse.builder()
                     .serviceName(serviceName)
@@ -89,6 +129,14 @@ public class HealthMonitoringServiceImpl
 
             long responseTime =
                     System.currentTimeMillis() - start;
+
+            log.error(
+                    "Service health check failed: service={}, responseTime={}ms, error={}",
+                    serviceName,
+                    responseTime,
+                    ex.getMessage(),
+                    ex
+            );
 
             return ServiceHealthResponse.builder()
                     .serviceName(serviceName)

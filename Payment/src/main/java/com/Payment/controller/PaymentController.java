@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import com.Payment.dto.PaymentHistoryResponse;
 
 @RestController
 @RequestMapping("/api/payments")
@@ -104,6 +105,14 @@ public class PaymentController {
 
         return ResponseEntity.ok(
                 paymentService.getPaymentsByUserId(userId)
+        );
+    }
+
+    @GetMapping("/admin/all")
+    public ResponseEntity<List<PaymentHistoryResponse>> getAllPayments() {
+
+        return ResponseEntity.ok(
+                paymentService.getAllPayments()
         );
     }
 }

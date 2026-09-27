@@ -6,10 +6,11 @@ import com.auth.Authentication.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.auth.Authentication.dto.AdminUserResponse;
-
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -24,18 +25,59 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
+
+        log.info(
+                "Registration request received username={}",
+                user.getUsername()
+        );
+
         try {
-            return ResponseEntity.ok(service.register(user));
+
+            User registered = service.register(user);
+
+            log.info(
+                    "Registration successful username={}",
+                    registered.getUsername()
+            );
+
+            return ResponseEntity.ok(registered);
+
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+
+            log.error(
+                    "Registration failed username={}",
+                    user.getUsername(),
+                    e
+            );
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
         }
     }
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
+
+        log.info(
+                "Login request received username={}",
+                user.getUsername()
+        );
+
         try {
-            User loggedIn = service.login(user.getUsername(), user.getPassword());
-            String token = jwtUtil.generateAccessToken(loggedIn);
+
+            User loggedIn =
+                    service.login(
+                            user.getUsername(),
+                            user.getPassword()
+                    );
+
+            String token =
+                    jwtUtil.generateAccessToken(loggedIn);
+
+            log.info(
+                    "Authentication successful username={}",
+                    loggedIn.getUsername()
+            );
 
             return ResponseEntity.ok(
                     Map.of(
@@ -43,8 +85,18 @@ public class AuthController {
                             "userId", loggedIn.getId()
                     )
             );
+
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+
+            log.error(
+                    "Authentication failed username={}",
+                    user.getUsername(),
+                    e
+            );
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
         }
     }
 

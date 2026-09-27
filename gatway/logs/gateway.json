@@ -1,0 +1,22 @@
+{"@timestamp":"2026-09-27T13:45:34.2037262Z","level":"INFO","logger_name":"org.hibernate.validator.internal.util.Version","message":"HV000001: Hibernate Validator 8.0.1.Final"}
+{"@timestamp":"2026-09-27T13:45:34.3851947Z","level":"INFO","logger_name":"com.gatway.GatwayApplication","message":"Starting GatwayApplication using Java 22.0.1 with PID 35776 (C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\gatway\\target\\classes started by Nitish Kumar in C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\gatway)"}
+{"@timestamp":"2026-09-27T13:45:34.3875639Z","level":"INFO","logger_name":"com.gatway.GatwayApplication","message":"No active profile set, falling back to 1 default profile: \"default\""}
+{"@timestamp":"2026-09-27T13:45:35.9803683Z","level":"INFO","logger_name":"org.springframework.cloud.context.scope.GenericScope","message":"BeanFactory id=925e1652-69e6-3c00-8aea-73dc7d57aa65"}
+{"@timestamp":"2026-09-27T13:45:36.4871681Z","level":"INFO","logger_name":"org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration","message":"\r\n\r\nUsing generated security password: 825d9504-2b71-4be8-9675-f619abe89e9c\r\n"}
+{"@timestamp":"2026-09-27T13:45:37.3290556Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [After]"}
+{"@timestamp":"2026-09-27T13:45:37.3300534Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Before]"}
+{"@timestamp":"2026-09-27T13:45:37.3300534Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Between]"}
+{"@timestamp":"2026-09-27T13:45:37.3300534Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Cookie]"}
+{"@timestamp":"2026-09-27T13:45:37.3300534Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Header]"}
+{"@timestamp":"2026-09-27T13:45:37.3300534Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Host]"}
+{"@timestamp":"2026-09-27T13:45:37.3300534Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Method]"}
+{"@timestamp":"2026-09-27T13:45:37.3310547Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Path]"}
+{"@timestamp":"2026-09-27T13:45:37.3310547Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Query]"}
+{"@timestamp":"2026-09-27T13:45:37.3310547Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [ReadBody]"}
+{"@timestamp":"2026-09-27T13:45:37.3310547Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [RemoteAddr]"}
+{"@timestamp":"2026-09-27T13:45:37.3310547Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [XForwardedRemoteAddr]"}
+{"@timestamp":"2026-09-27T13:45:37.3310547Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Weight]"}
+{"@timestamp":"2026-09-27T13:45:37.3310547Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [CloudFoundryRouteService]"}
+{"@timestamp":"2026-09-27T13:45:37.5964967Z","level":"INFO","logger_name":"org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver","message":"Exposing 3 endpoint(s) beneath base path '/actuator'"}
+{"@timestamp":"2026-09-27T13:45:38.0759748Z","level":"INFO","logger_name":"org.springframework.boot.web.embedded.netty.NettyWebServer","message":"Netty started on port 8080"}
+{"@timestamp":"2026-09-27T13:45:38.1873187Z","level":"INFO","logger_name":"com.gatway.GatwayApplication","message":"Started GatwayApplication in 4.81 seconds (process running for 5.271)"}

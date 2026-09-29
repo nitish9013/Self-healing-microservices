@@ -107,3 +107,4 @@
 {"@timestamp":"2026-09-29T07:30:06.0798402Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
 {"@timestamp":"2026-09-29T07:30:06.1440805Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
 {"@timestamp":"2026-09-29T08:04:06.0142675Z","level":"WARN","logger_name":"com.zaxxer.hikari.pool.HikariPool","message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m45s858ms552µs500ns)."}
+{"@timestamp":"2026-09-29T13:51:15.4169902Z","level":"WARN","logger_name":"com.zaxxer.hikari.pool.HikariPool","message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4h18m37s454ms390µs)."}

@@ -69,3 +69,7 @@
 {"@timestamp":"2026-09-29T07:05:58.3816299Z","level":"INFO","logger_name":"com.user.users.service.impl.UserServiceImpl","message":"Fetching user with id: 13"}
 {"@timestamp":"2026-09-29T07:06:30.6922255Z","level":"INFO","logger_name":"com.user.users.service.impl.UserServiceImpl","message":"Fetching user with id: 13"}
 {"@timestamp":"2026-09-29T07:06:30.7638322Z","level":"INFO","logger_name":"com.user.users.service.impl.UserServiceImpl","message":"Fetching user with id: 13"}
+{"@timestamp":"2026-09-29T07:29:47.0582549Z","level":"INFO","logger_name":"com.user.users.service.impl.UserServiceImpl","message":"Fetching user with id: 13"}
+{"@timestamp":"2026-09-29T07:29:47.1710233Z","level":"INFO","logger_name":"com.user.users.service.impl.UserServiceImpl","message":"Fetching user with id: 13"}
+{"@timestamp":"2026-09-29T07:30:06.0317347Z","level":"INFO","logger_name":"com.user.users.service.impl.UserServiceImpl","message":"Fetching user with id: 13"}
+{"@timestamp":"2026-09-29T07:30:06.1177575Z","level":"INFO","logger_name":"com.user.users.service.impl.UserServiceImpl","message":"Fetching user with id: 13"}

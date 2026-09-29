@@ -175,3 +175,8 @@
 {"@timestamp":"2026-09-29T07:28:35.368772Z","level":"INFO","logger_name":"com.dashboard.monitoring.service.impl.HealthMonitoringServiceImpl","message":"Service health check successful: service=Payment Service, status=UP, responseTime=14ms"}
 {"@timestamp":"2026-09-29T07:28:35.3845892Z","level":"INFO","logger_name":"com.dashboard.monitoring.service.impl.HealthMonitoringServiceImpl","message":"Service health check successful: service=Dashboard Service, status=UP, responseTime=16ms"}
 {"@timestamp":"2026-09-29T07:28:35.3851878Z","level":"INFO","logger_name":"com.dashboard.monitoring.service.impl.HealthMonitoringServiceImpl","message":"Health check completed successfully. All services are UP"}
+{"@timestamp":"2026-09-29T07:36:58.2705308Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T07:41:58.4034699Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T07:46:58.5600316Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T07:51:58.6806246Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T07:56:58.799738Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}

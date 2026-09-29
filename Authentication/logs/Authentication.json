@@ -74,3 +74,4 @@
 {"@timestamp":"2026-09-29T07:06:29.4673745Z","level":"INFO","logger_name":"com.auth.Authentication.service.UserServiceImpl","message":"Login attempt for username=nitish2"}
 {"@timestamp":"2026-09-29T07:06:29.5570718Z","level":"INFO","logger_name":"com.auth.Authentication.service.UserServiceImpl","message":"Login successful username=nitish2"}
 {"@timestamp":"2026-09-29T07:06:29.5618379Z","level":"INFO","logger_name":"com.auth.Authentication.controller.AuthController","message":"Authentication successful username=nitish2"}
+{"@timestamp":"2026-09-29T08:04:20.5613204Z","level":"WARN","logger_name":"com.zaxxer.hikari.pool.HikariPool","message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m45s850ms454µs300ns)."}

@@ -180,3 +180,11 @@
 {"@timestamp":"2026-09-29T07:46:58.5600316Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
 {"@timestamp":"2026-09-29T07:51:58.6806246Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
 {"@timestamp":"2026-09-29T07:56:58.799738Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T08:07:14.6244017Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T08:12:14.764725Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T08:17:14.8995613Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T08:22:15.0574754Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T08:27:15.1878803Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T08:32:15.3179919Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T08:37:15.4495173Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}
+{"@timestamp":"2026-09-29T08:42:15.5797212Z","level":"INFO","logger_name":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=adminclient-1] Node 1 disconnected."}

@@ -12,7 +12,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -29,25 +33,25 @@ public class CentralizedLogServiceImpl
     public CentralizedLogServiceImpl(
             ObjectMapper objectMapper,
 
-            @Value("${logs.auth:../authentication/logs/authentication.json}")
+            @Value("${logs.auth}")
             String authLog,
 
-            @Value("${logs.user:../users/logs/users.json}")
+            @Value("${logs.user}")
             String userLog,
 
-            @Value("${logs.catalog:../catalog/logs/catalog-service.json}")
+            @Value("${logs.catalog}")
             String catalogLog,
 
-            @Value("${logs.order:../order/logs/order-service.json}")
+            @Value("${logs.order}")
             String orderLog,
 
-            @Value("${logs.payment:../payment/logs/Payment.json}")
+            @Value("${logs.payment}")
             String paymentLog,
 
-            @Value("${logs.gateway:../gateway/logs/gateway.json}")
+            @Value("${logs.gateway}")
             String gatewayLog,
 
-            @Value("${logs.dashboard:logs/dashboard.json}")
+            @Value("${logs.dashboard}")
             String dashboardLog,
 
             @Value("${logs.max-results:500}")
@@ -76,14 +80,6 @@ public class CentralizedLogServiceImpl
             int limit
     ) {
 
-        log.info(
-                "Centralized log collection started: service={}, level={}, search={}, limit={}",
-                service,
-                level,
-                search,
-                limit
-        );
-
         int effectiveLimit = Math.min(
                 Math.max(limit, 1),
                 maxResults
@@ -92,8 +88,11 @@ public class CentralizedLogServiceImpl
         List<CentralizedLogResponse> logs =
                 new ArrayList<>();
 
-        if (service != null
-                && !service.isBlank()) {
+        /*
+         * If a particular service is requested,
+         * read only that service log.
+         */
+        if (service != null && !service.isBlank()) {
 
             String normalizedService =
                     service.trim().toUpperCase();
@@ -104,7 +103,7 @@ public class CentralizedLogServiceImpl
             if (path == null) {
 
                 log.warn(
-                        "Unknown log service requested: service={}",
+                        "Unknown log service requested: {}",
                         service
                 );
 
@@ -119,6 +118,10 @@ public class CentralizedLogServiceImpl
 
         } else {
 
+            /*
+             * No service filter:
+             * read logs from all services.
+             */
             logSources.forEach(
                     (serviceName, path) ->
                             readLogFile(
@@ -129,38 +132,37 @@ public class CentralizedLogServiceImpl
             );
         }
 
-        List<CentralizedLogResponse> filtered =
-                logs.stream()
-                        .filter(logEntry ->
-                                matchesLevel(
-                                        logEntry,
-                                        level
-                                )
-                        )
-                        .filter(logEntry ->
-                                matchesSearch(
-                                        logEntry,
-                                        search
-                                )
-                        )
-                        .sorted(
-                                Comparator.comparing(
-                                        CentralizedLogResponse::getTimestamp,
-                                        Comparator.nullsLast(
-                                                Comparator.reverseOrder()
-                                        )
-                                )
-                        )
-                        .limit(effectiveLimit)
-                        .toList();
+        /*
+         * Apply filters and sort newest first.
+         */
+        return logs.stream()
 
-        log.info(
-                "Centralized log collection completed: totalRead={}, totalReturned={}",
-                logs.size(),
-                filtered.size()
-        );
+                .filter(logEntry ->
+                        matchesLevel(
+                                logEntry,
+                                level
+                        )
+                )
 
-        return filtered;
+                .filter(logEntry ->
+                        matchesSearch(
+                                logEntry,
+                                search
+                        )
+                )
+
+                .sorted(
+                        Comparator.comparing(
+                                CentralizedLogResponse::getTimestamp,
+                                Comparator.nullsLast(
+                                        Comparator.reverseOrder()
+                                )
+                        )
+                )
+
+                .limit(effectiveLimit)
+
+                .toList();
     }
 
     private void readLogFile(
@@ -170,12 +172,14 @@ public class CentralizedLogServiceImpl
     ) {
 
         Path path =
-                Path.of(filePath).toAbsolutePath().normalize();
+                Path.of(filePath)
+                        .toAbsolutePath()
+                        .normalize();
 
         if (!Files.exists(path)) {
 
             log.debug(
-                    "Log file does not exist: service={}, path={}",
+                    "Log file does not exist. service={}, path={}",
                     service,
                     path
             );
@@ -201,10 +205,9 @@ public class CentralizedLogServiceImpl
         } catch (IOException ex) {
 
             log.error(
-                    "Failed to read log file: service={}, path={}, error={}",
+                    "Failed to read log file. service={}, path={}",
                     service,
                     path,
-                    ex.getMessage(),
                     ex
             );
         }
@@ -236,10 +239,10 @@ public class CentralizedLogServiceImpl
                     timestamp =
                             Instant.parse(timestampValue);
 
-                } catch (Exception ignored) {
+                } catch (Exception ex) {
 
                     log.debug(
-                            "Unable to parse log timestamp: {}",
+                            "Unable to parse timestamp: {}",
                             timestampValue
                     );
                 }
@@ -247,39 +250,46 @@ public class CentralizedLogServiceImpl
 
             logs.add(
                     CentralizedLogResponse.builder()
+
                             .timestamp(timestamp)
+
                             .service(service)
+
                             .level(
                                     getText(
                                             node,
                                             "level"
                                     )
                             )
+
                             .loggerName(
                                     getText(
                                             node,
                                             "logger_name"
                                     )
                             )
+
                             .message(
                                     getText(
                                             node,
                                             "message"
                                     )
                             )
+
                             .stackTrace(
                                     getText(
                                             node,
                                             "stack_trace"
                                     )
                             )
+
                             .build()
             );
 
         } catch (Exception ex) {
 
             log.debug(
-                    "Skipping invalid JSON log entry from service={}",
+                    "Skipping invalid JSON log entry. service={}",
                     service
             );
         }
@@ -330,7 +340,7 @@ public class CentralizedLogServiceImpl
         }
 
         String keyword =
-                search.toLowerCase();
+                search.trim().toLowerCase();
 
         return contains(
                 logEntry.getMessage(),
@@ -342,6 +352,10 @@ public class CentralizedLogServiceImpl
         )
                 || contains(
                 logEntry.getService(),
+                keyword
+        )
+                || contains(
+                logEntry.getStackTrace(),
                 keyword
         );
     }

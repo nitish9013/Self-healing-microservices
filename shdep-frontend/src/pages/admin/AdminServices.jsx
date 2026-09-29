@@ -73,18 +73,22 @@ const menuItems = [
     {
         label: "Logs",
         icon: DescriptionRounded,
+        path: "/admin/logs",
     },
     {
         label: "Alerts",
         icon: WarningAmberRounded,
+        path: "/admin/alerts",
     },
     {
         label: "System Metrics",
         icon: QueryStatsRounded,
+        path: "/admin/system/metrics",
     },
     {
         label: "Settings",
         icon: SettingsRounded,
+        path: "/admin/settings",
     },
 ];
 

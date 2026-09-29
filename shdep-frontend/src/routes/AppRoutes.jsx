@@ -23,6 +23,10 @@ import AdminOrders from "../pages/admin/AdminOrders";
 import AdminPayments from "../pages/admin/AdminPayments";
 import AdminCatalog from "../pages/admin/AdminCatalog";
 import AdminKafka from "../pages/admin/AdminKafka";
+import AdminLogs from "../pages/admin/AdminLogs";
+import AdminAlerts from "../pages/admin/AdminAlerts";
+import AdminSystemMetrics from "../pages/admin/AdminSystemMetrics";
+import AdminSettings from "../pages/admin/AdminSettings";
 
 
 function AppRoutes() {
@@ -129,6 +133,49 @@ function AppRoutes() {
     }
 />
 
+<Route
+    path="/admin/logs"
+    element={
+        <ProtectedRoute>
+            <AdminRoute>
+                <AdminLogs />
+            </AdminRoute>
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/admin/alerts"
+    element={
+        <ProtectedRoute>
+            <AdminRoute>
+                <AdminAlerts />
+            </AdminRoute>
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/admin/system/metrics"
+    element={
+        <ProtectedRoute>
+            <AdminRoute>
+                <AdminSystemMetrics />
+            </AdminRoute>
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/admin/settings"
+    element={
+        <ProtectedRoute>
+            <AdminRoute>
+                <AdminSettings />
+            </AdminRoute>
+        </ProtectedRoute>
+    }
+/>
                 {/* ================= USER DASHBOARD ================= */}
 
                 <Route

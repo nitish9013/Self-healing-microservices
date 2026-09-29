@@ -1,0 +1,57 @@
+{"@timestamp":"2026-09-28T11:10:03.497327Z","level":"INFO","logger_name":"org.hibernate.validator.internal.util.Version","message":"HV000001: Hibernate Validator 8.0.1.Final"}
+{"@timestamp":"2026-09-28T11:10:03.6495073Z","level":"INFO","logger_name":"com.gatway.GatwayApplication","message":"Starting GatwayApplication using Java 22.0.1 with PID 22768 (C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\gatway\\target\\classes started by Nitish Kumar in C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\gatway)"}
+{"@timestamp":"2026-09-28T11:10:03.6521493Z","level":"INFO","logger_name":"com.gatway.GatwayApplication","message":"No active profile set, falling back to 1 default profile: \"default\""}
+{"@timestamp":"2026-09-28T11:10:05.1730638Z","level":"INFO","logger_name":"org.springframework.cloud.context.scope.GenericScope","message":"BeanFactory id=925e1652-69e6-3c00-8aea-73dc7d57aa65"}
+{"@timestamp":"2026-09-28T11:10:05.6996104Z","level":"INFO","logger_name":"org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration","message":"\r\n\r\nUsing generated security password: d78d4a55-c85d-472b-bfea-f6a0b911d9af\r\n"}
+{"@timestamp":"2026-09-28T11:10:06.5248012Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [After]"}
+{"@timestamp":"2026-09-28T11:10:06.5248012Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Before]"}
+{"@timestamp":"2026-09-28T11:10:06.5248012Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Between]"}
+{"@timestamp":"2026-09-28T11:10:06.5248012Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Cookie]"}
+{"@timestamp":"2026-09-28T11:10:06.5258087Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Header]"}
+{"@timestamp":"2026-09-28T11:10:06.5258087Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Host]"}
+{"@timestamp":"2026-09-28T11:10:06.5258087Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Method]"}
+{"@timestamp":"2026-09-28T11:10:06.5258087Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Path]"}
+{"@timestamp":"2026-09-28T11:10:06.5263149Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Query]"}
+{"@timestamp":"2026-09-28T11:10:06.5263149Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [ReadBody]"}
+{"@timestamp":"2026-09-28T11:10:06.5263149Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [RemoteAddr]"}
+{"@timestamp":"2026-09-28T11:10:06.5263149Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [XForwardedRemoteAddr]"}
+{"@timestamp":"2026-09-28T11:10:06.5263149Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [Weight]"}
+{"@timestamp":"2026-09-28T11:10:06.5268385Z","level":"INFO","logger_name":"org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator","message":"Loaded RoutePredicateFactory [CloudFoundryRouteService]"}
+{"@timestamp":"2026-09-28T11:10:06.8272857Z","level":"INFO","logger_name":"org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver","message":"Exposing 3 endpoint(s) beneath base path '/actuator'"}
+{"@timestamp":"2026-09-28T11:10:07.322258Z","level":"INFO","logger_name":"org.springframework.boot.web.embedded.netty.NettyWebServer","message":"Netty started on port 8080"}
+{"@timestamp":"2026-09-28T11:10:07.4317946Z","level":"INFO","logger_name":"com.gatway.GatwayApplication","message":"Started GatwayApplication in 4.776 seconds (process running for 5.289)"}
+{"@timestamp":"2026-09-28T12:33:59.8236509Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/analytics"}
+{"@timestamp":"2026-09-28T12:33:59.8467705Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/services"}
+{"@timestamp":"2026-09-28T12:33:59.8600651Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/circuit-breaker"}
+{"@timestamp":"2026-09-28T12:33:59.8617007Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/retries"}
+{"@timestamp":"2026-09-28T12:33:59.8821765Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/kafka/overview"}
+{"@timestamp":"2026-09-28T12:34:59.2943938Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/retries"}
+{"@timestamp":"2026-09-28T12:34:59.2943938Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/analytics"}
+{"@timestamp":"2026-09-28T12:34:59.2961419Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/services"}
+{"@timestamp":"2026-09-28T12:34:59.2943938Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/circuit-breaker"}
+{"@timestamp":"2026-09-28T12:34:59.2994626Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/kafka/overview"}
+{"@timestamp":"2026-09-28T12:34:59.3105379Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/analytics"}
+{"@timestamp":"2026-09-28T12:34:59.3141877Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/circuit-breaker"}
+{"@timestamp":"2026-09-28T12:34:59.3125503Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/retries"}
+{"@timestamp":"2026-09-28T12:34:59.3179978Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/services"}
+{"@timestamp":"2026-09-28T12:34:59.3213927Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/kafka/overview"}
+{"@timestamp":"2026-09-28T12:35:03.5517445Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/kafka/overview"}
+{"@timestamp":"2026-09-28T12:35:03.5522675Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/circuit-breaker"}
+{"@timestamp":"2026-09-28T12:35:03.5588759Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/retries"}
+{"@timestamp":"2026-09-28T12:35:03.5681816Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/services"}
+{"@timestamp":"2026-09-28T12:35:03.5701311Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/analytics"}
+{"@timestamp":"2026-09-28T12:35:03.5944239Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/kafka/overview"}
+{"@timestamp":"2026-09-28T12:35:03.6000899Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/circuit-breaker"}
+{"@timestamp":"2026-09-28T12:35:03.6082947Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/retries"}
+{"@timestamp":"2026-09-28T12:35:03.6138166Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/services"}
+{"@timestamp":"2026-09-28T12:35:03.6178835Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/analytics"}
+{"@timestamp":"2026-09-28T12:41:18.8340854Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/retries"}
+{"@timestamp":"2026-09-28T12:41:18.8340854Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/analytics"}
+{"@timestamp":"2026-09-28T12:41:18.8340854Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/circuit-breaker"}
+{"@timestamp":"2026-09-28T12:41:18.8340854Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/kafka/overview"}
+{"@timestamp":"2026-09-28T12:41:18.8340854Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/services"}
+{"@timestamp":"2026-09-28T12:41:18.8553544Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/analytics"}
+{"@timestamp":"2026-09-28T12:41:18.8553544Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/kafka/overview"}
+{"@timestamp":"2026-09-28T12:41:18.8553544Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/services"}
+{"@timestamp":"2026-09-28T12:41:18.8553544Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/circuit-breaker"}
+{"@timestamp":"2026-09-28T12:41:18.8553544Z","level":"WARN","logger_name":"com.gatway.filter.JwtAuthenticationFilter","message":"Gateway request rejected: invalid JWT path=/admin/retries"}

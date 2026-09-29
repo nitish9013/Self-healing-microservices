@@ -10,7 +10,8 @@ import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadMXBean;
 
 @Service
-public class SystemMetricsServiceImpl implements SystemMetricsService {
+public class SystemMetricsServiceImpl
+        implements SystemMetricsService {
 
     @Override
     public SystemMetricsResponse getSystemMetrics() {
@@ -24,60 +25,142 @@ public class SystemMetricsServiceImpl implements SystemMetricsService {
         ThreadMXBean threadBean =
                 ManagementFactory.getThreadMXBean();
 
-        Runtime runtime =
-                Runtime.getRuntime();
+        long heapUsed =
+                Math.max(
+                        heap.getUsed(),
+                        0L
+                );
 
-        double memoryUsage =
-                ((double) heap.getUsed() / heap.getMax()) * 100;
+        long heapMax =
+                heap.getMax();
+
+        /*
+         * Some JVMs may report max heap as -1.
+         * Use committed memory as a safe fallback.
+         */
+        if (heapMax <= 0) {
+
+            heapMax =
+                    Math.max(
+                            heap.getCommitted(),
+                            heapUsed
+                    );
+        }
+
+        double memoryUsage = 0.0;
+
+        if (heapMax > 0) {
+
+            memoryUsage =
+                    ((double) heapUsed / heapMax)
+                            * 100.0;
+        }
 
         long uptime =
-                ManagementFactory.getRuntimeMXBean()
+                ManagementFactory
+                        .getRuntimeMXBean()
                         .getUptime();
 
         return SystemMetricsResponse.builder()
 
-                .cpuUsage(getCpuUsage())
-
-                .memoryUsage(
-                        Math.round(memoryUsage * 100.0) / 100.0
+                .cpuUsage(
+                        getCpuUsage()
                 )
 
-                .heapUsed(heap.getUsed())
+                .memoryUsage(
+                        round(memoryUsage)
+                )
 
-                .heapMax(heap.getMax())
+                .heapUsed(
+                        heapUsed
+                )
 
-                .threadCount(threadBean.getThreadCount())
+                .heapMax(
+                        heapMax
+                )
 
-                .uptime(formatUptime(uptime))
+                .threadCount(
+                        threadBean.getThreadCount()
+                )
+
+                .uptime(
+                        formatUptime(uptime)
+                )
 
                 .build();
-
     }
+
 
     private double getCpuUsage() {
 
-        com.sun.management.OperatingSystemMXBean osBean =
-                (com.sun.management.OperatingSystemMXBean)
-                        ManagementFactory.getOperatingSystemMXBean();
+        com.sun.management
+                .OperatingSystemMXBean osBean =
+                (com.sun.management
+                        .OperatingSystemMXBean)
+                        ManagementFactory
+                                .getOperatingSystemMXBean();
+
+        double cpuLoad =
+                osBean.getCpuLoad();
+
+        /*
+         * JVM can return a negative value when
+         * CPU load is temporarily unavailable.
+         */
+        if (cpuLoad < 0) {
+            return 0.0;
+        }
+
+        return round(
+                cpuLoad * 100.0
+        );
+    }
+
+
+    private double round(
+            double value
+    ) {
 
         return Math.round(
-                osBean.getCpuLoad() * 10000
+                value * 100.0
         ) / 100.0;
-
     }
 
-    private String formatUptime(long millis) {
 
-        long seconds = millis / 1000;
+    private String formatUptime(
+            long millis
+    ) {
 
-        long minutes = seconds / 60;
+        long totalSeconds =
+                millis / 1000;
 
-        long hours = minutes / 60;
+        long days =
+                totalSeconds / 86400;
 
-        return hours + "h "
-                + (minutes % 60)
-                + "m";
+        long hours =
+                (totalSeconds % 86400) / 3600;
 
+        long minutes =
+                (totalSeconds % 3600) / 60;
+
+        long seconds =
+                totalSeconds % 60;
+
+
+        if (days > 0) {
+
+            return days + "d "
+                    + hours + "h "
+                    + minutes + "m";
+        }
+
+        if (hours > 0) {
+
+            return hours + "h "
+                    + minutes + "m";
+        }
+
+        return minutes + "m "
+                + seconds + "s";
     }
-
 }

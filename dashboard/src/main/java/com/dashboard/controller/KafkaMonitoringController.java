@@ -22,4 +22,10 @@ public class KafkaMonitoringController {
         return kafkaMonitoringService
                 .getKafkaStatus();
     }
+
+    @GetMapping("/kafka/overview")
+    public KafkaMonitoringResponse getKafkaOverview() {
+
+        return kafkaMonitoringService.getKafkaStatus();
+    }
 }

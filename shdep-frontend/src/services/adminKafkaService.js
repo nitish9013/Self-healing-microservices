@@ -7,3 +7,12 @@ export async function getKafkaStatus() {
 
     return response.data;
 }
+export async function getKafkaOverview() {
+
+    const response =
+        await apiClient.get(
+            "/admin/kafka/overview"
+        );
+
+    return response.data;
+}

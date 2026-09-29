@@ -1,4 +1,7 @@
 import {
+    getKafkaOverview,
+} from "../../services/adminKafkaService";
+import {
     Box,
     Typography,
     IconButton,
@@ -31,6 +34,7 @@ import {
     getAdminAnalytics,
     getServiceHealth,
     getCircuitBreakerStatus,
+    getRetryStatus,
 } from "../../services/adminDashboardService";
 const menuItems = [
     {
@@ -66,6 +70,7 @@ const menuItems = [
     {
         label: "Logs",
         icon: DescriptionRounded,
+        
     },
     {
         label: "Alerts",
@@ -134,6 +139,14 @@ const [circuitBreaker, setCircuitBreaker] = useState(null);
 const [circuitBreakerLoading, setCircuitBreakerLoading] = useState(true);
 const [circuitBreakerError, setCircuitBreakerError] = useState("");
 
+const [retryStatus, setRetryStatus] = useState(null);
+const [retryLoading, setRetryLoading] = useState(true);
+const [retryError, setRetryError] = useState("");
+
+const [kafkaStatus, setKafkaStatus] = useState(null);
+const [kafkaLoading, setKafkaLoading] = useState(true);
+const [kafkaError, setKafkaError] = useState("");
+
 
 const loadAnalytics = async () => {
     try {
@@ -158,9 +171,17 @@ const loadAnalytics = async () => {
 };
 
 useEffect(() => {
+
     loadAnalytics();
+
     loadServiceHealth();
+
     loadCircuitBreaker();
+
+    loadRetryStatus();
+
+    loadKafkaStatus();
+
 }, []);
 
 const loadServiceHealth = async () => {
@@ -203,6 +224,35 @@ const loadCircuitBreaker = async () => {
     }
 };
 
+const loadRetryStatus = async () => {
+
+    try {
+
+        setRetryLoading(true);
+        setRetryError("");
+
+        const data = await getRetryStatus();
+
+        setRetryStatus(data);
+
+    } catch (error) {
+
+        console.error(
+            "Retry Monitoring API Error:",
+            error
+        );
+
+        setRetryError(
+            "Unable to load retry statistics."
+        );
+
+    } finally {
+
+        setRetryLoading(false);
+
+    }
+};
+
 const getCircuitBreakerColor = (state) => {
     const normalizedState = String(state || "").toUpperCase();
 
@@ -229,6 +279,36 @@ const getCircuitBreakerLabel = (state) => {
     }
 
     return normalizedState || "UNKNOWN";
+};
+
+
+const loadKafkaStatus = async () => {
+
+    try {
+
+        setKafkaLoading(true);
+        setKafkaError("");
+
+        const data =
+            await getKafkaOverview();
+
+        setKafkaStatus(data);
+
+    } catch (error) {
+
+        console.error(
+            "Kafka Monitoring API Error:",
+            error
+        );
+
+        setKafkaError(
+            "Unable to load Kafka status."
+        );
+
+    } finally {
+
+        setKafkaLoading(false);
+    }
 };
 
     return (
@@ -373,6 +453,19 @@ if (item.label === "Catalog") {
 
 if (item.label === "Kafka") {
     navigate("/admin/kafka");
+}
+
+if(item.label === "Logs"){
+    navigate("/admin/logs");
+}
+if(item.label === "Alerts"){
+    navigate("/admin/alerts");
+}
+if(item.label === "System Metrics"){
+    navigate("/admin/system/metrics");
+}
+if(item.label === "Settings"){
+    navigate("/admin/settings");
 }
 
             }}
@@ -605,11 +698,13 @@ if (item.label === "Kafka") {
     loadAnalytics();
     loadServiceHealth();
     loadCircuitBreaker();
+    loadKafkaStatus();
 }}
 disabled={
     analyticsLoading ||
     healthLoading ||
-    circuitBreakerLoading
+    circuitBreakerLoading ||
+    kafkaLoading
 }
     sx={{
         color: "rgba(255,255,255,0.65)",
@@ -1102,37 +1197,153 @@ disabled={
 >
     {/* Service Monitoring */}
 
-    <Box
+<Box
+    sx={{
+        p: 1.6,
+        borderRadius: 2,
+        border:
+            "1px solid rgba(255,255,255,0.06)",
+        background:
+            "rgba(255,255,255,0.025)",
+    }}
+>
+
+    <Typography
         sx={{
-            p: 1.6,
-            borderRadius: 2,
-            border:
-                "1px solid rgba(255,255,255,0.06)",
-            background:
-                "rgba(255,255,255,0.025)",
+            fontSize: 12,
+            color:
+                "rgba(255,255,255,0.55)",
         }}
     >
-        <Typography
-            sx={{
-                fontSize: 12,
-                color:
-                    "rgba(255,255,255,0.55)",
-            }}
-        >
-            Service monitoring
-        </Typography>
+        Service monitoring
+    </Typography>
+
+    {healthLoading ? (
 
         <Typography
             sx={{
-                mt: 0.5,
-                fontSize: 11,
+                mt: 1,
+                fontSize: 12,
                 color:
-                    "rgba(255,255,255,0.32)",
+                    "rgba(255,255,255,0.35)",
             }}
         >
-            Live microservice health monitoring
+            Checking services...
         </Typography>
-    </Box>
+
+    ) : healthError ? (
+
+        <Typography
+            sx={{
+                mt: 1,
+                fontSize: 12,
+                color: "#fca5a5",
+            }}
+        >
+            {healthError}
+        </Typography>
+
+    ) : (
+
+        (() => {
+
+            const total =
+                serviceHealth.length;
+
+            const up =
+                serviceHealth.filter(
+                    (service) =>
+                        String(
+                            service.status || ""
+                        ).toUpperCase() === "UP"
+                ).length;
+
+            const down =
+                total - up;
+
+            return (
+                <Box
+                    sx={{
+                        mt: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                    }}
+                >
+
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: .6,
+                        }}
+                    >
+
+                        <CircleRounded
+                            sx={{
+                                fontSize: 8,
+                                color: "#35d98b",
+                            }}
+                        />
+
+                        <Typography
+                            sx={{
+                                fontSize: 13,
+                                fontWeight: 700,
+                            }}
+                        >
+                            {up} UP
+                        </Typography>
+
+                    </Box>
+
+
+                    <Typography
+                        sx={{
+                            fontSize: 11,
+                            color:
+                                "rgba(255,255,255,.3)",
+                        }}
+                    >
+                        /
+                    </Typography>
+
+
+                    <Typography
+                        sx={{
+                            fontSize: 13,
+                            fontWeight: 700,
+                            color:
+                                down > 0
+                                    ? "#f87171"
+                                    : "#35d98b",
+                        }}
+                    >
+                        {down} DOWN
+                    </Typography>
+
+
+                    <Typography
+                        sx={{
+                            ml: "auto",
+                            fontSize: 10,
+                            color:
+                                down > 0
+                                    ? "#fca5a5"
+                                    : "#7de5b0",
+                        }}
+                    >
+                        {total} services
+                    </Typography>
+
+                </Box>
+            );
+
+        })()
+
+    )}
+
+</Box>
 
     {/* Circuit Breaker */}
 
@@ -1244,18 +1455,25 @@ disabled={
         )}
     </Box>
 
-    {/* Kafka */}
+ <Box
+    sx={{
+        p: 1.6,
+        borderRadius: 2,
+        border:
+            "1px solid rgba(255,255,255,0.06)",
+        background:
+            "rgba(255,255,255,0.025)",
+    }}
+>
 
     <Box
         sx={{
-            p: 1.6,
-            borderRadius: 2,
-            border:
-                "1px solid rgba(255,255,255,0.06)",
-            background:
-                "rgba(255,255,255,0.025)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
         }}
     >
+
         <Typography
             sx={{
                 fontSize: 12,
@@ -1266,51 +1484,312 @@ disabled={
             Kafka event processing
         </Typography>
 
-        <Typography
-            sx={{
-                mt: 0.5,
-                fontSize: 11,
-                color:
-                    "rgba(255,255,255,0.32)",
-            }}
-        >
-            Coming in next dashboard integration
-        </Typography>
+
+        {!kafkaLoading &&
+            kafkaStatus && (
+
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: .6,
+                    }}
+                >
+
+                    <CircleRounded
+    sx={{
+        fontSize: 8,
+        color:
+            kafkaStatus.connected
+                ? "#35d98b"
+                : "#ef4444",
+    }}
+/>
+
+<Typography
+    sx={{
+        fontSize: 11,
+        fontWeight: 700,
+        color:
+            kafkaStatus.connected
+                ? "#35d98b"
+                : "#ef4444",
+    }}
+>
+    {kafkaStatus.connected
+        ? "CONNECTED"
+        : "DISCONNECTED"}
+</Typography>
+
+                </Box>
+
+            )}
+
     </Box>
 
-    {/* Self Healing */}
 
-    <Box
+    {kafkaLoading ? (
+
+        <Typography
+            sx={{
+                mt: 1,
+                fontSize: 11,
+                color:
+                    "rgba(255,255,255,.35)",
+            }}
+        >
+            Checking Kafka broker...
+        </Typography>
+
+    ) : kafkaError ? (
+
+        <Typography
+            sx={{
+                mt: 1,
+                fontSize: 11,
+                color: "#f87171",
+            }}
+        >
+            {kafkaError}
+        </Typography>
+
+    ) : (
+
+        <Box
+            sx={{
+                mt: 1.2,
+                display: "grid",
+                gridTemplateColumns:
+                    "repeat(3, 1fr)",
+                gap: 2,
+            }}
+        >
+
+            <Box>
+
+                <Typography
+                    sx={{
+                        fontSize: 9,
+                        color:
+                            "rgba(255,255,255,.35)",
+                    }}
+                >
+                    BROKERS
+                </Typography>
+
+                <Typography
+                    sx={{
+                        mt: .3,
+                        fontSize: 14,
+                        fontWeight: 700,
+                    }}
+                >
+                    {kafkaStatus?.brokerCount ?? 0}
+                </Typography>
+
+            </Box>
+
+
+            <Box>
+
+                <Typography
+                    sx={{
+                        fontSize: 9,
+                        color:
+                            "rgba(255,255,255,.35)",
+                    }}
+                >
+                    TOPICS
+                </Typography>
+
+                <Typography
+                    sx={{
+                        mt: .3,
+                        fontSize: 14,
+                        fontWeight: 700,
+                    }}
+                >
+                    {kafkaStatus?.topics?.length ?? 0}
+                </Typography>
+
+            </Box>
+
+
+            <Box>
+
+                <Typography
+                    sx={{
+                        fontSize: 9,
+                        color:
+                            "rgba(255,255,255,.35)",
+                    }}
+                >
+                    CONSUMER GROUPS
+                </Typography>
+
+                <Typography
+                    sx={{
+                        mt: .3,
+                        fontSize: 14,
+                        fontWeight: 700,
+                    }}
+                >
+                    {kafkaStatus?.consumerGroup?.length ?? 0}
+                </Typography>
+
+            </Box>
+
+        </Box>
+
+    )}
+
+</Box>
+
+   {/* Self Healing */}
+
+<Box
+    sx={{
+        p: 1.6,
+        borderRadius: 2,
+        border:
+            "1px solid rgba(255,255,255,0.06)",
+        background:
+            "rgba(255,255,255,0.025)",
+    }}
+>
+
+    <Typography
         sx={{
-            p: 1.6,
-            borderRadius: 2,
-            border:
-                "1px solid rgba(255,255,255,0.06)",
-            background:
-                "rgba(255,255,255,0.025)",
+            fontSize: 12,
+            color:
+                "rgba(255,255,255,0.55)",
         }}
     >
-        <Typography
-            sx={{
-                fontSize: 12,
-                color:
-                    "rgba(255,255,255,0.55)",
-            }}
-        >
-            Self-healing activity
-        </Typography>
+        Self-healing activity
+    </Typography>
+
+
+    {retryLoading ? (
 
         <Typography
             sx={{
-                mt: 0.5,
-                fontSize: 11,
+                mt: 1,
+                fontSize: 12,
                 color:
-                    "rgba(255,255,255,0.32)",
+                    "rgba(255,255,255,0.35)",
             }}
         >
-            Coming in next dashboard integration
+            Loading recovery metrics...
         </Typography>
-    </Box>
+
+    ) : retryError ? (
+
+        <Typography
+            sx={{
+                mt: 1,
+                fontSize: 12,
+                color: "#fca5a5",
+            }}
+        >
+            {retryError}
+        </Typography>
+
+    ) : (
+
+        <Box
+            sx={{
+                mt: 1,
+                display: "grid",
+                gridTemplateColumns:
+                    "repeat(3, 1fr)",
+                gap: 1,
+            }}
+        >
+
+            <Box>
+
+                <Typography
+                    sx={{
+                        fontSize: 10,
+                        color:
+                            "rgba(255,255,255,.35)",
+                    }}
+                >
+                    TOTAL
+                </Typography>
+
+                <Typography
+                    sx={{
+                        mt: .3,
+                        fontSize: 15,
+                        fontWeight: 700,
+                    }}
+                >
+                    {retryStatus?.totalRetries ?? 0}
+                </Typography>
+
+            </Box>
+
+
+            <Box>
+
+                <Typography
+                    sx={{
+                        fontSize: 10,
+                        color:
+                            "rgba(255,255,255,.35)",
+                    }}
+                >
+                    SUCCESS
+                </Typography>
+
+                <Typography
+                    sx={{
+                        mt: .3,
+                        fontSize: 15,
+                        fontWeight: 700,
+                        color: "#35d98b",
+                    }}
+                >
+                    {retryStatus?.successfulRetries ?? 0}
+                </Typography>
+
+            </Box>
+
+
+            <Box>
+
+                <Typography
+                    sx={{
+                        fontSize: 10,
+                        color:
+                            "rgba(255,255,255,.35)",
+                    }}
+                >
+                    FAILED
+                </Typography>
+
+                <Typography
+                    sx={{
+                        mt: .3,
+                        fontSize: 15,
+                        fontWeight: 700,
+                        color:
+                            (retryStatus?.failedRetries ?? 0) > 0
+                                ? "#f87171"
+                                : "#35d98b",
+                    }}
+                >
+                    {retryStatus?.failedRetries ?? 0}
+                </Typography>
+
+            </Box>
+
+        </Box>
+
+    )}
+
+</Box>
 </Box>
 
                         </Box>

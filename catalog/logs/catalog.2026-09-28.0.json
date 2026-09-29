@@ -1,0 +1,172 @@
+{"@timestamp":"2026-09-28T11:09:25.072073Z","level":"INFO","logger_name":"org.hibernate.validator.internal.util.Version","message":"HV000001: Hibernate Validator 8.0.1.Final"}
+{"@timestamp":"2026-09-28T11:09:25.2390922Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"Starting CatalogApplication using Java 22.0.1 with PID 25320 (C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\catalog\\target\\classes started by Nitish Kumar in C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\catalog)"}
+{"@timestamp":"2026-09-28T11:09:25.241603Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"No active profile set, falling back to 1 default profile: \"default\""}
+{"@timestamp":"2026-09-28T11:09:26.725615Z","level":"INFO","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode."}
+{"@timestamp":"2026-09-28T11:09:26.8130922Z","level":"INFO","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","message":"Finished Spring Data repository scanning in 65 ms. Found 2 JPA repository interfaces."}
+{"@timestamp":"2026-09-28T11:09:27.9186752Z","level":"INFO","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","message":"Tomcat initialized with port 8085 (http)"}
+{"@timestamp":"2026-09-28T11:09:27.9450816Z","level":"INFO","logger_name":"org.apache.coyote.http11.Http11NioProtocol","message":"Initializing ProtocolHandler [\"http-nio-8085\"]"}
+{"@timestamp":"2026-09-28T11:09:27.9479283Z","level":"INFO","logger_name":"org.apache.catalina.core.StandardService","message":"Starting service [Tomcat]"}
+{"@timestamp":"2026-09-28T11:09:27.9479283Z","level":"INFO","logger_name":"org.apache.catalina.core.StandardEngine","message":"Starting Servlet engine: [Apache Tomcat/10.1.19]"}
+{"@timestamp":"2026-09-28T11:09:28.0424489Z","level":"INFO","logger_name":"org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]","message":"Initializing Spring embedded WebApplicationContext"}
+{"@timestamp":"2026-09-28T11:09:28.0424489Z","level":"INFO","logger_name":"org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext","message":"Root WebApplicationContext: initialization completed in 2720 ms"}
+{"@timestamp":"2026-09-28T11:09:28.6158009Z","level":"INFO","logger_name":"org.hibernate.jpa.internal.util.LogHelper","message":"HHH000204: Processing PersistenceUnitInfo [name: default]"}
+{"@timestamp":"2026-09-28T11:09:28.7074125Z","level":"INFO","logger_name":"org.hibernate.Version","message":"HHH000412: Hibernate ORM core version 6.4.4.Final"}
+{"@timestamp":"2026-09-28T11:09:28.7423427Z","level":"INFO","logger_name":"org.hibernate.cache.internal.RegionFactoryInitiator","message":"HHH000026: Second-level cache disabled"}
+{"@timestamp":"2026-09-28T11:09:29.0139513Z","level":"INFO","logger_name":"org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo","message":"No LoadTimeWeaver setup: ignoring JPA class transformer"}
+{"@timestamp":"2026-09-28T11:09:29.0454228Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Starting..."}
+{"@timestamp":"2026-09-28T11:09:29.2584459Z","level":"INFO","logger_name":"com.zaxxer.hikari.pool.HikariPool","message":"HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7e1fb22c"}
+{"@timestamp":"2026-09-28T11:09:29.2614503Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Start completed."}
+{"@timestamp":"2026-09-28T11:09:30.5394183Z","level":"INFO","logger_name":"org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)"}
+{"@timestamp":"2026-09-28T11:09:30.752107Z","level":"INFO","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'"}
+{"@timestamp":"2026-09-28T11:09:31.5048739Z","level":"WARN","logger_name":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration","message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}
+{"@timestamp":"2026-09-28T11:09:32.6506116Z","level":"INFO","logger_name":"org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver","message":"Exposing 3 endpoint(s) beneath base path '/actuator'"}
+{"@timestamp":"2026-09-28T11:09:32.8218381Z","level":"INFO","logger_name":"org.apache.coyote.http11.Http11NioProtocol","message":"Starting ProtocolHandler [\"http-nio-8085\"]"}
+{"@timestamp":"2026-09-28T11:09:32.8666046Z","level":"INFO","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","message":"Tomcat started on port 8085 (http) with context path ''"}
+{"@timestamp":"2026-09-28T11:09:32.8874135Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"Started CatalogApplication in 8.623 seconds (process running for 9.125)"}
+{"@timestamp":"2026-09-28T11:12:54.0151113Z","level":"INFO","logger_name":"org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]","message":"Initializing Spring DispatcherServlet 'dispatcherServlet'"}
+{"@timestamp":"2026-09-28T11:12:54.0169672Z","level":"INFO","logger_name":"org.springframework.web.servlet.DispatcherServlet","message":"Initializing Servlet 'dispatcherServlet'"}
+{"@timestamp":"2026-09-28T11:12:54.0188051Z","level":"INFO","logger_name":"org.springframework.web.servlet.DispatcherServlet","message":"Completed initialization in 2 ms"}
+{"@timestamp":"2026-09-28T11:12:54.6631247Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T11:12:55.4716555Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T11:12:59.8891219Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:13:01.350417Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:13:20.1098116Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:13:20.2495747Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:18:07.6878303Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:18:07.8243997Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:21:37.1906552Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:21:37.3723562Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:24:23.7118917Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T11:24:23.7883404Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T11:24:29.1173874Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:24:29.2120341Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:26:32.5013899Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:26:32.6877434Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:33:03.9306703Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:33:04.0880835Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:43:58.3422446Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:43:58.4891801Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:44:57.7184411Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:44:57.82095Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:53:10.2506106Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:53:10.3312287Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:54:21.8218967Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:54:21.924783Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:55:06.4048132Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T11:55:06.5063194Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:02:41.7715549Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:07:26.0809626Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:07:26.2151665Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:22:38.1799184Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:22:38.2739266Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:22:49.0045115Z","level":"WARN","logger_name":"com.zaxxer.hikari.pool.HikariPool","message":"HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m48s635ms110µs700ns)."}
+{"@timestamp":"2026-09-28T12:34:43.6681512Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T12:34:43.7615517Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T12:34:46.2290944Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:34:46.3454885Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:35:16.1400066Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T12:35:16.2177621Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T12:35:55.0973527Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T12:35:55.1576285Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T12:36:06.7366934Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T12:36:06.794435Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"All products fetched: resultCount=2"}
+{"@timestamp":"2026-09-28T12:36:17.2463246Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:36:17.3766625Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:36:28.1790854Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:36:28.3032451Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:36:58.8134819Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:36:58.9251451Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:37:23.4825398Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:37:23.6010998Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:40:33.3788527Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:40:33.4992406Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:41:44.3133982Z","level":"INFO","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","message":"Closing JPA EntityManagerFactory for persistence unit 'default'"}
+{"@timestamp":"2026-09-28T12:41:44.3257475Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown initiated..."}
+{"@timestamp":"2026-09-28T12:41:44.3352452Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown completed."}
+{"@timestamp":"2026-09-28T12:41:48.4428898Z","level":"INFO","logger_name":"org.hibernate.validator.internal.util.Version","message":"HV000001: Hibernate Validator 8.0.1.Final"}
+{"@timestamp":"2026-09-28T12:41:48.5983882Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"Starting CatalogApplication using Java 22.0.1 with PID 9268 (C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\catalog\\target\\classes started by Nitish Kumar in C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\catalog)"}
+{"@timestamp":"2026-09-28T12:41:48.5993897Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"No active profile set, falling back to 1 default profile: \"default\""}
+{"@timestamp":"2026-09-28T12:41:50.0058401Z","level":"INFO","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode."}
+{"@timestamp":"2026-09-28T12:41:50.0828885Z","level":"INFO","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","message":"Finished Spring Data repository scanning in 69 ms. Found 2 JPA repository interfaces."}
+{"@timestamp":"2026-09-28T12:41:51.0068506Z","level":"INFO","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","message":"Tomcat initialized with port 8085 (http)"}
+{"@timestamp":"2026-09-28T12:41:51.0257265Z","level":"INFO","logger_name":"org.apache.coyote.http11.Http11NioProtocol","message":"Initializing ProtocolHandler [\"http-nio-8085\"]"}
+{"@timestamp":"2026-09-28T12:41:51.028726Z","level":"INFO","logger_name":"org.apache.catalina.core.StandardService","message":"Starting service [Tomcat]"}
+{"@timestamp":"2026-09-28T12:41:51.029232Z","level":"INFO","logger_name":"org.apache.catalina.core.StandardEngine","message":"Starting Servlet engine: [Apache Tomcat/10.1.19]"}
+{"@timestamp":"2026-09-28T12:41:51.1188632Z","level":"INFO","logger_name":"org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]","message":"Initializing Spring embedded WebApplicationContext"}
+{"@timestamp":"2026-09-28T12:41:51.1188632Z","level":"INFO","logger_name":"org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext","message":"Root WebApplicationContext: initialization completed in 2457 ms"}
+{"@timestamp":"2026-09-28T12:41:51.7740403Z","level":"INFO","logger_name":"org.hibernate.jpa.internal.util.LogHelper","message":"HHH000204: Processing PersistenceUnitInfo [name: default]"}
+{"@timestamp":"2026-09-28T12:41:51.8926322Z","level":"INFO","logger_name":"org.hibernate.Version","message":"HHH000412: Hibernate ORM core version 6.4.4.Final"}
+{"@timestamp":"2026-09-28T12:41:51.93365Z","level":"INFO","logger_name":"org.hibernate.cache.internal.RegionFactoryInitiator","message":"HHH000026: Second-level cache disabled"}
+{"@timestamp":"2026-09-28T12:41:52.2175755Z","level":"INFO","logger_name":"org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo","message":"No LoadTimeWeaver setup: ignoring JPA class transformer"}
+{"@timestamp":"2026-09-28T12:41:52.2497591Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Starting..."}
+{"@timestamp":"2026-09-28T12:41:52.4565661Z","level":"INFO","logger_name":"com.zaxxer.hikari.pool.HikariPool","message":"HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3e61cffd"}
+{"@timestamp":"2026-09-28T12:41:52.4575641Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Start completed."}
+{"@timestamp":"2026-09-28T12:41:53.6996268Z","level":"INFO","logger_name":"org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)"}
+{"@timestamp":"2026-09-28T12:41:53.8905426Z","level":"INFO","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'"}
+{"@timestamp":"2026-09-28T12:41:54.7124238Z","level":"WARN","logger_name":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration","message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}
+{"@timestamp":"2026-09-28T12:41:55.9243613Z","level":"INFO","logger_name":"org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver","message":"Exposing 3 endpoint(s) beneath base path '/actuator'"}
+{"@timestamp":"2026-09-28T12:41:56.0502317Z","level":"INFO","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","message":"Tomcat started on port 8085 (http) with context path ''"}
+{"@timestamp":"2026-09-28T12:41:56.0683927Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"Started CatalogApplication in 8.382 seconds (process running for 8.885)"}
+{"@timestamp":"2026-09-28T12:41:56.0853447Z","level":"INFO","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","message":"Closing JPA EntityManagerFactory for persistence unit 'default'"}
+{"@timestamp":"2026-09-28T12:41:56.0898524Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown initiated..."}
+{"@timestamp":"2026-09-28T12:41:56.0975852Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown completed."}
+{"@timestamp":"2026-09-28T12:42:19.3436356Z","level":"INFO","logger_name":"org.hibernate.validator.internal.util.Version","message":"HV000001: Hibernate Validator 8.0.1.Final"}
+{"@timestamp":"2026-09-28T12:42:19.4742875Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"Starting CatalogApplication using Java 22.0.1 with PID 30996 (C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\catalog\\target\\classes started by Nitish Kumar in C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\catalog)"}
+{"@timestamp":"2026-09-28T12:42:19.4752882Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"No active profile set, falling back to 1 default profile: \"default\""}
+{"@timestamp":"2026-09-28T12:42:20.8011254Z","level":"INFO","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode."}
+{"@timestamp":"2026-09-28T12:42:20.8736346Z","level":"INFO","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","message":"Finished Spring Data repository scanning in 65 ms. Found 2 JPA repository interfaces."}
+{"@timestamp":"2026-09-28T12:42:21.8586253Z","level":"INFO","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","message":"Tomcat initialized with port 8085 (http)"}
+{"@timestamp":"2026-09-28T12:42:21.8708208Z","level":"INFO","logger_name":"org.apache.coyote.http11.Http11NioProtocol","message":"Initializing ProtocolHandler [\"http-nio-8085\"]"}
+{"@timestamp":"2026-09-28T12:42:21.8728337Z","level":"INFO","logger_name":"org.apache.catalina.core.StandardService","message":"Starting service [Tomcat]"}
+{"@timestamp":"2026-09-28T12:42:21.8743429Z","level":"INFO","logger_name":"org.apache.catalina.core.StandardEngine","message":"Starting Servlet engine: [Apache Tomcat/10.1.19]"}
+{"@timestamp":"2026-09-28T12:42:21.9544301Z","level":"INFO","logger_name":"org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]","message":"Initializing Spring embedded WebApplicationContext"}
+{"@timestamp":"2026-09-28T12:42:21.9544301Z","level":"INFO","logger_name":"org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext","message":"Root WebApplicationContext: initialization completed in 2428 ms"}
+{"@timestamp":"2026-09-28T12:42:22.59937Z","level":"INFO","logger_name":"org.hibernate.jpa.internal.util.LogHelper","message":"HHH000204: Processing PersistenceUnitInfo [name: default]"}
+{"@timestamp":"2026-09-28T12:42:22.6989273Z","level":"INFO","logger_name":"org.hibernate.Version","message":"HHH000412: Hibernate ORM core version 6.4.4.Final"}
+{"@timestamp":"2026-09-28T12:42:22.7371743Z","level":"INFO","logger_name":"org.hibernate.cache.internal.RegionFactoryInitiator","message":"HHH000026: Second-level cache disabled"}
+{"@timestamp":"2026-09-28T12:42:22.9814572Z","level":"INFO","logger_name":"org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo","message":"No LoadTimeWeaver setup: ignoring JPA class transformer"}
+{"@timestamp":"2026-09-28T12:42:23.0053036Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Starting..."}
+{"@timestamp":"2026-09-28T12:42:23.199626Z","level":"INFO","logger_name":"com.zaxxer.hikari.pool.HikariPool","message":"HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2e013ba1"}
+{"@timestamp":"2026-09-28T12:42:23.2016182Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Start completed."}
+{"@timestamp":"2026-09-28T12:42:24.2543465Z","level":"INFO","logger_name":"org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)"}
+{"@timestamp":"2026-09-28T12:42:24.3980546Z","level":"INFO","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'"}
+{"@timestamp":"2026-09-28T12:42:26.5658002Z","level":"WARN","logger_name":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration","message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}
+{"@timestamp":"2026-09-28T12:42:28.7902567Z","level":"INFO","logger_name":"org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver","message":"Exposing 3 endpoint(s) beneath base path '/actuator'"}
+{"@timestamp":"2026-09-28T12:42:28.9405335Z","level":"INFO","logger_name":"org.apache.coyote.http11.Http11NioProtocol","message":"Starting ProtocolHandler [\"http-nio-8085\"]"}
+{"@timestamp":"2026-09-28T12:42:28.9842157Z","level":"INFO","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","message":"Tomcat started on port 8085 (http) with context path ''"}
+{"@timestamp":"2026-09-28T12:42:29.0343136Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"Started CatalogApplication in 10.404 seconds (process running for 10.83)"}
+{"@timestamp":"2026-09-28T12:43:58.597138Z","level":"INFO","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","message":"Closing JPA EntityManagerFactory for persistence unit 'default'"}
+{"@timestamp":"2026-09-28T12:43:58.6001357Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown initiated..."}
+{"@timestamp":"2026-09-28T12:43:58.6031382Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown completed."}
+{"@timestamp":"2026-09-28T12:44:00.962242Z","level":"INFO","logger_name":"org.hibernate.validator.internal.util.Version","message":"HV000001: Hibernate Validator 8.0.1.Final"}
+{"@timestamp":"2026-09-28T12:44:01.09624Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"Starting CatalogApplication using Java 22.0.1 with PID 11240 (C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\catalog\\target\\classes started by Nitish Kumar in C:\\Users\\Nitish Kumar\\OneDrive\\Desktop\\S.H.D.E.P_PROJECT\\catalog)"}
+{"@timestamp":"2026-09-28T12:44:01.09624Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"No active profile set, falling back to 1 default profile: \"default\""}
+{"@timestamp":"2026-09-28T12:44:02.5166696Z","level":"INFO","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode."}
+{"@timestamp":"2026-09-28T12:44:02.5875471Z","level":"INFO","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","message":"Finished Spring Data repository scanning in 55 ms. Found 2 JPA repository interfaces."}
+{"@timestamp":"2026-09-28T12:44:03.5626517Z","level":"INFO","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","message":"Tomcat initialized with port 8085 (http)"}
+{"@timestamp":"2026-09-28T12:44:03.585687Z","level":"INFO","logger_name":"org.apache.coyote.http11.Http11NioProtocol","message":"Initializing ProtocolHandler [\"http-nio-8085\"]"}
+{"@timestamp":"2026-09-28T12:44:03.5923696Z","level":"INFO","logger_name":"org.apache.catalina.core.StandardService","message":"Starting service [Tomcat]"}
+{"@timestamp":"2026-09-28T12:44:03.5923696Z","level":"INFO","logger_name":"org.apache.catalina.core.StandardEngine","message":"Starting Servlet engine: [Apache Tomcat/10.1.19]"}
+{"@timestamp":"2026-09-28T12:44:03.6796142Z","level":"INFO","logger_name":"org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]","message":"Initializing Spring embedded WebApplicationContext"}
+{"@timestamp":"2026-09-28T12:44:03.6806137Z","level":"INFO","logger_name":"org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext","message":"Root WebApplicationContext: initialization completed in 2511 ms"}
+{"@timestamp":"2026-09-28T12:44:04.1895639Z","level":"INFO","logger_name":"org.hibernate.jpa.internal.util.LogHelper","message":"HHH000204: Processing PersistenceUnitInfo [name: default]"}
+{"@timestamp":"2026-09-28T12:44:04.267774Z","level":"INFO","logger_name":"org.hibernate.Version","message":"HHH000412: Hibernate ORM core version 6.4.4.Final"}
+{"@timestamp":"2026-09-28T12:44:04.295734Z","level":"INFO","logger_name":"org.hibernate.cache.internal.RegionFactoryInitiator","message":"HHH000026: Second-level cache disabled"}
+{"@timestamp":"2026-09-28T12:44:04.5178031Z","level":"INFO","logger_name":"org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo","message":"No LoadTimeWeaver setup: ignoring JPA class transformer"}
+{"@timestamp":"2026-09-28T12:44:04.5409224Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Starting..."}
+{"@timestamp":"2026-09-28T12:44:04.7521806Z","level":"INFO","logger_name":"com.zaxxer.hikari.pool.HikariPool","message":"HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3e61cffd"}
+{"@timestamp":"2026-09-28T12:44:04.7541735Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Start completed."}
+{"@timestamp":"2026-09-28T12:44:05.8512971Z","level":"INFO","logger_name":"org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)"}
+{"@timestamp":"2026-09-28T12:44:06.0058803Z","level":"INFO","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'"}
+{"@timestamp":"2026-09-28T12:44:08.0241142Z","level":"WARN","logger_name":"org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration","message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning"}
+{"@timestamp":"2026-09-28T12:44:10.1504084Z","level":"INFO","logger_name":"org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver","message":"Exposing 3 endpoint(s) beneath base path '/actuator'"}
+{"@timestamp":"2026-09-28T12:44:10.3006892Z","level":"INFO","logger_name":"org.apache.coyote.http11.Http11NioProtocol","message":"Starting ProtocolHandler [\"http-nio-8085\"]"}
+{"@timestamp":"2026-09-28T12:44:10.340727Z","level":"INFO","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","message":"Tomcat started on port 8085 (http) with context path ''"}
+{"@timestamp":"2026-09-28T12:44:10.3847311Z","level":"INFO","logger_name":"com.ecommerce.catalog.CatalogApplication","message":"Started CatalogApplication in 10.171 seconds (process running for 10.62)"}
+{"@timestamp":"2026-09-28T12:44:12.5520746Z","level":"INFO","logger_name":"org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]","message":"Initializing Spring DispatcherServlet 'dispatcherServlet'"}
+{"@timestamp":"2026-09-28T12:44:12.5530783Z","level":"INFO","logger_name":"org.springframework.web.servlet.DispatcherServlet","message":"Initializing Servlet 'dispatcherServlet'"}
+{"@timestamp":"2026-09-28T12:44:12.5550776Z","level":"INFO","logger_name":"org.springframework.web.servlet.DispatcherServlet","message":"Completed initialization in 2 ms"}
+{"@timestamp":"2026-09-28T12:44:56.3238032Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:44:56.4939791Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:50:40.4517674Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}
+{"@timestamp":"2026-09-28T12:50:40.5196588Z","level":"INFO","logger_name":"com.ecommerce.catalog.service.impl.ProductServiceImpl","message":"Total product count retrieved: count=2"}

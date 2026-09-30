@@ -27,8 +27,24 @@ public class KafkaStartupConfig {
             return;
         }
 
-        System.out.println("Starting Kafka listeners after application startup...");
+        Thread kafkaStartupThread = new Thread(() -> {
+            try {
+                System.out.println("Starting Kafka listeners asynchronously...");
 
-        kafkaListenerEndpointRegistry.start();
+                kafkaListenerEndpointRegistry.start();
+
+                System.out.println("Kafka listeners started successfully.");
+
+            } catch (Exception e) {
+                System.err.println(
+                        "Kafka listener startup failed: " + e.getMessage()
+                );
+                e.printStackTrace();
+            }
+        });
+
+        kafkaStartupThread.setName("kafka-listener-startup");
+        kafkaStartupThread.setDaemon(true);
+        kafkaStartupThread.start();
     }
 }

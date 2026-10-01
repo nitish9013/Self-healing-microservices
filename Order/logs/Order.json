@@ -25,3 +25,6 @@
 {"@timestamp":"2026-09-30T12:44:13.0850687Z","level":"INFO","logger_name":"org.apache.coyote.http11.Http11NioProtocol","message":"Starting ProtocolHandler [\"http-nio-0.0.0.0-8083\"]"}
 {"@timestamp":"2026-09-30T12:44:13.1066763Z","level":"INFO","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","message":"Tomcat started on port 8083 (http) with context path ''"}
 {"@timestamp":"2026-09-30T12:44:13.139036Z","level":"INFO","logger_name":"com.orderservice.order.OrderApplication","message":"Started OrderApplication in 10.619 seconds (process running for 11.199)"}
+{"@timestamp":"2026-09-30T13:05:47.905238Z","level":"INFO","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","message":"Closing JPA EntityManagerFactory for persistence unit 'default'"}
+{"@timestamp":"2026-09-30T13:05:47.9102498Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown initiated..."}
+{"@timestamp":"2026-09-30T13:05:47.9199584Z","level":"INFO","logger_name":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown completed."}

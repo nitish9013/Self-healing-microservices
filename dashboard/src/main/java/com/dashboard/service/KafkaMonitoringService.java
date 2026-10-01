@@ -5,15 +5,14 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.ConsumerGroupListing;
 import org.apache.kafka.clients.admin.ConsumerGroupDescription;
+import org.apache.kafka.clients.admin.ConsumerGroupListing;
+import org.apache.kafka.clients.admin.ListOffsetsResult;
+import org.apache.kafka.clients.admin.OffsetSpec;
 import org.apache.kafka.clients.admin.TopicDescription;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.TopicPartitionInfo;
-//import org.apache.kafka.common.OffsetAndMetadata;
-import org.apache.kafka.clients.admin.ListOffsetsResult;
-import org.apache.kafka.clients.admin.OffsetSpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -42,18 +41,22 @@ public class KafkaMonitoringService {
 
     private AdminClient adminClient;
 
+    // =========================================================
+    // Initialize Kafka Admin Client
+    // =========================================================
 
     @PostConstruct
     public void initialize() {
 
-        Properties properties =
-                new Properties();
+        Properties properties = new Properties();
 
+        // Bootstrap server
         properties.put(
                 AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG,
                 bootstrapServers
         );
 
+        // Timeouts
         properties.put(
                 AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG,
                 requestTimeoutMs
@@ -64,10 +67,65 @@ public class KafkaMonitoringService {
                 defaultApiTimeoutMs
         );
 
-        adminClient =
-                AdminClient.create(properties);
+        // =====================================================
+        // Kafka Security
+        // =====================================================
+
+        properties.put(
+                AdminClientConfig.SECURITY_PROTOCOL_CONFIG,
+                System.getenv().getOrDefault(
+                        "KAFKA_SECURITY_PROTOCOL",
+                        "PLAINTEXT"
+                )
+        );
+
+        properties.put(
+                "sasl.mechanism",
+                System.getenv().getOrDefault(
+                        "KAFKA_SASL_MECHANISM",
+                        ""
+                )
+        );
+
+        properties.put(
+                "sasl.jaas.config",
+                System.getenv().getOrDefault(
+                        "KAFKA_SASL_JAAS_CONFIG",
+                        ""
+                )
+        );
+
+        properties.put(
+                "ssl.truststore.type",
+                System.getenv().getOrDefault(
+                        "KAFKA_SSL_TRUSTSTORE_TYPE",
+                        "PEM"
+                )
+        );
+
+        properties.put(
+                "ssl.truststore.certificates",
+                System.getenv().getOrDefault(
+                        "KAFKA_SSL_TRUSTSTORE_CERTIFICATES",
+                        ""
+                )
+        );
+
+        properties.put(
+                "ssl.endpoint.identification.algorithm",
+                System.getenv().getOrDefault(
+                        "KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM",
+                        "https"
+                )
+        );
+
+        // Create AdminClient
+        adminClient = AdminClient.create(properties);
     }
 
+    // =========================================================
+    // Shutdown
+    // =========================================================
 
     @PreDestroy
     public void shutdown() {
@@ -79,19 +137,19 @@ public class KafkaMonitoringService {
         }
     }
 
+    // =========================================================
+    // Kafka Status
+    // =========================================================
 
     public KafkaMonitoringResponse getKafkaStatus() {
 
-        String checkedAt =
-                Instant.now().toString();
+        String checkedAt = Instant.now().toString();
 
         try {
 
-            /*
-             * ==========================================
-             * CLUSTER
-             * ==========================================
-             */
+            // =================================================
+            // CLUSTER
+            // =================================================
 
             String clusterId =
                     adminClient
@@ -101,7 +159,6 @@ public class KafkaMonitoringService {
                                     5,
                                     TimeUnit.SECONDS
                             );
-
 
             int brokerCount =
                     adminClient
@@ -113,12 +170,9 @@ public class KafkaMonitoringService {
                             )
                             .size();
 
-
-            /*
-             * ==========================================
-             * TOPICS
-             * ==========================================
-             */
+            // =================================================
+            // TOPICS
+            // =================================================
 
             Set<String> topicNames =
                     adminClient
@@ -138,45 +192,33 @@ public class KafkaMonitoringService {
                                             .toCollection(TreeSet::new)
                             );
 
-
-            Map<String, TopicDescription>
-                    topicDescriptions =
+            Map<String, TopicDescription> topicDescriptions =
                     topicNames.isEmpty()
                             ? Collections.emptyMap()
                             : adminClient
-                            .describeTopics(
-                                    topicNames
-                            )
+                            .describeTopics(topicNames)
                             .allTopicNames()
                             .get(
                                     5,
                                     TimeUnit.SECONDS
                             );
 
-
-            List<KafkaMonitoringResponse.TopicInfo>
-                    topics =
+            List<KafkaMonitoringResponse.TopicInfo> topics =
                     new ArrayList<>();
 
-
-            for (String topicName :
-                    topicNames) {
+            for (String topicName : topicNames) {
 
                 TopicDescription description =
-                        topicDescriptions.get(
-                                topicName
-                        );
+                        topicDescriptions.get(topicName);
 
                 if (description == null) {
                     continue;
                 }
 
-
                 int partitions =
                         description
                                 .partitions()
                                 .size();
-
 
                 int replicationFactor =
                         description
@@ -191,16 +233,11 @@ public class KafkaMonitoringService {
                                 )
                                 .orElse(0);
 
-
                 long latestOffset =
-                        getLatestOffset(
-                                description
-                        );
-
+                        getLatestOffset(description);
 
                 topics.add(
-                        new KafkaMonitoringResponse
-                                .TopicInfo(
+                        new KafkaMonitoringResponse.TopicInfo(
                                 topicName,
                                 partitions,
                                 replicationFactor,
@@ -209,23 +246,19 @@ public class KafkaMonitoringService {
                 );
             }
 
+            // =================================================
+            // CONSUMER GROUPS
+            // =================================================
 
-            /*
-             * ==========================================
-             * CONSUMER GROUPS
-             * ==========================================
-             */
-
-            List<ConsumerGroupListing>
-                    groupListings =
-                    (List<ConsumerGroupListing>) adminClient
-                            .listConsumerGroups()
-                            .all()
-                            .get(
-                                    5,
-                                    TimeUnit.SECONDS
-                            );
-
+            List<ConsumerGroupListing> groupListings =
+                    (List<ConsumerGroupListing>)
+                            adminClient
+                                    .listConsumerGroups()
+                                    .all()
+                                    .get(
+                                            5,
+                                            TimeUnit.SECONDS
+                                    );
 
             List<String> groupIds =
                     groupListings
@@ -236,61 +269,44 @@ public class KafkaMonitoringService {
                             .sorted()
                             .toList();
 
-
-            List<KafkaMonitoringResponse
-                    .ConsumerGroupInfo>
+            List<KafkaMonitoringResponse.ConsumerGroupInfo>
                     consumerGroups =
                     new ArrayList<>();
 
-
             if (!groupIds.isEmpty()) {
 
-                Map<String,
-                        ConsumerGroupDescription>
+                Map<String, ConsumerGroupDescription>
                         groupDescriptions =
                         adminClient
-                                .describeConsumerGroups(
-                                        groupIds
-                                )
+                                .describeConsumerGroups(groupIds)
                                 .all()
                                 .get(
                                         5,
                                         TimeUnit.SECONDS
                                 );
 
+                for (String groupId : groupIds) {
 
-                for (String groupId :
-                        groupIds) {
-
-                    ConsumerGroupDescription
-                            group =
-                            groupDescriptions
-                                    .get(groupId);
+                    ConsumerGroupDescription group =
+                            groupDescriptions.get(groupId);
 
                     if (group == null) {
                         continue;
                     }
 
-
                     String state =
                             group.state()
                                     .toString();
-
 
                     int members =
                             group.members()
                                     .size();
 
-
                     long lag =
-                            calculateGroupLag(
-                                    groupId
-                            );
-
+                            calculateGroupLag(groupId);
 
                     consumerGroups.add(
-                            new KafkaMonitoringResponse
-                                    .ConsumerGroupInfo(
+                            new KafkaMonitoringResponse.ConsumerGroupInfo(
                                     groupId,
                                     state,
                                     members,
@@ -300,6 +316,9 @@ public class KafkaMonitoringService {
                 }
             }
 
+            // =================================================
+            // SUCCESS RESPONSE
+            // =================================================
 
             return new KafkaMonitoringResponse(
                     true,
@@ -312,8 +331,11 @@ public class KafkaMonitoringService {
                     null
             );
 
-
         } catch (Exception exception) {
+
+            // =================================================
+            // ERROR RESPONSE
+            // =================================================
 
             return new KafkaMonitoringResponse(
                     false,
@@ -328,6 +350,9 @@ public class KafkaMonitoringService {
         }
     }
 
+    // =========================================================
+    // Latest Topic Offset
+    // =========================================================
 
     private long getLatestOffset(
             TopicDescription description
@@ -335,15 +360,11 @@ public class KafkaMonitoringService {
 
         try {
 
-            Map<TopicPartition, OffsetSpec>
-                    requests =
+            Map<TopicPartition, OffsetSpec> requests =
                     new HashMap<>();
 
-
-            for (
-                    TopicPartitionInfo partition :
-                    description.partitions()
-            ) {
+            for (TopicPartitionInfo partition :
+                    description.partitions()) {
 
                 TopicPartition topicPartition =
                         new TopicPartition(
@@ -351,17 +372,14 @@ public class KafkaMonitoringService {
                                 partition.partition()
                         );
 
-
                 requests.put(
                         topicPartition,
                         OffsetSpec.latest()
                 );
             }
 
-
             Map<TopicPartition,
-                    ListOffsetsResult
-                            .ListOffsetsResultInfo>
+                    ListOffsetsResult.ListOffsetsResultInfo>
                     offsets =
                     adminClient
                             .listOffsets(requests)
@@ -370,7 +388,6 @@ public class KafkaMonitoringService {
                                     5,
                                     TimeUnit.SECONDS
                             );
-
 
             return offsets
                     .values()
@@ -388,6 +405,9 @@ public class KafkaMonitoringService {
         }
     }
 
+    // =========================================================
+    // Consumer Group Lag
+    // =========================================================
 
     private long calculateGroupLag(
             String groupId
@@ -395,35 +415,25 @@ public class KafkaMonitoringService {
 
         try {
 
-            Map<TopicPartition,
-                    OffsetAndMetadata>
+            Map<TopicPartition, OffsetAndMetadata>
                     committedOffsets =
                     adminClient
-                            .listConsumerGroupOffsets(
-                                    groupId
-                            )
+                            .listConsumerGroupOffsets(groupId)
                             .partitionsToOffsetAndMetadata()
                             .get(
                                     5,
                                     TimeUnit.SECONDS
                             );
 
-
             if (committedOffsets.isEmpty()) {
                 return 0;
             }
 
-
-            Map<TopicPartition,
-                    OffsetSpec>
-                    latestRequests =
+            Map<TopicPartition, OffsetSpec> latestRequests =
                     new HashMap<>();
 
-
-            for (
-                    TopicPartition partition :
-                    committedOffsets.keySet()
-            ) {
+            for (TopicPartition partition :
+                    committedOffsets.keySet()) {
 
                 latestRequests.put(
                         partition,
@@ -431,24 +441,18 @@ public class KafkaMonitoringService {
                 );
             }
 
-
             Map<TopicPartition,
-                    ListOffsetsResult
-                            .ListOffsetsResultInfo>
+                    ListOffsetsResult.ListOffsetsResultInfo>
                     latestOffsets =
                     adminClient
-                            .listOffsets(
-                                    latestRequests
-                            )
+                            .listOffsets(latestRequests)
                             .all()
                             .get(
                                     5,
                                     TimeUnit.SECONDS
                             );
 
-
             long totalLag = 0;
-
 
             for (
                     Map.Entry<
@@ -461,35 +465,26 @@ public class KafkaMonitoringService {
                 TopicPartition partition =
                         entry.getKey();
 
-
                 long committed =
                         entry.getValue()
                                 .offset();
 
-
                 ListOffsetsResult
-                        .ListOffsetsResultInfo
-                        latest =
-                        latestOffsets.get(
-                                partition
-                        );
-
+                        .ListOffsetsResultInfo latest =
+                        latestOffsets.get(partition);
 
                 if (latest == null) {
                     continue;
                 }
 
-
                 long endOffset =
                         latest.offset();
-
 
                 totalLag += Math.max(
                         0,
                         endOffset - committed
                 );
             }
-
 
             return totalLag;
 

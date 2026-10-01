@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
         name = "user-service",
-        url = "http://localhost:8082"
+        url = "${user.service.url}"
 )
 public interface UserProfileClient {
 

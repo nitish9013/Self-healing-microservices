@@ -36,5 +36,5 @@ COPY --from=build /app/target/authentication-0.0.1-SNAPSHOT.jar app.jar
 # Documentation/default container port
 EXPOSE 8081
 
-# Start Authentication service
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Start Authentication service with memory optimization for Render free tier (512MB limit)
+ENTRYPOINT ["java", "-XX:+UseSerialGC", "-Xmx350m", "-Xms200m", "-jar", "app.jar"]

@@ -78,12 +78,15 @@ public class JwtAuthenticationFilter
                 exchange.getRequest().getMethod(),
                 path
         );
-        // login/register ko allow karo
+        if (exchange.getRequest().getMethod() == org.springframework.http.HttpMethod.OPTIONS) {
+            return chain.filter(exchange);
+        }
 
-        if (path.startsWith("/auth")) {
+        // Allow public authentication and actuator endpoints
+        if (path.startsWith("/auth") || path.startsWith("/actuator")) {
 
             log.debug(
-                    "Public authentication endpoint path={}",
+                    "Public endpoint path={}",
                     path
             );
 

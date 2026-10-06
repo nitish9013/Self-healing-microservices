@@ -9,23 +9,110 @@ on:
 jobs:
   ping-services:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Ping all Render microservices
+      - name: Ping all Render microservices in parallel
+        shell: bash
         run: |
           services=(
-            "https://shdep-gateway.onrender.com/actuator/health"
-            "https://shdep-authentication.onrender.com/actuator/health"
-            "https://shdep-users.onrender.com/actuator/health"
-            "https://shdep-catalog.onrender.com/actuator/health"
-            "https://shdep-order.onrender.com/actuator/health"
-            "https://shdep-payment.onrender.com/actuator/health"
-            "https://shdep-dashboard.onrender.com/actuator/health"
+            "Gateway|https://shdep-gateway.onrender.com/actuator/health"
+            "Authentication|https://shdep-authentication.onrender.com/actuator/health"
+            "Users|https://shdep-users.onrender.com/actuator/health"
+            "Catalog|https://shdep-catalog.onrender.com/actuator/health"
+            "Order|https://shdep-order.onrender.com/actuator/health"
+            "Payment|https://shdep-payment.onrender.com/actuator/health"
+            "Dashboard|https://shdep-dashboard.onrender.com/actuator/health"
           )
 
-          echo "Starting health pings..."
-          for url in "${services[@]}"; do
-            echo "Pinging: $url"
-            code=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 20 -m 90 "$url" || echo "TIMEOUT/ERR")
-            echo "Response: $code"
+          mkdir -p /tmp/render-ping-results
+
+          echo "=============================================="
+          echo " SHDEP Render Keep-Alive"
+          echo " Parallel health checks"
+          echo " Max wait per service: 200 seconds"
+          echo "=============================================="
+          echo ""
+
+          pids=()
+
+          # Start ALL services at the same time
+          for service in "${services[@]}"; do
+            name="${service%%|*}"
+            url="${service#*|}"
+
+            echo "Starting: $name"
+
+            (
+              start_time=$(date +%s)
+
+              code=$(curl \
+                -s \
+                -o /dev/null \
+                -w "%{http_code}" \
+                --connect-timeout 20 \
+                --max-time 200 \
+                "$url")
+
+              curl_exit=$?
+              end_time=$(date +%s)
+              duration=$((end_time - start_time))
+
+              if [ "$curl_exit" -eq 0 ]; then
+                echo "$name|$code|$duration|OK" \
+                  > "/tmp/render-ping-results/${name}.result"
+              else
+                echo "$name|000|$duration|TIMEOUT/ERROR" \
+                  > "/tmp/render-ping-results/${name}.result"
+              fi
+            ) &
+
+            pids+=($!)
           done
-          echo "All services pinged successfully!"
+
+          echo ""
+          echo "All 7 health checks started in parallel."
+          echo "Waiting for results..."
+          echo ""
+
+          # Wait for ALL background requests
+          for pid in "${pids[@]}"; do
+            wait "$pid" || true
+          done
+
+          echo ""
+          echo "=============================================="
+          echo " FINAL RESULTS"
+          echo "=============================================="
+
+          success_count=0
+          failure_count=0
+
+          for service in "${services[@]}"; do
+            name="${service%%|*}"
+            result_file="/tmp/render-ping-results/${name}.result"
+
+            if [ -f "$result_file" ]; then
+              IFS='|' read -r result_name code duration status < "$result_file"
+
+              if [ "$code" = "200" ]; then
+                echo "[OK 200] $result_name - ${duration}s"
+                success_count=$((success_count + 1))
+              else
+                echo "[WARN $code] $result_name - ${duration}s - $status"
+                failure_count=$((failure_count + 1))
+              fi
+            else
+              echo "[ERROR] $name - No result received"
+              failure_count=$((failure_count + 1))
+            fi
+          done
+
+          echo ""
+          echo "=============================================="
+          echo " Successful: $success_count / 7"
+          echo " Failed/Timeout: $failure_count / 7"
+          echo "=============================================="
+
+          # Do not fail the GitHub Action just because a Render
+          # free service needed more time to wake up.
+          exit 0

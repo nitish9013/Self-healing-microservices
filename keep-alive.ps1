@@ -11,24 +11,90 @@ $services = @(
     "https://shdep-dashboard.onrender.com/actuator/health"
 )
 
+$connectTimeout = 20
+$maxTime = 200
+$interval = 600
+
 Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host "  SHDEP Microservices Keep-Alive Pinger  " -ForegroundColor Yellow
-Write-Host "  Pinging every 10 minutes (Ctrl+C to stop)" -ForegroundColor Cyan
+Write-Host "  Parallel warm-up enabled" -ForegroundColor Green
+Write-Host "  Startup allowance: 200 seconds" -ForegroundColor Cyan
+Write-Host "  Pinging every 10 minutes" -ForegroundColor Cyan
+Write-Host "  Press Ctrl+C to stop" -ForegroundColor Gray
 Write-Host "=========================================" -ForegroundColor Cyan
 
 while ($true) {
-    $time = Get-Date -Format "HH:mm:ss"
-    Write-Host "`n[$time] Pinging services..." -ForegroundColor Magenta
 
+    $time = Get-Date -Format "HH:mm:ss"
+
+    Write-Host "`n[$time] Starting parallel health pings..." -ForegroundColor Magenta
+    Write-Host "Waking all Render services simultaneously..." -ForegroundColor Yellow
+
+    $jobs = @()
+
+    # Start all health checks in parallel
     foreach ($url in $services) {
-        $code = curl.exe -s -o nul -w "%{http_code}" --connect-timeout 20 -m 90 $url
-        if ($code -eq "200") {
-            Write-Host "  [OK 200] $url" -ForegroundColor Green
-        } else {
-            Write-Host "  [WARN $code] $url" -ForegroundColor Yellow
+
+        $jobs += Start-Job -ArgumentList $url, $connectTimeout, $maxTime -ScriptBlock {
+
+            param(
+                $url,
+                $connectTimeout,
+                $maxTime
+            )
+
+            $code = curl.exe `
+                -s `
+                -o nul `
+                -w "%{http_code}" `
+                --connect-timeout $connectTimeout `
+                -m $maxTime `
+                $url
+
+            [PSCustomObject]@{
+                Url  = $url
+                Code = $code
+            }
         }
     }
 
-    Write-Host "`nWaiting 10 minutes for next ping cycle... (Press Ctrl+C to stop)" -ForegroundColor Gray
-    Start-Sleep -Seconds 600
+    # Wait until all jobs finish
+    $jobs | Wait-Job | Out-Null
+
+    # Collect results
+    $results = foreach ($job in $jobs) {
+        Receive-Job $job
+    }
+
+    # Cleanup jobs
+    $jobs | Remove-Job -Force
+
+    Write-Host "`nHealth check results:" -ForegroundColor Cyan
+
+    $successCount = 0
+    $failedCount = 0
+
+    foreach ($result in $results) {
+
+        if ($result.Code -eq "200") {
+
+            Write-Host "  [OK 200] $($result.Url)" -ForegroundColor Green
+            $successCount++
+
+        } else {
+
+            Write-Host "  [WARN $($result.Code)] $($result.Url)" -ForegroundColor Yellow
+            $failedCount++
+        }
+    }
+
+    Write-Host "`n-----------------------------------------" -ForegroundColor DarkGray
+    Write-Host "Successful: $successCount / $($services.Count)" -ForegroundColor Green
+    Write-Host "Failed/Timeout: $failedCount / $($services.Count)" -ForegroundColor Yellow
+    Write-Host "-----------------------------------------" -ForegroundColor DarkGray
+
+    Write-Host "`nWaiting 10 minutes for next ping cycle..." -ForegroundColor Gray
+    Write-Host "(Press Ctrl+C to stop)" -ForegroundColor Gray
+
+    Start-Sleep -Seconds $interval
 }

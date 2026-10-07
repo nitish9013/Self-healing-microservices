@@ -5,12 +5,14 @@ import {
     Button,
 } from "@mui/material";
 
+import { useNavigate } from "react-router-dom";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import SupportAgentRoundedIcon from "@mui/icons-material/SupportAgentRounded";
 
 
 export default function SupportCard() {
+    const navigate = useNavigate();
 
     return (
         <Card
@@ -137,6 +139,7 @@ export default function SupportCard() {
                 <Button
                     variant="contained"
                     startIcon={<SupportAgentRoundedIcon />}
+                    onClick={() => navigate("/support")}
                     sx={{
                         justifyContent: "flex-start",
 

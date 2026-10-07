@@ -10,6 +10,9 @@ import PendingRoundedIcon
 
 import CancelRoundedIcon
     from "@mui/icons-material/CancelRounded";
+import ArrowBackRoundedIcon
+    from "@mui/icons-material/ArrowBackRounded";
+import { useNavigate } from "react-router-dom";
 import {
     getOrders,
     createOrder
@@ -37,6 +40,7 @@ import {
 
 
 const Order = () => {
+    const navigate = useNavigate();
 
 const getErrorMessage = (err, fallback) => {
     const status = err?.response?.status;
@@ -458,27 +462,48 @@ openRazorpayCheckout({
                 PAGE HEADER
             ================================= */}
 
-            <Box sx={{ mb: 4 }}>
+            <Box sx={{ mb: 4, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 2 }}>
 
-                <Typography
-                    variant="h4"
+                <Box>
+                    <Typography
+                        variant="h4"
+                        sx={{
+                            fontWeight: 700,
+                            color: "white",
+                            mb: 1
+                        }}
+                    >
+                        Orders
+                    </Typography>
+
+
+                    <Typography
+                        sx={{
+                            color: "#94A3B8"
+                        }}
+                    >
+                        Create and monitor your orders
+                    </Typography>
+                </Box>
+
+                <Button
+                    variant="outlined"
+                    startIcon={<ArrowBackRoundedIcon />}
+                    onClick={() => navigate("/dashboard")}
                     sx={{
-                        fontWeight: 700,
-                        color: "white",
-                        mb: 1
+                        borderRadius: 2.5,
+                        color: "#93C5FD",
+                        borderColor: "rgba(59,130,246,.3)",
+                        textTransform: "none",
+                        fontWeight: 600,
+                        "&:hover": {
+                            borderColor: "#60A5FA",
+                            background: "rgba(59,130,246,.1)",
+                        },
                     }}
                 >
-                    Orders
-                </Typography>
-
-
-                <Typography
-                    sx={{
-                        color: "#94A3B8"
-                    }}
-                >
-                    Create and monitor your orders
-                </Typography>
+                    Back to Dashboard
+                </Button>
 
             </Box>
 

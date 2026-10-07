@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link as RouterLink } from "react-router-dom";
 import authService from "../../services/authService";
@@ -42,6 +42,13 @@ const [error, setError] = useState("");
 
 const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("expired") === "true") {
+      setError("Your session has expired. Please log in again.");
+    }
+  }, []);
 
   const handleChange = (e) => {
 

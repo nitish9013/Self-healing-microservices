@@ -1,19 +1,25 @@
+import { useState, useEffect } from "react";
 import {
     Box,
     Button,
     Chip,
     Typography,
+    IconButton,
+    Tooltip,
 } from "@mui/material";
 
 import {
     ShoppingCartOutlined,
-    ArrowForwardRounded,
     Inventory2Outlined,
     EditOutlined,
     DeleteOutlineRounded,
+    FavoriteRounded,
+    FavoriteBorderRounded,
 } from "@mui/icons-material";
 
 import { useAuth } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext";
+import wishlistService from "../../services/wishlistService";
 
 
 export default function ProductCard({
@@ -22,37 +28,44 @@ export default function ProductCard({
     onEdit,
     onDelete,
 }) {
+    /* ============================================
+       AUTH / ROLE & CART HOOKS (UNCONDITIONAL)
+    ============================================ */
+    const { role } = useAuth();
+    const { addToCart, isInCart, openCartDrawer } = useCart();
+
+    const productId = product?.id;
+    const [inWishlist, setInWishlist] = useState(() => (productId ? wishlistService.isInWishlist(productId) : false));
+
+    useEffect(() => {
+        if (productId) {
+            const current = wishlistService.isInWishlist(productId);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setInWishlist((prev) => (prev !== current ? current : prev));
+        }
+    }, [productId]);
 
     if (!product) {
         return null;
     }
 
-
-    /* ============================================
-       AUTH / ROLE
-    ============================================ */
-
-    const { role } = useAuth();
-
+    const inCart = productId ? isInCart(productId) : false;
 
     const normalizedRole =
         String(role || "")
             .replace("ROLE_", "")
             .toUpperCase();
 
-
     const canEditProduct =
         normalizedRole === "ADMIN" ||
         normalizedRole === "SALESMAN";
 
-       const canDeleteProduct =
-    normalizedRole === "ADMIN"; 
-
+    const canDeleteProduct =
+        normalizedRole === "ADMIN";
 
     /* ============================================
        PRODUCT DATA
     ============================================ */
-
     const {
         id,
         name,
@@ -64,18 +77,32 @@ export default function ProductCard({
         categoryName,
     } = product;
 
+    const handleWishlistToggle = (event) => {
+        event.stopPropagation();
+        if (!id) return;
+
+        if (inWishlist) {
+            wishlistService.removeFromWishlist(id);
+            setInWishlist(false);
+        } else {
+            wishlistService.addToWishlist(product);
+            setInWishlist(true);
+        }
+    };
+
+    const handleAddToCart = (event) => {
+        event.stopPropagation();
+        if (!isAvailable) return;
+        addToCart(product, 1);
+        openCartDrawer();
+    };
 
     /* ============================================
        STOCK STATUS
     ============================================ */
-
     const isAvailable =
         active === true &&
         Number(stockQuantity) > 0;
-
-
-    const isOutOfStock =
-        Number(stockQuantity) <= 0;
 
 
     /* ============================================
@@ -332,6 +359,41 @@ const handleDelete = (
 
 
                 {/* =================================
+                    WISHLIST BUTTON
+                ================================= */}
+
+                <Tooltip title={inWishlist ? "Remove from wishlist" : "Add to wishlist"}>
+                    <IconButton
+                        onClick={handleWishlistToggle}
+                        sx={{
+                            position: "absolute",
+                            top: 10,
+                            left: 10,
+                            width: 32,
+                            height: 32,
+                            background: "rgba(15,23,42,.75)",
+                            backdropFilter: "blur(6px)",
+                            border: inWishlist
+                                ? "1px solid rgba(244,114,182,.4)"
+                                : "1px solid rgba(255,255,255,.15)",
+                            color: inWishlist ? "#F472B6" : "#94A3B8",
+                            transition: "all .2s ease",
+                            "&:hover": {
+                                background: "rgba(15,23,42,.95)",
+                                color: "#F472B6",
+                                transform: "scale(1.1)",
+                            },
+                        }}
+                    >
+                        {inWishlist ? (
+                            <FavoriteRounded sx={{ fontSize: 18 }} />
+                        ) : (
+                            <FavoriteBorderRounded sx={{ fontSize: 18 }} />
+                        )}
+                    </IconButton>
+                </Tooltip>
+
+                {/* =================================
                     STOCK BADGE
                 ================================= */}
 
@@ -556,71 +618,62 @@ const handleDelete = (
 
 
                 {/* =================================
-                    VIEW PRODUCT
+                    ACTIONS: VIEW & ADD TO CART
                 ================================= */}
 
-                <Button
-                    fullWidth
+                <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
+                    <Button
+                        fullWidth
+                        variant="outlined"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            handleClick();
+                        }}
+                        sx={{
+                            minHeight: 40,
+                            borderRadius: 2,
+                            textTransform: "none",
+                            fontSize: 12,
+                            fontWeight: 700,
+                            color: "#93C5FD",
+                            borderColor: "rgba(96,165,250,.20)",
+                            "&:hover": {
+                                borderColor: "rgba(96,165,250,.45)",
+                                background: "rgba(59,130,246,.08)",
+                            },
+                        }}
+                    >
+                        View
+                    </Button>
 
-                    variant="outlined"
-
-                    startIcon={
-                        isAvailable
-                            ? (
-                                <ShoppingCartOutlined />
-                            )
-                            : (
-                                <ArrowForwardRounded />
-                            )
-                    }
-
-                    onClick={(
-                        event
-                    ) => {
-
-                        event.stopPropagation();
-
-                        handleClick();
-
-                    }}
-
-                    sx={{
-                        mt: 2,
-
-                        minHeight:
-                            40,
-
-                        borderRadius:
-                            2,
-
-                        textTransform:
-                            "none",
-
-                        fontSize:
-                            12,
-
-                        fontWeight:
-                            700,
-
-                        color:
-                            "#93C5FD",
-
-                        borderColor:
-                            "rgba(96,165,250,.20)",
-
-                        "&:hover": {
-                            borderColor:
-                                "rgba(96,165,250,.45)",
-
-                            background:
-                                "rgba(59,130,246,.08)",
-                        },
-                    }}
-                >
-                    {isAvailable
-                        ? "View Product"
-                        : "View Details"}
-                </Button>
+                    {isAvailable && (
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            startIcon={<ShoppingCartOutlined sx={{ fontSize: 16 }} />}
+                            onClick={handleAddToCart}
+                            sx={{
+                                minHeight: 40,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                fontSize: 12,
+                                fontWeight: 700,
+                                background: inCart
+                                    ? "linear-gradient(135deg, #10B981, #059669)"
+                                    : "linear-gradient(135deg, #2563EB, #1D4ED8)",
+                                color: "#fff",
+                                boxShadow: "0 4px 14px rgba(37,99,235,.25)",
+                                "&:hover": {
+                                    background: inCart
+                                        ? "linear-gradient(135deg, #059669, #047857)"
+                                        : "linear-gradient(135deg, #1D4ED8, #1E40AF)",
+                                },
+                            }}
+                        >
+                            {inCart ? "In Cart ✓" : "Add to Cart"}
+                        </Button>
+                    )}
+                </Box>
 
 
                 {/* =================================

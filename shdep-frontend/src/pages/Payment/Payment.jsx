@@ -15,7 +15,8 @@ import {
 import {
     PaymentsRounded,
     RefreshRounded,
-    ReceiptLongRounded
+    ReceiptLongRounded,
+    ArrowBackRounded,
 } from "@mui/icons-material";
 
 
@@ -121,28 +122,55 @@ useEffect(() => {
                     sx={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 1.5,
+                        justifyContent: "space-between",
+                        flexWrap: "wrap",
+                        gap: 2,
                         mb: 1
                     }}
                 >
-
-                    <PaymentsRounded
+                    <Box
                         sx={{
-                            color: "#38BDF8",
-                            fontSize: 32
-                        }}
-                    />
-
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            fontWeight: 700,
-                            color: "white"
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1.5,
                         }}
                     >
-                        Payments
-                    </Typography>
+                        <PaymentsRounded
+                            sx={{
+                                color: "#38BDF8",
+                                fontSize: 32
+                            }}
+                        />
 
+                        <Typography
+                            variant="h4"
+                            sx={{
+                                fontWeight: 700,
+                                color: "white"
+                            }}
+                        >
+                            Payments
+                        </Typography>
+                    </Box>
+
+                    <Button
+                        variant="outlined"
+                        startIcon={<ArrowBackRounded />}
+                        onClick={() => navigate("/dashboard")}
+                        sx={{
+                            borderRadius: 2.5,
+                            color: "#93C5FD",
+                            borderColor: "rgba(59,130,246,.3)",
+                            textTransform: "none",
+                            fontWeight: 600,
+                            "&:hover": {
+                                borderColor: "#60A5FA",
+                                background: "rgba(59,130,246,.1)",
+                            },
+                        }}
+                    >
+                        Back to Dashboard
+                    </Button>
                 </Box>
 
 

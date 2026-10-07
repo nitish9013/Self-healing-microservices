@@ -111,10 +111,16 @@ export default function QuickActions() {
                             key={action.title}
                             variant="outlined"
                             onClick={() => {
-    if (action.title === "Payments") {
-        navigate("/payments");
-    }
-}}
+                                if (action.title === "Payments") {
+                                    navigate("/payments");
+                                } else if (action.title === "Browse Catalog") {
+                                    navigate("/catalog");
+                                } else if (action.title === "My Orders") {
+                                    navigate("/orders");
+                                } else if (action.title === "My Profile") {
+                                    navigate("/profile");
+                                }
+                            }}
                             sx={{
                                 minHeight: 90,
 

@@ -5,16 +5,22 @@ import {
     Chip,
     CircularProgress,
     Typography,
+    IconButton,
 } from "@mui/material";
 
 import {
     ArrowBackRounded,
     Inventory2Outlined,
     RefreshRounded,
+    AddRounded,
+    RemoveRounded,
+    ShoppingCartOutlined,
+    FlashOnRounded,
 } from "@mui/icons-material";
 
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 
 import catalogService from "../../services/catalogService";
 
@@ -66,6 +72,22 @@ export default function ProductDetails() {
         error,
         setError,
     ] = useState("");
+
+    const { addToCart, isInCart, openCartDrawer } = useCart();
+    const [orderQty, setOrderQty] = useState(1);
+    const inCart = product?.id ? isInCart(product.id) : false;
+
+    const handleAddToCart = () => {
+        if (!product || !isAvailable) return;
+        addToCart(product, orderQty);
+        openCartDrawer();
+    };
+
+    const handleBuyNow = () => {
+        if (!product || !isAvailable) return;
+        addToCart(product, orderQty);
+        openCartDrawer();
+    };
 
 
     /* ============================================
@@ -137,9 +159,9 @@ export default function ProductDetails() {
     ============================================ */
 
     useEffect(() => {
-
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadProduct();
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
 
@@ -942,57 +964,117 @@ export default function ProductDetails() {
 
 
                                     {/* =================
-                                        ACTION
+                                        ACTIONS: QUANTITY, CART & BUY NOW
                                     ================= */}
 
-                                    <Button
-                                        fullWidth
+                                    {isAvailable ? (
+                                        <Box sx={{ mt: 3, display: "flex", flexDirection: "column", gap: 2 }}>
+                                            {/* Quantity Selector */}
+                                            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                                                <Typography sx={{ color: "#94A3B8", fontSize: 13, fontWeight: 600 }}>
+                                                    Quantity:
+                                                </Typography>
+                                                <Box
+                                                    sx={{
+                                                        display: "inline-flex",
+                                                        alignItems: "center",
+                                                        background: "rgba(255,255,255,.05)",
+                                                        borderRadius: 2.5,
+                                                        p: 0.5,
+                                                        border: "1px solid rgba(255,255,255,.10)",
+                                                    }}
+                                                >
+                                                    <IconButton
+                                                        size="small"
+                                                        disabled={orderQty <= 1}
+                                                        onClick={() => setOrderQty((prev) => Math.max(1, prev - 1))}
+                                                        sx={{ color: "#94A3B8" }}
+                                                    >
+                                                        <RemoveRounded sx={{ fontSize: 16 }} />
+                                                    </IconButton>
+                                                    <Typography sx={{ px: 2, fontSize: 14, fontWeight: 700, color: "#F8FAFC" }}>
+                                                        {orderQty}
+                                                    </Typography>
+                                                    <IconButton
+                                                        size="small"
+                                                        disabled={orderQty >= (product.stockQuantity || 99)}
+                                                        onClick={() => setOrderQty((prev) => Math.min(product.stockQuantity || 99, prev + 1))}
+                                                        sx={{ color: "#94A3B8" }}
+                                                    >
+                                                        <AddRounded sx={{ fontSize: 16 }} />
+                                                    </IconButton>
+                                                </Box>
+                                            </Box>
 
-                                        disabled={
-                                            !isAvailable
-                                        }
+                                            {/* Action Buttons */}
+                                            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 1.5 }}>
+                                                <Button
+                                                    fullWidth
+                                                    variant="contained"
+                                                    startIcon={<ShoppingCartOutlined />}
+                                                    onClick={handleAddToCart}
+                                                    sx={{
+                                                        minHeight: 48,
+                                                        borderRadius: 2.5,
+                                                        background: inCart
+                                                            ? "linear-gradient(135deg, #10B981, #059669)"
+                                                            : "linear-gradient(135deg, #2563EB, #1D4ED8)",
+                                                        color: "#fff",
+                                                        textTransform: "none",
+                                                        fontSize: 14,
+                                                        fontWeight: 700,
+                                                        boxShadow: "0 8px 20px rgba(37,99,235,.25)",
+                                                        "&:hover": {
+                                                            background: inCart
+                                                                ? "linear-gradient(135deg, #059669, #047857)"
+                                                                : "linear-gradient(135deg, #1D4ED8, #1E40AF)",
+                                                        },
+                                                    }}
+                                                >
+                                                    {inCart ? "In Cart (Add More)" : "Add to Cart"}
+                                                </Button>
 
-                                        sx={{
-                                            mt: 3,
-
-                                            minHeight:
-                                                48,
-
-                                            borderRadius:
-                                                2.5,
-
-                                            background:
-                                                isAvailable
-                                                    ? "#2563EB"
-                                                    : "rgba(255,255,255,.06)",
-
-                                            color:
-                                                isAvailable
-                                                    ? "#fff"
-                                                    : "#64748B",
-
-                                            textTransform:
-                                                "none",
-
-                                            fontSize:
-                                                14,
-
-                                            fontWeight:
-                                                700,
-
-                                            "&:hover":
-                                                {
-                                                    background:
-                                                        isAvailable
-                                                            ? "#1D4ED8"
-                                                            : "rgba(255,255,255,.06)",
-                                                },
-                                        }}
-                                    >
-                                        {isAvailable
-                                            ? "Add to Cart — Coming Next"
-                                            : "Currently Unavailable"}
-                                    </Button>
+                                                <Button
+                                                    fullWidth
+                                                    variant="contained"
+                                                    startIcon={<FlashOnRounded />}
+                                                    onClick={handleBuyNow}
+                                                    sx={{
+                                                        minHeight: 48,
+                                                        borderRadius: 2.5,
+                                                        background: "linear-gradient(135deg, #F59E0B, #D97706)",
+                                                        color: "#fff",
+                                                        textTransform: "none",
+                                                        fontSize: 14,
+                                                        fontWeight: 700,
+                                                        boxShadow: "0 8px 20px rgba(245,158,11,.25)",
+                                                        "&:hover": {
+                                                            background: "linear-gradient(135deg, #D97706, #B45309)",
+                                                        },
+                                                    }}
+                                                >
+                                                    Buy Now
+                                                </Button>
+                                            </Box>
+                                        </Box>
+                                    ) : (
+                                        <Button
+                                            fullWidth
+                                            disabled
+                                            sx={{
+                                                mt: 3,
+                                                minHeight: 48,
+                                                borderRadius: 2.5,
+                                                background: "rgba(255,255,255,.06)",
+                                                color: "#64748B",
+                                                textTransform: "none",
+                                                fontSize: 14,
+                                                fontWeight: 700,
+                                            }}
+                                        >
+                                            Currently Unavailable
+                                        </Button>
+                                    )}
 
                                 </Box>
 

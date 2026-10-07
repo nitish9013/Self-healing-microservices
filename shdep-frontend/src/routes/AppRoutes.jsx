@@ -15,6 +15,15 @@ import Payment from "../pages/Payment/Payment";
 import PaymentDetails from "../pages/Payment/PaymentDetails";
 import OrderDetails from "../pages/Order/OrderDetails";
 
+import Wishlist from "../pages/wishlist/Wishlist";
+import Support from "../pages/support/Support";
+import Profile from "../pages/profile/Profile";
+import Settings from "../pages/settings/Settings";
+import Cart from "../pages/cart/Cart";
+
+import CartDrawer from "../components/cart/CartDrawer";
+import MobileBottomNav from "../components/common/MobileBottomNav";
+
 import AdminRoute from "../components/auth/AdminRoute";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminServices from "../pages/admin/AdminServices";
@@ -273,7 +282,70 @@ function AppRoutes() {
                     }
                 />
 
+
+                {/* ================= WISHLIST ================= */}
+
+                <Route
+                    path="/wishlist"
+                    element={
+                        <ProtectedRoute>
+                            <Wishlist />
+                        </ProtectedRoute>
+                    }
+                />
+
+
+                {/* ================= SUPPORT ================= */}
+
+                <Route
+                    path="/support"
+                    element={
+                        <ProtectedRoute>
+                            <Support />
+                        </ProtectedRoute>
+                    }
+                />
+
+
+                {/* ================= PROFILE ================= */}
+
+                <Route
+                    path="/profile"
+                    element={
+                        <ProtectedRoute>
+                            <Profile />
+                        </ProtectedRoute>
+                    }
+                />
+
+
+                {/* ================= USER SETTINGS ================= */}
+
+                <Route
+                    path="/settings"
+                    element={
+                        <ProtectedRoute>
+                            <Settings />
+                        </ProtectedRoute>
+                    }
+                />
+
+
+                {/* ================= SHOPPING CART ================= */}
+
+                <Route
+                    path="/cart"
+                    element={
+                        <ProtectedRoute>
+                            <Cart />
+                        </ProtectedRoute>
+                    }
+                />
+
             </Routes>
+
+            <CartDrawer />
+            <MobileBottomNav />
 
         </BrowserRouter>
     );

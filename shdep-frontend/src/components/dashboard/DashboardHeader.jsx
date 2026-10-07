@@ -3,22 +3,22 @@ import {
     Toolbar,
     Box,
     Typography,
-    TextField,
-    InputAdornment,
     IconButton,
     Avatar,
-    Chip,
     Button,
     Divider,
+    Badge,
 } from "@mui/material";
 
 import {
     MenuRounded,
     NotificationsNoneRounded,
     SettingsOutlined,
+    ShoppingBagOutlined,
 } from "@mui/icons-material";
 
 import { useAuth } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
 
@@ -27,6 +27,7 @@ export default function DashboardHeader({
     onMenuClick,
 }) {
     const navigate = useNavigate();
+    const { getCartCount, openCartDrawer } = useCart();
 
 const {
     username,
@@ -343,21 +344,61 @@ const isAdmin = normalizedRole === "ADMIN";
 
 
                 {/* =================================
+                    SHOPPING CART
+                ================================= */}
+
+                <IconButton
+                    onClick={openCartDrawer}
+                    aria-label="Shopping Cart"
+                    sx={{
+                        width: 40,
+                        height: 40,
+                        color: "#94A3B8",
+                        border: "1px solid rgba(255,255,255,.08)",
+                        background: "rgba(255,255,255,.025)",
+                        display: "flex",
+                        "&:hover": {
+                            color: "#60A5FA",
+                            background: "rgba(59,130,246,.10)",
+                            borderColor: "rgba(59,130,246,.30)",
+                        },
+                    }}
+                >
+                    <Badge
+                        badgeContent={getCartCount()}
+                        color="primary"
+                        sx={{
+                            "& .MuiBadge-badge": {
+                                background: "#2563EB",
+                                color: "#fff",
+                                fontWeight: 800,
+                                fontSize: 10,
+                                minWidth: 16,
+                                height: 16,
+                            },
+                        }}
+                    >
+                        <ShoppingBagOutlined sx={{ fontSize: 20 }} />
+                    </Badge>
+                </IconButton>
+
+
+                {/* =================================
                     SETTINGS
                 ================================= */}
 
                 <IconButton
-                    disabled
+                    onClick={() => navigate("/settings")}
                     aria-label="Settings"
                     sx={{
                         width: 40,
 
                         height: 40,
 
-                        color: "#64748B",
+                        color: "#94A3B8",
 
                         border:
-                            "1px solid rgba(255,255,255,.06)",
+                            "1px solid rgba(255,255,255,.08)",
 
                         background:
                             "rgba(255,255,255,.025)",
@@ -367,8 +408,10 @@ const isAdmin = normalizedRole === "ADMIN";
                             sm: "flex",
                         },
 
-                        "&.Mui-disabled": {
-                            color: "#475569",
+                        "&:hover": {
+                            color: "#60A5FA",
+                            background: "rgba(59,130,246,.10)",
+                            borderColor: "rgba(59,130,246,.30)",
                         },
                     }}
                 >
@@ -443,6 +486,7 @@ const isAdmin = normalizedRole === "ADMIN";
                 ================================= */}
 
                 <Box
+                    onClick={() => navigate("/profile")}
                     sx={{
                         display: "flex",
 
@@ -451,6 +495,18 @@ const isAdmin = normalizedRole === "ADMIN";
                         gap: 1.2,
 
                         pl: .5,
+
+                        cursor: "pointer",
+
+                        p: 0.5,
+
+                        borderRadius: 2.5,
+
+                        transition: "all .2s ease",
+
+                        "&:hover": {
+                            background: "rgba(255,255,255,.05)",
+                        },
                     }}
                 >
 

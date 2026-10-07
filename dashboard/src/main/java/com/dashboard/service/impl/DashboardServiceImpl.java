@@ -1,75 +1,72 @@
 package com.dashboard.service.impl;
 
-import com.dashboard.client.CatalogClient;
-import com.dashboard.client.OrderClient;
-import com.dashboard.client.UserClient;
 import com.dashboard.dto.response.*;
 import com.dashboard.feign.CatalogFeignClient;
 import com.dashboard.feign.OrderFeignClient;
 import com.dashboard.feign.UserFeignClient;
 import com.dashboard.service.DashboardService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class DashboardServiceImpl
-        implements DashboardService {
+public class DashboardServiceImpl implements DashboardService {
 
-//    private final UserClient userClient;
-//    private final CatalogClient catalogClient;
-private final UserFeignClient userFeignClient;
+    private final UserFeignClient userFeignClient;
     private final CatalogFeignClient catalogFeignClient;
     private final OrderFeignClient orderFeignClient;
 
-    private final OrderClient orderClient;
-
     @Override
-    @Retry(
+    @Retry(name = "dashboardRetry")
+    @CircuitBreaker(name = "dashboardService", fallbackMethod = "dashboardFallback")
+    public DashboardResponse getDashboard(Long userId) {
+        log.info("Fetching dashboard data for userId={}", userId);
 
-            name = "dashboardRetry"
+        UserSummaryResponse user;
+        try {
+            user = userFeignClient.getUser(userId);
+        } catch (Exception ex) {
+            log.warn("Failed to fetch user summary for userId={}, using fallback user: {}", userId, ex.getMessage());
+            user = UserSummaryResponse.builder()
+                    .userId(userId)
+                    .name("User #" + userId)
+                    .email("user" + userId + "@shdep.local")
+                    .build();
+        }
 
+        List<CategorySummaryResponse> categories;
+        try {
+            categories = catalogFeignClient.getCategories();
+            if (categories == null) categories = Collections.emptyList();
+        } catch (Exception ex) {
+            log.warn("Failed to fetch categories from CatalogService: {}", ex.getMessage());
+            categories = Collections.emptyList();
+        }
 
-    )
-    @CircuitBreaker(
-            name = "dashboardService",
-            fallbackMethod = "dashboardFallback"
-    )
+        List<ProductSummaryResponse> products;
+        try {
+            products = catalogFeignClient.getProducts();
+            if (products == null) products = Collections.emptyList();
+        } catch (Exception ex) {
+            log.warn("Failed to fetch products from CatalogService: {}", ex.getMessage());
+            products = Collections.emptyList();
+        }
 
-    public DashboardResponse getDashboard(
-            Long userId) {
-        System.out.println(
-                "Retry Attempt"
-        );
-
-//        UserSummaryResponse user =
-//                userClient.getUser(userId);
-//
-//        List<CategorySummaryResponse>
-//                categories =
-//                catalogClient.getCategories();
-//
-//        List<ProductSummaryResponse>
-//                products =
-//                catalogClient.getProducts();
-
-        UserSummaryResponse user =
-                userFeignClient.getUser(userId);
-
-        List<CategorySummaryResponse> categories =
-                catalogFeignClient.getCategories();
-
-        List<ProductSummaryResponse> products =
-                catalogFeignClient.getProducts();
-
-        List<OrderSummaryResponse> orders =
-                orderFeignClient.getOrders(
-                        user.getEmail());
-
+        List<OrderSummaryResponse> orders;
+        try {
+            orders = orderFeignClient.getOrders(user.getEmail());
+            if (orders == null) orders = Collections.emptyList();
+        } catch (Exception ex) {
+            log.warn("Failed to fetch orders from OrderService for email={}: {}", user.getEmail(), ex.getMessage());
+            orders = Collections.emptyList();
+        }
 
         return DashboardResponse.builder()
                 .user(user)
@@ -79,32 +76,18 @@ private final UserFeignClient userFeignClient;
                 .build();
     }
 
-
-
-    public DashboardResponse dashboardFallback(
-            Long userId,
-            Exception ex) {
-
-//        System.out.println(
-//                "Fallback Triggered : "
-//                        + ex.getMessage());
-        System.out.println("========== DASHBOARD FALLBACK ==========");
-        System.out.println("Exception Type : " + ex.getClass().getName());
-        System.out.println("Exception Message : " + ex.getMessage());
-        ex.printStackTrace();
-        System.out.println("========================================");
+    public DashboardResponse dashboardFallback(Long userId, Exception ex) {
+        log.error("Global dashboard fallback triggered for userId={}: {}", userId, ex.getMessage(), ex);
 
         return DashboardResponse.builder()
-                .user(
-                        UserSummaryResponse.builder()
-                                .userId(userId)
-                                .name("Service Unavailable")
-                                .email("N/A")
-                                .build()
-                )
-                .categories(List.of())
-                .featuredProducts(List.of())
-                .recentOrders(List.of())
+                .user(UserSummaryResponse.builder()
+                        .userId(userId)
+                        .name("System In Recovery")
+                        .email("recovery@shdep.local")
+                        .build())
+                .categories(Collections.emptyList())
+                .featuredProducts(Collections.emptyList())
+                .recentOrders(Collections.emptyList())
                 .build();
     }
 }

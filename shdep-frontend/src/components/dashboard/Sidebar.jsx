@@ -7,7 +7,7 @@ import {
     PaymentsOutlined,
     SettingsOutlined,
     ShoppingBagOutlined,
-    StorefrontOutlined,
+    ShoppingCartOutlined,
     CategoryOutlined,
 } from "@mui/icons-material";
 
@@ -17,8 +17,9 @@ import {
     Typography,
 } from "@mui/material";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext";
 
 
 export default function Sidebar({
@@ -27,11 +28,15 @@ export default function Sidebar({
 }) {
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const currentPath = location.pathname;
 
     const { logout } = useAuth();
     const {
     role,
 } = useAuth();
+    const { getCartCount } = useCart();
+    const cartCount = getCartCount();
 
 
 const normalizedRole =
@@ -74,30 +79,35 @@ const isAdmin =
     };
 
 
-    /*
-     * These modules are intentionally disabled
-     * until their actual frontend pages are created.
-     */
-
     const mainNavigation = [
 
         {
             label: "Home",
             icon: DashboardOutlined,
-            active: true,
+            active: currentPath === "/dashboard" || currentPath === "/",
             onClick: handleHome,
         },
 
     {
     label: "Catalog",
     icon: ShoppingBagOutlined,
+    active: currentPath === "/catalog" || (currentPath.startsWith("/catalog") && currentPath !== "/catalog/categories"),
     path: "/catalog",
+},
+
+{
+    label: "Cart",
+    icon: ShoppingCartOutlined,
+    badge: cartCount > 0 ? cartCount : null,
+    active: currentPath === "/cart",
+    path: "/cart",
 },
 
 {
     label: "Manage Categories",
     icon: CategoryOutlined,
     visible: isAdmin,
+    active: currentPath === "/catalog/categories",
     onClick: () => {
         navigate("/catalog/categories");
 
@@ -110,25 +120,29 @@ const isAdmin =
         {
             label: "Orders",
             icon: ShoppingBagOutlined,
+            active: currentPath.startsWith("/orders"),
             path: "/orders",
         },
 
         {
             label: "Payments",
             icon: PaymentsOutlined,
+            active: currentPath.startsWith("/payments"),
             path: "/payments",
         },
 
         {
             label: "Wishlist",
             icon: FavoriteBorderOutlined,
-            disabled: true,
+            active: currentPath.startsWith("/wishlist"),
+            path: "/wishlist",
         },
 
         {
             label: "Support",
             icon: HelpOutlineOutlined,
-            disabled: true,
+            active: currentPath.startsWith("/support"),
+            path: "/support",
         },
     ];
 
@@ -138,13 +152,15 @@ const isAdmin =
         {
             label: "Profile",
             icon: AccountCircleOutlined,
-            disabled: true,
+            active: currentPath.startsWith("/profile"),
+            path: "/profile",
         },
 
         {
             label: "Settings",
             icon: SettingsOutlined,
-            disabled: true,
+            active: currentPath.startsWith("/settings"),
+            path: "/settings",
         },
     ];
 
@@ -266,6 +282,24 @@ disabled={item.disabled}
                     {item.label}
                 </Typography>
 
+
+                {item.badge != null && (
+                    <Box
+                        sx={{
+                            marginLeft: "auto",
+                            px: 0.9,
+                            py: 0.2,
+                            borderRadius: 10,
+                            background: "rgba(59, 130, 246, 0.2)",
+                            border: "1px solid rgba(59, 130, 246, 0.35)",
+                            color: "#60A5FA",
+                            fontSize: 10,
+                            fontWeight: 700,
+                        }}
+                    >
+                        {item.badge}
+                    </Box>
+                )}
 
                 {item.disabled && (
 
